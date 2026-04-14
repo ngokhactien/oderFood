@@ -1,7 +1,18 @@
-import Home from './pages/Home'
+import React from "react";
+import { Outlet } from "react-router-dom";
+import Header from "./components/Header";
+// import Footer from "./components/Footer"; // nếu có
 
-function App() {
-  return <Home />
-}
+const App = () => {
+  return (
+    <>
+      <Header />
+      <main style={{ minHeight: "80vh" }}>
+        <Outlet /> {/* Các trang con sẽ hiển thị tại đây */}
+      </main>
+      {/* <Footer /> */}
+    </>
+  );
+};
 
-export default App
+export default App;
