@@ -13,3 +13,15 @@ body {
   font-family: 'Poppins', sans-serif !important;
   font-size: 14px !important;
 }
+
+:root {
+  --primary-color: #e56a2e;
+  --primary-light: #ffe0c3;
+  --accent-color: #ff3b30;
+  --text-light: #ffffff;
+  --text-dark: #333333;
+  --gray-light: #e5e5e5;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --transition: all 0.25s ease;
+}

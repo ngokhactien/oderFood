@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import Card from "./Card";
 import "./productList.css";
 
 const ProductList = ({ products, onAdd }) => {
+
   return (
     <div className="product-list">
       {products.map((item) => (

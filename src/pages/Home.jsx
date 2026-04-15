@@ -1,7 +1,14 @@
+import { useDispatch } from "react-redux";
 import ProductList from "../components/ProductList";
 import products from "../data/products.js";
+import { addToCart } from "../redux/cartSlice.js";
 
 const Home = () => {
+  const dispatch = useDispatch();
+
+  const handleAdd = (product) => {
+    dispatch(addToCart(product));
+  };
 
   return (
     <>
@@ -10,7 +17,7 @@ const Home = () => {
 
       <ProductList
         products={products}
-        // onAdd={handleAdd}
+        onAdd={handleAdd}
       />
     </div>
     </>

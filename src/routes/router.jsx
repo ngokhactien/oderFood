@@ -3,6 +3,7 @@ import App from "../App";
 import Home from "../pages/Home";
 import TableOrder from "../pages/TableOrder";
 import Takeaway from "../pages/Takeaway";
+import ProductDetail from "../pages/ProductDetail";
 
 const router = createBrowserRouter([
   {
@@ -12,7 +13,7 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> }, // Trang chủ
       { path: "table-order", element: <TableOrder /> },
       { path: "takeaway", element: <Takeaway /> },
-    //   { path: ":film/:type/:id", element: <DetailsPages /> },
+      { path: "product/:id", element: <ProductDetail /> },
     //   { path: "s", element: <SearchPage /> },
     //   { path: "b", element: <CollectionPages /> },
     ],
