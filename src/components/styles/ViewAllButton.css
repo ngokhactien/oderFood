@@ -1,0 +1,33 @@
+.view-all-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 25px 0;
+}
+
+.view-all-btn {
+  background-color: #ffffff;
+  color: #444;
+  border: 1px solid #ddd;
+  padding: 10px 28px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px; /* Bo góc chuẩn */
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+/* Hiệu ứng khi di chuột */
+.view-all-btn:hover {
+  background-color: #fdfdfd;
+  border-color: #ff6633; /* Chuyển sang màu cam khi hover */
+  color: #ff6633;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Hiệu ứng khi nhấn giữ */
+.view-all-btn:active {
+  transform: scale(0.96);
+  background-color: #f0f0f0;
+}

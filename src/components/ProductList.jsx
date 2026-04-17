@@ -1,6 +1,5 @@
-import { useEffect } from "react";
 import Card from "./Card";
-import "./productList.css";
+import "./styles/productList.css";
 
 const ProductList = ({ products, onAdd }) => {
 

@@ -182,67 +182,7 @@ const products = [
     reviews: 60,
     sold: 150,
     description: "Salad rong biển tươi mát, giàu dinh dưỡng và tốt cho sức khỏe."
-  },
-  {
-    id: 13,
-    name: "Bánh xèo Nhật Okonomiyaki",
-    brand: "iSushi",
-    price: 185000,
-    discount: "-14%",
-    images: [
-      "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&h=400&fit=crop",
-    ],
-    sizes: ["Regular"],
-    rating: 4.7,
-    reviews: 85,
-    sold: 210,
-    description: "Bánh xèo Nhật Okonomiyaki với lớp bột mềm và topping phong phú."
-  },
-  {
-    id: 14,
-    name: "Takoyaki bạch tuộc",
-    brand: "iSushi",
-    price: 165000,
-    discount: "-15%",
-    images: [
-      "https://images.unsplash.com/photo-1613145997970-db84a7975fbb?w=600&h=400&fit=crop",
-    ],
-    sizes: ["6 pcs", "12 pcs"],
-    rating: 4.8,
-    reviews: 100,
-    sold: 270,
-    description: "Takoyaki bạch tuộc nóng hổi, lớp vỏ giòn và nhân mềm thơm."
-  },
-  {
-    id: 15,
-    name: "Trà xanh Nhật Bản",
-    brand: "iSushi",
-    price: 60000,
-    discount: "-17%",
-    images: [
-      "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&h=400&fit=crop",
-    ],
-    sizes: ["Hot", "Cold"],
-    rating: 4.4,
-    reviews: 50,
-    sold: 120,
-    description: "Trà xanh Nhật Bản thanh mát, giúp thư giãn và tốt cho sức khỏe."
-  },
-  {
-    id: 16,
-    name: "Kem Mochi Nhật",
-    brand: "iSushi",
-    price: 95000,
-    discount: "-16%",
-    images: [
-      "https://images.unsplash.com/photo-1599785209707-28a4c9b7b6c6?w=600&h=400&fit=crop",
-    ],
-    sizes: ["2 pcs", "4 pcs"],
-    rating: 4.7,
-    reviews: 75,
-    sold: 190,
-    description: "Kem mochi Nhật Bản với lớp vỏ dẻo và nhân kem mát lạnh."
-  },
+  }
 ];
 
 export default products;

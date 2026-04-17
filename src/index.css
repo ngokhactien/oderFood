@@ -24,4 +24,6 @@ body {
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
   --transition: all 0.25s ease;
+  --padding-app: 0.5rem 2.5rem;
 }
+

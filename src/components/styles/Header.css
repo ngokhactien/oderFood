@@ -19,7 +19,7 @@
 .header-container {
   max-width: 95%;
   margin: 0 auto;
-  padding: 12px 24px;
+  padding: var(--padding-app);
   display: flex;
   align-items: center;
   justify-content: space-between;

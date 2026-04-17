@@ -1,0 +1,50 @@
+.promo-container {
+  display: flex;
+  justify-content: space-between; /* Đẩy 2 bên ra xa */
+  align-items: center;
+  padding: 3rem 0 2.5rem;
+  background-color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+.promo-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  color: #333;
+  border-bottom: 0.2rem solid var(--primary-color);;
+}
+
+/* Cái khung màu cam hình viên thuốc */
+.countdown-badge {
+  background-color: var(--primary-color);; /* Màu cam đặc trưng */
+  padding: 8px 12px 8px 20px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.promo-text {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Khu vực chứa các ô số */
+.timer-box {
+  display: flex;
+  gap: 5px;
+}
+
+/* Từng ô số trắng */
+.time-num {
+  background-color: #fff;
+  color: #333;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  min-width: 25px;
+  text-align: center;
+  font-size: 15px;
+}

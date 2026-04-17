@@ -1,0 +1,81 @@
+/* ===== CONTAINER ===== */
+.food-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 2rem 3rem;
+  background: aliceblue;
+  border-radius: 1rem;
+}
+
+/* ===== COLUMN ===== */
+.food-column {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #eee;
+}
+
+/* TITLE */
+.food-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.food-title::after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 2px;
+  background: #ff6b00;
+  margin-top: 6px;
+}
+
+/* ===== ITEM ===== */
+.food-item {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f1f1;
+  align-items: center;
+}
+
+.food-item:last-child {
+  border-bottom: none;
+}
+
+.food-item img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+}
+
+/* INFO */
+.food-info {
+  flex: 1;
+}
+
+.food-name {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.food-rating {
+  color: #ffc107;
+  font-size: 12px;
+}
+
+.food-price {
+  color: #ff6b00;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .food-container {
+    grid-template-columns: 1fr;
+  }
+}

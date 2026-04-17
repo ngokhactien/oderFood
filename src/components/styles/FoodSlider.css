@@ -1,0 +1,177 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
+
+.food-slider {
+  position: relative;
+  width: 100%;
+  height: 80vh; /* Slide chiếm 90% chiều cao màn hình */
+  overflow: hidden;
+  font-family: "Poppins", sans-serif; /* Font chữ hiện đại */
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.food-slider-wrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1); /* Hiệu ứng trượt cực mượt */
+}
+
+.food-slide {
+  min-width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+/* Lớp phủ nền mờ để text nổi bật */
+.food-info-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.3) 60%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  display: flex;
+  align-items: center;
+  padding-left: 10%; /* Text nằm về bên trái */
+}
+
+.food-info-content {
+  max-width: 500px;
+  color: white;
+}
+
+.food-tagline {
+  display: block;
+  color: #ffcc00; /* Màu vàng cam kích thích vị giác */
+  font-size: 14px;
+  letter-spacing: 2px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.food-title {
+  font-size: 56px;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+  line-height: 1.1;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.food-description {
+  font-size: 18px;
+  margin-bottom: 30px;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+/* Các nút bấm */
+.food-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.btn-order,
+.btn-detail {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.food-actions .btn-order .icon{ 
+    margin-right: 0.5rem;
+}
+
+.food-actions .btn-order {
+  background-color: #ff4500; /* Màu cam đỏ đậm */
+  color: white;
+      display: flex;
+    align-items: center;
+}
+
+.btn-order:hover {
+  background-color: #e03e00;
+  transform: translateY(-2px);
+}
+
+.btn-detail {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  backdrop-filter: blur(5px);
+}
+
+.btn-detail:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Định dạng nút mũi tên (SVG) */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.arrow:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.arrow svg {
+  width: 30px;
+  height: 30px;
+  fill: white;
+}
+
+.prev {
+  left: 30px;
+}
+.next {
+  right: 30px;
+}
+
+/* Phân trang (Dots) */
+.food-dots {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot.active {
+  background: #ffcc00;
+  width: 25px; /* Hiệu ứng dot dài ra khi active */
+  border-radius: 10px;
+}

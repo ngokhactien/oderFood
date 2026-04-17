@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./card.css";
+import "./styles/card.css";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import DEFAULT_IMAGE from "../assets/x.jpg";
 import { NavLink } from "react-router-dom";

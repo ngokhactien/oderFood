@@ -1,0 +1,84 @@
+.menu-section {
+  padding: 30px 20px;
+  margin-top: 2rem;
+  border-radius: 1rem;
+  background-color: #f9f5f2; /* Màu nền hơi hồng nhạt giống hình */
+  text-align: center;
+}
+
+.menu-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.category-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Khoảng cách giữa các ô */
+  flex-wrap: wrap; /* Tự xuống dòng nếu màn hình nhỏ */
+}
+
+.category-card {
+  background: white;
+  padding: 25px 15px;
+  border-radius: 15px; /* Bo góc khung trắng */
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Đổ bóng nhẹ */
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.category-card:hover {
+  transform: translateY(-5px); /* Hiệu ứng bay lên khi di chuột */
+}
+
+.image-circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 2px dashed #ccc; /* Viền đứt đoạn xung quanh ảnh */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  padding: 5px;
+}
+
+.image-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Đảm bảo ảnh đồ ăn không bị méo */
+}
+
+.category-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  margin: 0;
+}
+
+.image-circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  /* Viền đứt đoạn xung quanh ảnh */
+  border: 2px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  padding: 8px; /* Thêm padding để tạo khoảng cách giữa ảnh món ăn và viền đĩa */
+  background-color: #fff; /* Nền trắng cho đĩa */
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05); /* Hiệu ứng lòng đĩa nhẹ */
+}
+
+.image-circle img {
+  width: 80%; /* Giảm kích thước ảnh món ăn một chút */
+  height: 80%;
+  object-fit: contain; /* Giữ nguyên tỷ lệ ảnh */
+}
