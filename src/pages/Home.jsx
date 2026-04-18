@@ -8,6 +8,7 @@ import PromoHeader from "../components/PromoHeader.jsx";
 import ViewAllButton from "../components/ViewAllButton.jsx";
 import FoodHeroBanner from "../components/FoodHeroBanner.jsx";
 import FoodListSection from "../components/FoodListSection.jsx";
+import CustomerReviews from "../components/CustomerReviews.jsx";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -35,7 +36,7 @@ const Home = () => {
         <ViewAllButton />
 
         <FoodListSection/>
-
+        <CustomerReviews/>
       </div>
     </>
   );
