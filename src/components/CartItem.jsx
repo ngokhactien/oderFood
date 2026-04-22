@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import "./styles/card.css";
+import "./styles/CartItem.css";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import DEFAULT_IMAGE from "../assets/x.jpg";
 import { NavLink } from "react-router-dom";
 import { calculatePrice } from "../common/calculatePrice";
+import { toast } from "react-toastify";
 
-const Card = ({ product, onAdd }) => {
+const CartItem = ({ product, onAdd }) => {
   const { name, brand, price, discount, id } = product;
 
   // Tính giá sau khi giảm
@@ -67,6 +68,7 @@ const Card = ({ product, onAdd }) => {
               e.preventDefault(); // Ngăn NavLink chuyển trang
               e.stopPropagation(); // Ngăn bubbling
               onAdd(product);
+              toast.success("Thêm vào giỏ hàng thành công!");
             }}
             aria-label="Thêm vào giỏ hàng"
           >
@@ -78,4 +80,4 @@ const Card = ({ product, onAdd }) => {
   );
 };
 
-export default Card;
+export default CartItem;

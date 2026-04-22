@@ -2,13 +2,13 @@ import { useDispatch } from "react-redux";
 import ProductList from "../components/ProductList";
 import products from "../data/products.js";
 import { addToCart } from "../redux/cartSlice.js";
-import FoodSlider from "../components/FoodSlider.jsx";
+import FoodSlider from "../components/home/FoodSlider.jsx";
 import CategoryMenu from "../components/CategoryMenu.jsx";
 import PromoHeader from "../components/PromoHeader.jsx";
 import ViewAllButton from "../components/ViewAllButton.jsx";
-import FoodHeroBanner from "../components/FoodHeroBanner.jsx";
-import FoodListSection from "../components/FoodListSection.jsx";
-import CustomerReviews from "../components/CustomerReviews.jsx";
+import FoodHeroBanner from "../components/home/FoodHeroBanner.jsx";
+import FoodListSection from "../components/home/FoodListSection.jsx";
+import CustomerReviews from "../components/home/CustomerReviews.jsx";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -19,7 +19,7 @@ const Home = () => {
 
   return (
     <>
-      <div style={{ padding: "var(--padding-app)" }}>
+      <div>
         <FoodSlider />
         <CategoryMenu />
 

@@ -10,8 +10,6 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const product = action.payload;
-
-      // Kiểm tra nếu sản phẩm đã tồn tại thì tăng số lượng
       const existingItem = state.items.find(
         (item) => item.id === product.id
       );
@@ -23,10 +21,39 @@ const cartSlice = createSlice({
       }
     },
 
-    removeFromCart: (state, action) => {
+    removeItem: (state, action) => {
       state.items = state.items.filter(
         (item) => item.id !== action.payload
       );
+    },
+
+    increaseQty: (state, action) => {
+      const item = state.items.find(
+        (i) => i.id === action.payload
+      );
+      if (item) item.quantity += 1;
+    },
+
+    decreaseQty: (state, action) => {
+      const item = state.items.find(
+        (i) => i.id === action.payload
+      );
+      if (item && item.quantity > 1) {
+        item.quantity -= 1;
+      }
+    },
+
+    updateQuantity: (state, action) => {
+      const { id, quantity } = action.payload;
+      const item = state.items.find((i) => i.id === id);
+
+      if (!item) return;
+
+      if (isNaN(quantity) || quantity < 1) {
+        item.quantity = 1;
+      } else {
+        item.quantity = quantity;
+      }
     },
 
     clearCart: (state) => {
@@ -35,7 +62,13 @@ const cartSlice = createSlice({
   },
 });
 
-export const { addToCart, removeFromCart, clearCart } =
-  cartSlice.actions;
+export const {
+  addToCart,
+  removeItem,
+  increaseQty,
+  decreaseQty,
+  updateQuantity,
+  clearCart,
+} = cartSlice.actions;
 
-export default cartSlice.reducer;
+export default cartSlice.reducer; // 👈 QUAN TRỌNG

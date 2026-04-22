@@ -4,22 +4,23 @@ import {
   UserIcon,
   ChevronDownIcon, // Thêm icon này nếu muốn giống ảnh
 } from "@heroicons/react/24/outline";
-import "./styles/Header.css";
+import "../styles/header/Header.css";
 
-import menuItems from "../data/menuHeader";
+import menuItems from "../../data/menuHeader";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 const Header = () => {
   // Lấy danh sách sản phẩm trong giỏ hàng
   const cartItems = useSelector((state) => state.cart.items);
   const [lang, setLang] = useState("EN");
   const [showLangMenu, setShowLangMenu] = useState(false);
+  const dispatch = useDispatch();
 
   // Tính tổng số lượng sản phẩm
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
-
   return (
     <header className="header">
       <div className="header-top">
@@ -70,13 +71,51 @@ const Header = () => {
               </label>
             </div>
 
-            {/* Giỏ hàng có Badge số 3 */}
-            <button className="header-action cart-btn">
-              <div className="icon-wrapper">
+            <div className="cart-wrapper">
+              <NavLink to="/cart" className="cart-icon-link">
                 <ShoppingCartIcon className="icon" />
                 <span className="cart-badge">{cartCount}</span>
+              </NavLink>
+
+              {/* DROPDOWN */}
+              <div className="cart-dropdown">
+                <h4>Sản phẩm mới thêm</h4>
+                {[...cartItems]
+                  .reverse()
+                  .slice(0, 5)
+                  .map((item, index) => (
+                    <NavLink
+                      to={`/product/${item.id}`}
+                      className="cart-item"
+                      key={index}
+                    >
+                      <img
+                        src={item.images || "https://via.placeholder.com/40"}
+                        alt=""
+                        onError={(e) => {
+                          e.target.src = "https://via.placeholder.com/40";
+                        }}
+                      />
+
+                      <div className="cart-info">
+                        <p className="name">{item.name}</p>
+                        {/* 👉 SỐ LƯỢNG */}
+                        <span className="quantity">x{item.quantity}</span>
+                      </div>
+
+                      <span className="price">
+                        {item.price.toLocaleString("vi-VN")}đ
+                      </span>
+                    </NavLink>
+                  ))}
+                <div className="cart-footer">
+                  <span>{cartCount} Thêm Hàng Vào Giỏ</span>
+                  <NavLink to="/cart">
+                    <button>Xem Giỏ Hàng</button>
+                  </NavLink>
+                </div>
               </div>
-            </button>
+            </div>
 
             <button className="header-action">
               <UserIcon className="icon" />

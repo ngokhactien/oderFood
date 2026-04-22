@@ -1,11 +1,6 @@
-import React from "react";
-import "./styles/FoodListSection.css";
-import foodListSection from "../data/foodListSection.js";
+import "../styles/FoodListSection.css";
+import foodListSection from "../../data/foodListSection.js";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
-
-function renderStars() {
-    return "★★★★★";
-}
 
 const Card = ({ title, items }) => (
   <div className="food-column">

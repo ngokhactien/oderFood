@@ -6,14 +6,15 @@ import {
   PlusIcon,
   MinusIcon,
 } from "@heroicons/react/24/outline";
-import { addToCart } from "../redux/cartSlice";
+import { addToCart } from "../../redux/cartSlice";
 import { useLocation, useParams } from "react-router-dom";
-import products from "../data/products"; // Dữ liệu fallback
-import DEFAULT_IMAGE from "../assets/x.jpg";
-import "../styles/ProductDetail.css";
-import { calculatePrice } from "../common/calculatePrice";
+import products from "../../data/products"; // Dữ liệu fallback
+import DEFAULT_IMAGE from "../../assets/x.jpg";
+import "../styles/detail/ProductDetail.css";
+import { calculatePrice } from "../../common/calculatePrice";
+import { toast } from "react-toastify";
 
-const ProductDetail = () => {
+const ProductDetail = ({ comments }) => {
   const { id } = useParams();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -59,7 +60,7 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (!selectedSize && sizes.length > 0) {
-      alert("Vui lòng chọn size!");
+      toast.warning("Vui lòng chọn size!");
       return;
     }
 
@@ -71,7 +72,7 @@ const ProductDetail = () => {
       }),
     );
 
-    alert("Đã thêm vào giỏ hàng!");
+    toast.success("Thêm vào giỏ hàng thành công!");
   };
 
   const handleBuyNow = () => {
@@ -137,6 +138,10 @@ const ProductDetail = () => {
         <div className="product-detail__right">
           <h2 className="product-detail__title">{name}</h2>
 
+          <p className="category">
+            Danh mục: <span>Pizza & Burger</span>
+          </p>
+
           <div className="product-detail__rating">
             <div className="product-detail__rating-item product-detail__rating-score">
               <span className="product-detail__score">{rating}</span>
@@ -148,7 +153,7 @@ const ProductDetail = () => {
             </div>
 
             <div className="product-detail__rating-item">
-              <span className="product-detail__reviews">{reviews}</span>
+              <span className="product-detail__reviews">{comments}</span>
               <span className="product-detail__label">Đánh Giá</span>
             </div>
 
@@ -160,11 +165,15 @@ const ProductDetail = () => {
 
           <div className="product-detail__price-box">
             <div>
-            {price && (
-              <span style={{fontSize: '16px'}} className="old-price">{formatPrice(price)}</span>
-            )}
-            <span className="product-detail__price">{formatPrice(finalPrice)}</span>
-          </div>
+              {price && (
+                <span style={{ fontSize: "16px" }} className="old-price">
+                  {formatPrice(price)}
+                </span>
+              )}
+              <span className="product-detail__price">
+                {formatPrice(finalPrice)}
+              </span>
+            </div>
             {/* <span className="product-detail__price">{formatPrice(finalPrice)}</span> */}
             <span className="product-detail__voucher">Giá Sau Voucher</span>
           </div>
@@ -177,6 +186,17 @@ const ProductDetail = () => {
             <span>Vận chuyển:</span>
             <span>Nhận từ 17 Th04 - 20 Th04</span>
             <span className="product-detail__free-ship">Phí ship 0đ</span>
+          </div>
+
+          {/* Policy (text, không phải list) */}
+          <div className="product__policy">
+            <span>Mô Tả</span>
+            <p>
+              🚚 Giao hàng miễn phí trong 24h (nội thành) Giao hàng miễn phí
+              trong 24h (nội thành) Giao hàng miễn phí trong 24h (nội thành)
+              Giao hàng miễn phí trong 24h (nội thành) Giao hàng miễn phí trong
+              24h (nội thành).........
+            </p>
           </div>
 
           {/* ===== SIZE SECTION ===== */}
@@ -212,7 +232,7 @@ const ProductDetail = () => {
               <button onClick={() => setQuantity((q) => q + 1)}>
                 <PlusIcon className="product-detail__icon" />
               </button>
-              <span className="product-detail__stock">Còn hàng</span>
+              <span className="product-detail__stock">{"Còn hàng"}</span>
             </div>
           </div>
 

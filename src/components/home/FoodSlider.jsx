@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import './styles/FoodSlider.css';
-import foodMenu from '../data/foodSlider'
+import '../styles/FoodSlider.css';
+import foodMenu from '../../data/foodSlider'
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 
 const FoodSlider = () => {

@@ -1,5 +1,4 @@
-import React from "react";
-import "./styles/FoodHeroBanner.css";
+import "../styles/FoodHeroBanner.css";
 
 const PIZZA_REAL_IMG =
   "https://media.istockphoto.com/id/534000017/vi/anh/pizza-ngon-v%C3%A0-g%C3%A0-r%C3%A1n.jpg?s=1024x1024&w=is&k=20&c=EQ256G40ArEhwO0Z1fDj0GEGHi21hE-E2Yu44BFm5F4=";

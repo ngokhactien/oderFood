@@ -128,7 +128,7 @@ const products = [
     name: "Gunkan trứng cá hồi",
     brand: "iSushi",
     price: 230000,
-    discount: "Hot",
+    discount: "",
     images: [
       "https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=600&h=400&fit=crop",
     ],

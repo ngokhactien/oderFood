@@ -1,0 +1,8 @@
+.product-card {
+  display: flex;
+  gap: 20px;
+}
+
+.products {
+  width: 100%;
+}

@@ -1,4 +1,4 @@
-import Card from "./Card";
+import CartItem from "./CartItem";
 import "./styles/productList.css";
 
 const ProductList = ({ products, onAdd }) => {
@@ -6,7 +6,7 @@ const ProductList = ({ products, onAdd }) => {
   return (
     <div className="product-list">
       {products.map((item) => (
-        <Card key={item.id} product={item} onAdd={onAdd} />
+        <CartItem key={item.id} product={item} onAdd={onAdd} />
       ))}
     </div>
   );
