@@ -65,7 +65,7 @@ const CartDetail = ({
           return (
             <div className="cart__item" key={item.id + item.size}>
               {/* IMAGE */}
-              <NavLink to={`product/${item.id}`} className="cart__item-link">
+              <NavLink to={`/product/${item.id}`} className="cart__item-link">
                 <img
                   src={item.image || item.images?.[0]}
                   alt={item.name}

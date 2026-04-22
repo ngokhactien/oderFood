@@ -14,6 +14,7 @@ const App = () => {
         style={{
           minHeight: "80vh",
           padding: "7rem 5rem",
+          background: '#f5f5f5'
         }}
       >
         <Outlet /> {/* Các trang con sẽ hiển thị tại đây */}

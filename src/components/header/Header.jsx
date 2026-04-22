@@ -117,10 +117,10 @@ const Header = () => {
               </div>
             </div>
 
-            <button className="header-action">
+            <NavLink to="/login" className="header-action">
               <UserIcon className="icon" />
               <span>Đăng nhập</span>
-            </button>
+            </NavLink>
           </div>
         </div>
       </div>

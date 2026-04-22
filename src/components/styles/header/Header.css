@@ -110,6 +110,7 @@
   color: var(--text-light);
   cursor: pointer;
   transition: var(--transition);
+  text-decoration: none;
 }
 
 .header-action:hover {

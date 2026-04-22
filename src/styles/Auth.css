@@ -1,0 +1,129 @@
+.auth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth .card {
+  width: 42%;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.auth .card h2,
+.auth .card p {
+  text-align: center;
+}
+
+.auth .login-input,
+.auth .forgot-input {
+  padding: 12px;
+  margin-top: 12px;
+} 
+
+.auth input {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.auth .grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.auth .primary {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px;
+  background: #ff6b2c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.auth .outline {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ff6b2c;
+  color: #ff6b2c;
+  background: transparent;
+  border-radius: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.auth .divider {
+  text-align: center;
+  margin: 20px 0;
+  color: #aaa;
+}
+
+.auth .link {
+  text-align: right;
+  cursor: pointer;
+  margin-top: 8px;
+  color: #666;
+}
+
+/* đăng ký */
+.auth .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+}
+
+.auth .form-group label {
+  font-size: 14px;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.auth .input-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  background: #fff;
+}
+
+.auth .input-box input {
+  border: none;
+  outline: none;
+  flex: 1;
+  padding-left: 8px;
+}
+
+.auth .icon {
+  width: 18px;
+  height: 18px;
+  color: #999;
+}
+
+/* xem mat khau */
+.input-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  position: relative;
+}
+
+.input-box input {
+  border: none;
+  outline: none;
+  flex: 1;
+  padding: 0 8px;
+}
+
+.eye {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
