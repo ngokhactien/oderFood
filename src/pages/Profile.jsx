@@ -58,7 +58,7 @@ export default function Profile() {
         <div className="info">
           <div className="row">
             <span>Họ tên</span>
-            <span>Nguyễn Anh Lộc</span>
+            <span>Ngo khac tien</span>
           </div>
 
           <div className="row">

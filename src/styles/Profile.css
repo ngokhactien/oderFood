@@ -109,7 +109,7 @@
   gap: 6px;
 }
 
-.outline {
+.content-header .outline {
   border: 1px solid #ff6b2c;
   color: #ff6b2c;
   background: transparent;
@@ -118,9 +118,10 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  cursor: pointer;
 }
 
-.icon {
+.outline .icon {
   width: 18px;
   height: 18px;
 }
