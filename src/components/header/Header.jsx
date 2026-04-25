@@ -11,14 +11,15 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import UserMenu from "./UserMenu";
 
 const Header = () => {
   // Lấy danh sách sản phẩm trong giỏ hàng
   const cartItems = useSelector((state) => state.cart.items);
   const [lang, setLang] = useState("EN");
-  const [showLangMenu, setShowLangMenu] = useState(false);
-  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
 
+  const dispatch = useDispatch();
   // Tính tổng số lượng sản phẩm
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   return (
@@ -117,10 +118,14 @@ const Header = () => {
               </div>
             </div>
 
-            <NavLink to="/login" className="header-action">
-              <UserIcon className="icon" />
-              <span>Đăng nhập</span>
-            </NavLink>
+            {user ? (
+              <UserMenu user={user} />
+            ) : (
+              <NavLink to="/login" className="header-action">
+                <UserIcon className="icon" />
+                <span>Đăng nhập</span>
+              </NavLink>
+            )}
           </div>
         </div>
       </div>

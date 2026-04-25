@@ -9,30 +9,66 @@ import AuthPage from "../pages/AuthPage";
 import Profile from "../pages/Profile";
 import ResetPassword from "../components/account/ResetPassword";
 
+// chặn quyền truy cập
+import ProtectedRoute from "./ProtectedRoute";
+import AuthRoute from "./AuthRoute";
+
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />, // Layout chứa Header/Footer
+    element: <App />,
     children: [
-      { index: true, element: <Home /> }, // Trang chủ
+      { index: true, element: <Home /> },
       { path: "table-order", element: <TableOrder /> },
       { path: "product/:id", element: <Detail /> },
       { path: "cart", element: <Cart /> },
       { path: "product-card/:id", element: <ProductCard /> },
-      // login
-      { path: "login", element: <AuthPage mode="login" /> },
-      { path: "register", element: <AuthPage mode="register" /> },
-      { path: "forgot-password", element: <AuthPage mode="forgot" /> },
-      { path: "reset-password", element: <ResetPassword /> },
 
-      // INFO
-      { path: "info", element: <Profile /> },
+      // ❌ nếu đã login thì không vào được
+      {
+        path: "login",
+        element: (
+          <AuthRoute>
+            <AuthPage mode="login" />
+          </AuthRoute>
+        ),
+      },
+      {
+        path: "register",
+        element: (
+          <AuthRoute>
+            <AuthPage mode="register" />
+          </AuthRoute>
+        ),
+      },
+      {
+        path: "forgot-password",
+        element: (
+          <AuthRoute>
+            <AuthPage mode="forgot" />
+          </AuthRoute>
+        ),
+      },
+      {
+        path: "reset-password",
+        element: (
+          <AuthRoute>
+            <ResetPassword />
+          </AuthRoute>
+        ),
+      },
+
+      // ✅ phải login mới vào được
+      {
+        path: "info",
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
-  //   {
-  //     path: "*",
-  //     element: <NotFoundPage />, // Trang 404 không có Header/Footer
-  //   },
 ]);
 
 export default router;

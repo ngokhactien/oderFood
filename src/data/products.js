@@ -34,19 +34,18 @@ const products = [
   },
   {
     id: 3,
-    name: "Sushi cá hồi tươi",
+    name: "Salad rong biển",
     brand: "iSushi",
-    price: 210000,
-    discount: "-14%",
+    price: 110000,
+    discount: "-18%",
     images: [
-      "https://images.unsplash.com/photo-1562158070-57a88f1a5c8d?w=600&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1553621042-f6e147245754?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop",
     ],
-    sizes: ["6 pcs", "12 pcs"],
-    rating: 4.9,
-    reviews: 210,
-    sold: 520,
-    description: "Sushi cá hồi tươi ngon, được chế biến từ nguyên liệu nhập khẩu chất lượng cao."
+    sizes: ["Regular"],
+    rating: 4.5,
+    reviews: 60,
+    sold: 150,
+    description: "Salad rong biển tươi mát, giàu dinh dưỡng và tốt cho sức khỏe."
   },
   {
     id: 4,
@@ -152,37 +151,41 @@ const products = [
     reviews: 90,
     sold: 230,
     description: "Mì Udon hải sản với nước dùng thanh ngọt, sợi mì dai ngon."
-  },
-  {
-    id: 11,
-    name: "Mì Ramen thịt heo",
-    brand: "iSushi",
-    price: 210000,
-    discount: "-14%",
-    images: [
-      "https://images.unsplash.com/photo-1605475128023-2b6c0b1d44b0?w=600&h=400&fit=crop",
-    ],
-    sizes: ["Regular", "Large"],
-    rating: 4.8,
-    reviews: 140,
-    sold: 320,
-    description: "Mì ramen thịt heo với nước dùng đậm đà, chuẩn vị Nhật Bản."
-  },
-  {
-    id: 12,
-    name: "Salad rong biển",
-    brand: "iSushi",
-    price: 110000,
-    discount: "-18%",
-    images: [
-      "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop",
-    ],
-    sizes: ["Regular"],
-    rating: 4.5,
-    reviews: 60,
-    sold: 150,
-    description: "Salad rong biển tươi mát, giàu dinh dưỡng và tốt cho sức khỏe."
   }
 ];
 
 export default products;
+
+// {
+//   id: 8,
+//   name: "Sushi trứng Tamago",
+//   brand: "iSushi",
+//   category: "sushi",
+
+//   price: 140000,
+//   discount: 14,
+
+//   images: [
+//     "https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=600"
+//   ],
+
+//   options: [
+//     { label: "6 pcs", price: 140000 },
+//     { label: "12 pcs", price: 260000 }
+//   ],
+
+//   rating: 4.5,
+//   reviews: 70,
+//   sold: 180,
+
+//   stock: 50,
+//   isBestSeller: true,
+
+//   prepTime: 15,
+
+//   ingredients: ["trứng", "cơm", "rong biển"],
+
+//   description: "Sushi trứng tamago ngọt nhẹ, mềm mịn, phù hợp cho trẻ em.",
+
+//   status: "available"
+// }

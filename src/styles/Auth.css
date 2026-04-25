@@ -59,7 +59,7 @@
 
 .auth .divider {
   text-align: center;
-  margin: 20px 0;
+  margin: 1rem 0;
   color: #aaa;
 }
 
@@ -74,7 +74,7 @@
 .auth .form-group {
   display: flex;
   flex-direction: column;
-  margin-top: 12px;
+  /* margin-top: 12px; */
 }
 
 .auth .form-group label {
@@ -173,10 +173,10 @@
   margin-left: 8px;
 }
 
-.icon {
+/* .icon {
   width: 20px;
   color: #999;
-}
+} */
 
 .eye {
   cursor: pointer;

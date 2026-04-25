@@ -149,7 +149,7 @@
 }
 
 /* ===== FORGOT PASSWORD ===== */
-.forgot {
+.auth-container .forgot {
   text-align: end !important;
   font-size: 13px;
   color: #ff6a00;
@@ -158,7 +158,7 @@
   transition: 0.2s;
 }
 
-.forgot:hover {
+.auth-container .forgot:hover {
   text-decoration: underline;
   color: #e65c00;
 }

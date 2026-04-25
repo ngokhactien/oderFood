@@ -52,7 +52,7 @@ export default function Footer() {
             </li>
             <li>
               <EnvelopeIcon className="icon" />
-              info@forkandflame.com
+              khactien9d@forkandflame.com
             </li>
           </ul>
         </div>

@@ -6,25 +6,32 @@ import {
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../redux/authSlice";
 
 export default function Login({ setMode }) {
   const [showPassword, setShowPassword] = useState(false);
-
+  const navigate = useNavigate();
   const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
-console.log(import.meta.env.VITE_API_URL);
+  const dispatch = useDispatch();
+
   const handleLogin = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            account,
+            password,
+          }),
         },
-        body: JSON.stringify({
-          account,
-          password,
-        }),
-      });
+      );
 
       const data = await res.json();
 
@@ -33,13 +40,15 @@ console.log(import.meta.env.VITE_API_URL);
         return;
       }
 
-      // 🔥 lưu token
-      localStorage.setItem("token", data.token);
+      dispatch(
+        loginSuccess({
+          user: data.user,
+          token: data.token,
+        }),
+      );
 
-      console.log("User:", data.user);
       toast.success("Đăng nhập thành công 🎉");
-
-      // 👉 chuyển trang nếu muốn
+      navigate("/");
     } catch (err) {
       console.log(err);
       toast.error("Lỗi server");
@@ -49,7 +58,7 @@ console.log(import.meta.env.VITE_API_URL);
   return (
     <>
       <h2>Đăng Nhập</h2>
-      <p>Chào mừng bạn quay trở lại</p>
+      <p style={{ marginBottom: "1.5rem" }}>Chào mừng bạn quay trở lại</p>
 
       {/* Account */}
       <div className="form-group">

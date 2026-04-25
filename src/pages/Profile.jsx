@@ -4,11 +4,12 @@ import {
   MapPinIcon,
   ArrowRightOnRectangleIcon,
   PencilSquareIcon,
-  ShoppingBagIcon,
 } from "@heroicons/react/24/outline";
 import "../styles/profile.css";
+import { useSelector } from "react-redux";
 
 export default function Profile() {
+  const user = useSelector((state) => state.auth.user);
   return (
     <div className="profile">
       {/* LEFT SIDEBAR */}
@@ -16,8 +17,8 @@ export default function Profile() {
         <div className="user">
           <div className="avatar"></div>
           <div>
-            <h4>Nguyễn Anh Lộc</h4>
-            <p className="role">Admin</p>
+            <h4>{user.name}</h4>
+            <p className="role">{user.role}</p>
           </div>
         </div>
 
@@ -58,22 +59,22 @@ export default function Profile() {
         <div className="info">
           <div className="row">
             <span>Họ tên</span>
-            <span>Ngo khac tien</span>
+            <span>{user.name}</span>
           </div>
 
           <div className="row">
             <span>Email</span>
-            <span>khachvip@gmail.com</span>
+            <span>{user.email}</span>
           </div>
 
           <div className="row">
             <span>Số điện thoại</span>
-            <span>0336999888</span>
+            <span>{user.phone}</span>
           </div>
 
           <div className="row">
             <span>Tên tài khoản</span>
-            <span>khachvip</span>
+            <span>{user.username}</span>
           </div>
 
           <div className="row">
@@ -83,8 +84,15 @@ export default function Profile() {
           </div>
 
           <div className="row">
-            <span>Địa chỉ 1</span>
-            <span>Hà Đông, Hà Nội</span>
+            <span>Địa chỉ</span>
+
+            <div>
+              {user.addresses?.map((item) => (
+                <div key={item._id}>
+                  {item.address} ({item.phone})
+                </div>
+              ))}
+            </div>
             <button className="link-btn">Thêm địa chỉ</button>
           </div>
         </div>
