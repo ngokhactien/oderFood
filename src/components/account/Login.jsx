@@ -5,21 +5,62 @@ import {
   EyeSlashIcon,
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Login({ setMode }) {
   const [showPassword, setShowPassword] = useState(false);
+
+  const [account, setAccount] = useState("");
+  const [password, setPassword] = useState("");
+console.log(import.meta.env.VITE_API_URL);
+  const handleLogin = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          account,
+          password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.warning(data);
+        return;
+      }
+
+      // 🔥 lưu token
+      localStorage.setItem("token", data.token);
+
+      console.log("User:", data.user);
+      toast.success("Đăng nhập thành công 🎉");
+
+      // 👉 chuyển trang nếu muốn
+    } catch (err) {
+      console.log(err);
+      toast.error("Lỗi server");
+    }
+  };
 
   return (
     <>
       <h2>Đăng Nhập</h2>
       <p>Chào mừng bạn quay trở lại</p>
 
-      {/* Username */}
+      {/* Account */}
       <div className="form-group">
-        <label>Tên đăng nhập</label>
+        <label>Email hoặc Username</label>
         <div className="input-box">
           <UserIcon className="icon" />
-          <input placeholder="Nhập tên đăng nhập" />
+          <input
+            placeholder="Nhập email hoặc username"
+            value={account}
+            onChange={(e) => setAccount(e.target.value)}
+          />
         </div>
       </div>
 
@@ -33,6 +74,8 @@ export default function Login({ setMode }) {
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Nhập mật khẩu"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
 
           <div className="eye" onClick={() => setShowPassword(!showPassword)}>
@@ -44,13 +87,12 @@ export default function Login({ setMode }) {
           </div>
         </div>
       </div>
-
-      {/* Forgot */}
-      <div className="link" onClick={() => setMode("forgot")}>
+      <p className="forgot" onClick={() => setMode("forgot")}>
         Quên mật khẩu?
-      </div>
-
-      <button className="primary">Đăng Nhập</button>
+      </p>
+      <button className="primary" onClick={handleLogin}>
+        Đăng Nhập
+      </button>
 
       <div className="divider">hoặc</div>
 

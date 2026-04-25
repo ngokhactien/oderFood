@@ -19,7 +19,6 @@
   margin-bottom: 20px;
 }
 
-
 .avatar {
   width: 50px;
   height: 50px;
@@ -104,7 +103,6 @@
   border: none;
   padding: 10px 16px;
   border-radius: 8px;
-  display: flex;
   align-items: center;
   gap: 6px;
 }
@@ -126,7 +124,6 @@
   height: 18px;
 }
 
-
 .profile .user p {
   color: #888 !important;
 }
@@ -145,4 +142,23 @@
 .content-header p {
   margin: 0;
   color: #888;
+}
+
+.input-box.error {
+  border: 1px solid red;
+}
+
+/* ===== FORGOT PASSWORD ===== */
+.forgot {
+  text-align: end !important;
+  font-size: 13px;
+  color: #ff6a00;
+  margin-top: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.forgot:hover {
+  text-decoration: underline;
+  color: #e65c00;
 }

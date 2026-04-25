@@ -1,27 +1,36 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-
+import dotenv from "dotenv";
 import authRoutes from "./routes/auth.js";
+
+dotenv.config(); // 🔥 phải để lên trên
 
 const app = express();
 
-// cho phép nhận JSON từ frontend
+// middleware
 app.use(express.json());
 
-// cho phép React gọi API
-app.use(cors());
+// 🔥 CORS chuẩn
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+);
 
-// gắn route
+// routes
 app.use("/api/auth", authRoutes);
 
-// kết nối MongoDB
+// 🔥 MongoDB từ env
 mongoose
-  .connect("mongodb://127.0.0.1:27017/order-food")
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log(err));
 
-// chạy server
-app.listen(5000, () => {
-  console.log("Server chạy ở http://localhost:5000");
+// 🔥 port động
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server chạy ở port ${PORT}`);
 });

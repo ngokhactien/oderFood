@@ -7,6 +7,7 @@ import Cart from "../pages/Cart";
 import ProductCard from "../pages/ProductCard";
 import AuthPage from "../pages/AuthPage";
 import Profile from "../pages/Profile";
+import ResetPassword from "../components/account/ResetPassword";
 
 const router = createBrowserRouter([
   {
@@ -22,9 +23,10 @@ const router = createBrowserRouter([
       { path: "login", element: <AuthPage mode="login" /> },
       { path: "register", element: <AuthPage mode="register" /> },
       { path: "forgot-password", element: <AuthPage mode="forgot" /> },
+      { path: "reset-password", element: <ResetPassword /> },
 
       // INFO
-      { path: "info", element: <Profile mode="forgot" /> },
+      { path: "info", element: <Profile /> },
     ],
   },
   //   {

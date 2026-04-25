@@ -5,10 +5,9 @@ const addressSchema = new mongoose.Schema(
   {
     fullName: { type: String, required: true }, // tên người nhận
     phone: { type: String, required: true },
-    street: { type: String, required: true }, // số nhà, đường
+    address: { type: String, required: true }, // số nhà, đường
     ward: String,
     district: String,
-    city: String,
     isDefault: { type: Boolean, default: false }, // địa chỉ mặc định
   },
   { _id: true }, // mỗi address có id riêng
@@ -33,6 +32,9 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+     // 🔥 THÊM 2 FIELD NÀY
+    resetToken: String,
+    resetTokenExpire: Date,
   },
   {
     timestamps: true, // createdAt, updatedAt
@@ -52,14 +54,12 @@ export default mongoose.model("User", userSchema);
 //     {
 //       "fullName": "Tiến",
 //       "phone": "0901234567",
-//       "street": "123 Lê Lợi",
-//       "city": "HCM"
+//       "address": "123 Lê Lợi",
 //     },
 //     {
 //       "fullName": "Tiến",
 //       "phone": "0908888888",
-//       "street": "456 Trần Hưng Đạo",
-//       "city": "Hà Nội"
+//       "address": "456 Trần Hưng Đạo",
 //     }
 //   ]
 // }
