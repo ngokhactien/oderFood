@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.js";
+import productRoutes from "./routes/product.js";
 
 dotenv.config(); // 🔥 phải để lên trên
 
@@ -21,6 +22,7 @@ app.use(
 
 // routes
 app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
 
 // 🔥 MongoDB từ env
 mongoose

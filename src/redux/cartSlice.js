@@ -10,8 +10,9 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const product = action.payload;
+
       const existingItem = state.items.find(
-        (item) => item.id === product.id
+        (item) => item._id === product._id
       );
 
       if (existingItem) {
@@ -23,20 +24,20 @@ const cartSlice = createSlice({
 
     removeItem: (state, action) => {
       state.items = state.items.filter(
-        (item) => item.id !== action.payload
+        (item) => item._id !== action.payload
       );
     },
 
     increaseQty: (state, action) => {
       const item = state.items.find(
-        (i) => i.id === action.payload
+        (i) => i._id === action.payload
       );
       if (item) item.quantity += 1;
     },
 
     decreaseQty: (state, action) => {
       const item = state.items.find(
-        (i) => i.id === action.payload
+        (i) => i._id === action.payload
       );
       if (item && item.quantity > 1) {
         item.quantity -= 1;
@@ -45,7 +46,10 @@ const cartSlice = createSlice({
 
     updateQuantity: (state, action) => {
       const { id, quantity } = action.payload;
-      const item = state.items.find((i) => i.id === id);
+
+      const item = state.items.find(
+        (i) => i._id === id
+      );
 
       if (!item) return;
 
@@ -71,4 +75,4 @@ export const {
   clearCart,
 } = cartSlice.actions;
 
-export default cartSlice.reducer; // 👈 QUAN TRỌNG
+export default cartSlice.reducer;

@@ -63,9 +63,9 @@ const CartDetail = ({
           const finalPrice = getFinalPrice(item);
 
           return (
-            <div className="cart__item" key={item.id + item.size}>
+            <div className="cart__item" key={item._id + item.size}>
               {/* IMAGE */}
-              <NavLink to={`/product/${item.id}`} className="cart__item-link">
+              <NavLink to={`/product/${item._id}`} className="cart__item-link">
                 <img
                   src={item.image || item.images?.[0]}
                   alt={item.name}
@@ -95,7 +95,7 @@ const CartDetail = ({
               </div>
               {/* QUANTITY */}
               <div className="qty">
-                <button onClick={() => onDecrease(item.id, item.size)}>
+                <button onClick={() => onDecrease(item._id, item.size)}>
                   -
                 </button>
 
@@ -105,11 +105,11 @@ const CartDetail = ({
                   onChange={(e) => {
                     let val = Number(e.target.value);
                     if (!val || val < 1) val = 1;
-                    onChangeQty(item.id, item.size, val);
+                    onChangeQty(item._id, item.size, val);
                   }}
                 />
 
-                <button onClick={() => onIncrease(item.id, item.size)}>
+                <button onClick={() => onIncrease(item._id, item.size)}>
                   +
                 </button>
               </div>
@@ -121,7 +121,7 @@ const CartDetail = ({
               {/* DELETE */}
               <button
                 className="delete"
-                onClick={() => onRemove(item.id, item.size)}
+                onClick={() => onRemove(item._id, item.size)}
               >
                 <ArchiveBoxXMarkIcon className="icon-delete" />
               </button>

@@ -7,10 +7,11 @@ import { calculatePrice } from "../common/calculatePrice";
 import { toast } from "react-toastify";
 
 const CartItem = ({ product, onAdd }) => {
-  const { name, brand, price, discount, id } = product;
+  const { name, brand, price, discount, _id } = product;
 
   // Tính giá sau khi giảm
-  const finalPrice = calculatePrice(price, discount);
+  // const finalPrice = calculatePrice(price, discount);
+  const finalPrice = 10000000;
 
   // Lấy ảnh đầu tiên từ images hoặc fallback về image
   const initialImage = product?.images?.[0] || product?.image || DEFAULT_IMAGE;
@@ -27,13 +28,13 @@ const CartItem = ({ product, onAdd }) => {
 
   // Khi ảnh lỗi, thay bằng ảnh mặc định
   const handleImageError = () => {
-    console.error(`❌ Ảnh lỗi - ID ${id}: ${name}`, initialImage);
+    console.error(`❌ Ảnh lỗi - ID ${_id}: ${name}`, initialImage);
     setImgSrc(DEFAULT_IMAGE);
   };
 
   return (
     <NavLink
-      to={`/product/${id}`}
+      to={`/product/${_id}`}
       state={{ product }} // Truyền object product sang trang chi tiết
       className="card"
     >

@@ -11,16 +11,6 @@ export const createProduct = async (req, res) => {
   }
 };
 
-// ✅ GET ALL
-export const getProducts = async (req, res) => {
-  try {
-    const products = await Product.find().sort({ createdAt: -1 });
-    res.json(products);
-  } catch (err) {
-    res.status(500).json(err.message);
-  }
-};
-
 // ✅ GET ONE
 export const getProductById = async (req, res) => {
   try {
@@ -31,6 +21,16 @@ export const getProductById = async (req, res) => {
   } catch (err) {
     res.status(500).json(err.message);
   }
+};
+
+// lấy 10 sản phẩm
+// GET /api/products?limit=10 
+export const getProducts = async (req, res) => {
+  const limit = parseInt(req.query.limit) || 10;
+
+  const products = await Product.find().limit(limit);
+
+  res.json(products);
 };
 
 // ✅ UPDATE
