@@ -38,6 +38,7 @@
   text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
   transition: var(--transition);
   cursor: pointer;
+  text-decoration: none;
 }
 
 .logo-text:hover {

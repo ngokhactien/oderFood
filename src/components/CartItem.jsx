@@ -11,7 +11,7 @@ const CartItem = ({ product, onAdd }) => {
 
   // Tính giá sau khi giảm
   // const finalPrice = calculatePrice(price, discount);
-  const finalPrice = 10000000;
+  const finalPrice = calculatePrice(price, discount);
 
   // Lấy ảnh đầu tiên từ images hoặc fallback về image
   const initialImage = product?.images?.[0] || product?.image || DEFAULT_IMAGE;
@@ -46,7 +46,7 @@ const CartItem = ({ product, onAdd }) => {
           onError={handleImageError}
           loading="lazy"
         />
-        {discount && <span className="badge">{discount}</span>}
+        {discount && <span className="badge">{discount}%</span>}
       </div>
 
       {/* Thông tin sản phẩm */}

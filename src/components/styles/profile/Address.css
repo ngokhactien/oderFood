@@ -1,0 +1,100 @@
+.address {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+/* HEADER */
+.address__header h2 {
+  margin-bottom: 4px;
+}
+
+.address__header p {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 16px;
+}
+
+/* LIST */
+.address__list {
+  margin-bottom: 20px;
+}
+
+.address__card {
+  border: 1px solid #eee;
+  padding: 14px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.address__card .title {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.address__card .text {
+  font-size: 14px;
+  color: #555;
+}
+
+/* DEFAULT TAG */
+.default {
+  background: #ff6a00;
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+/* ADD FORM */
+.address__add h3 {
+  color: #ff6a00;
+  margin-bottom: 10px;
+}
+
+.address__add label {
+  font-size: 13px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.address__add textarea {
+  width: 100%;
+  min-height: 80px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 10px;
+  resize: none;
+  outline: none;
+}
+
+.address__add textarea:focus {
+  border-color: #ff6a00;
+}
+
+/* BUTTONS */
+.actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+}
+
+.primary {
+  background: #ff6a00;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.outline {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}

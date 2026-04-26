@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 const optionSchema = new mongoose.Schema({
   label: String,
   price: Number,
+  stock: Number, // mỗi size có kho riêng
 });
 
 const productSchema = new mongoose.Schema(
@@ -19,8 +20,9 @@ const productSchema = new mongoose.Schema(
 
     options: [optionSchema],
 
+    views: { type: Number, default: 0 },  // để tính độ hot
     rating: { type: Number, default: 0 },
-    reviews: { type: Number, default: 0 },
+    reviews: { type: Number, default: 0 }, // số người đánh giá 
     sold: { type: Number, default: 0 },
 
     stock: Number,

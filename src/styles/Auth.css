@@ -196,3 +196,22 @@
 .primary:hover {
   background: #e85c1d;
 }
+
+.input-box.error {
+  border: 1px solid red;
+}
+
+/* ===== FORGOT PASSWORD ===== */
+.auth-container .forgot {
+  text-align: end !important;
+  font-size: 13px;
+  color: #ff6a00;
+  margin-top: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.auth-container .forgot:hover {
+  text-decoration: underline;
+  color: #e65c00;
+}

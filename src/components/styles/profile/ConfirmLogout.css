@@ -1,0 +1,81 @@
+.modal_logout {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+
+/* nền mờ */
+.modal_logout .modal__overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* box */
+.modal_logout .modal__box {
+  position: relative;
+  width: 360px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 120px auto;
+  z-index: 2;
+  text-align: center;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal_logout .modal__box h3 {
+  margin-bottom: 8px;
+}
+
+.modal_logout .modal__box p {
+  font-size: 14px;
+  color: #555;
+}
+
+/* actions */
+.modal_logout .modal__actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.modal_logout .outline {
+  flex: 1;
+  border: 1px solid #ddd;
+  background: #fff;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.modal_logout .danger {
+  flex: 1;
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.modal_logout .danger:hover {
+  background: #e60023;
+}
+
+/* animation */
+@keyframes fadeIn {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

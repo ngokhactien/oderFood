@@ -6,10 +6,19 @@ import {
   PencilSquareIcon,
 } from "@heroicons/react/24/outline";
 import "../styles/profile.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import ProfileInfo from "../components/profile/ProfileInfo";
+import Address from "../components/profile/Address";
+import ConfirmLogout from "../components/profile/ConfirmLogout";
+import { logout } from "../redux/authSlice";
 
 export default function Profile() {
   const user = useSelector((state) => state.auth.user);
+  const [tab, setTab] = useState("profile");
+  const [showLogout, setShowLogout] = useState(false);
+  const dispatch = useDispatch();
+
   return (
     <div className="profile">
       {/* LEFT SIDEBAR */}
@@ -23,19 +32,18 @@ export default function Profile() {
         </div>
 
         <ul className="menu">
-          <li className="active">
-            <UserIcon className="icon" />
-            Hồ sơ
+          <li onClick={() => setTab("profile")}>
+            {" "}
+            <UserIcon className="icon" /> Hồ sơ
           </li>
-          <li>
-            <ClipboardDocumentListIcon className="icon" />
-            Đơn mua
+          <li onClick={() => setTab("orders")}>
+            <ClipboardDocumentListIcon className="icon" /> Đơn mua
           </li>
-          <li>
-            <MapPinIcon className="icon" />
-            Địa chỉ
+          <li onClick={() => setTab("address")}>
+            {" "}
+            <MapPinIcon className="icon" /> Địa chỉ
           </li>
-          <li>
+          <li onClick={() => setShowLogout(true)}>
             <ArrowRightOnRectangleIcon className="icon" />
             Đăng xuất
           </li>
@@ -44,59 +52,18 @@ export default function Profile() {
 
       {/* RIGHT CONTENT */}
       <div className="profile__content">
-        <div className="content-header">
-          <div>
-            <h2>Thông tin tài khoản</h2>
-            <p>Quản lý thông tin cá nhân của bạn</p>
-          </div>
-
-          <button className="outline">
-            <PencilSquareIcon className="icon" />
-            Sửa hồ sơ
-          </button>
-        </div>
-
-        <div className="info">
-          <div className="row">
-            <span>Họ tên</span>
-            <span>{user.name}</span>
-          </div>
-
-          <div className="row">
-            <span>Email</span>
-            <span>{user.email}</span>
-          </div>
-
-          <div className="row">
-            <span>Số điện thoại</span>
-            <span>{user.phone}</span>
-          </div>
-
-          <div className="row">
-            <span>Tên tài khoản</span>
-            <span>{user.username}</span>
-          </div>
-
-          <div className="row">
-            <span>Mật khẩu</span>
-            <span>********</span>
-            <button className="link-btn">Thay đổi</button>
-          </div>
-
-          <div className="row">
-            <span>Địa chỉ</span>
-
-            <div>
-              {user.addresses?.map((item) => (
-                <div key={item._id}>
-                  {item.address} ({item.phone})
-                </div>
-              ))}
-            </div>
-            <button className="link-btn">Thêm địa chỉ</button>
-          </div>
-        </div>
+        {tab === "profile" && <ProfileInfo user={user} />}
+        {tab === "address" && <Address addresses={user.addresses} />}
       </div>
+      <ConfirmLogout
+        open={showLogout}
+        onClose={() => setShowLogout(false)}
+        onConfirm={() => {
+          dispatch(logout());
+          localStorage.removeItem("token");
+          // window.location.href = "/"; // hoặc navigate
+        }}
+      />
     </div>
   );
 }

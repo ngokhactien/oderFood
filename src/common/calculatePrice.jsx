@@ -1,10 +1,7 @@
 // Tính giá sau khi giảm
-export const calculatePrice = (oldPrice, discount) => {
+export const calculatePrice = (oldPrice, discount) => {  
   if (!oldPrice || !discount) return oldPrice;
-
-  const percent = parseInt(discount.replace("%", "").replace("-", ""));
-
-  return Math.round(oldPrice * (1 - percent / 100));
+  return Math.round(oldPrice * (1 - discount / 100));
 };
 
 export const calculateFinalPriceWithDiscounts = (oldPrice, discounts = []) => {

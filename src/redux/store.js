@@ -8,3 +8,9 @@ export const store = configureStore({
     auth: authSlice,
   },
 });
+store.subscribe(() => {
+  localStorage.setItem(
+    "cart",
+    JSON.stringify(store.getState().cart.items)
+  );
+});

@@ -4,12 +4,15 @@ import { formatPrice, calculatePrice } from "../../common/calculatePrice";
 import { CalculatorIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 import "../styles/cardDetail/CardDetail.css";
 import { NavLink } from "react-router-dom";
-// ✅ luôn lấy giá cuối cùng
+
+// ✅ luôn lấy giá cuối cùng (có option nếu có)
 const getFinalPrice = (item) => {
+  const basePrice = item.optionPrice || item.price;
+
   if (item.discount) {
-    return calculatePrice(item.price, item.discount);
+    return calculatePrice(basePrice, item.discount);
   }
-  return item.price || 0;
+  return basePrice || 0;
 };
 
 const CartDetail = ({
@@ -21,9 +24,7 @@ const CartDetail = ({
 }) => {
   const [shippingInput, setShippingInput] = useState("0");
 
-  console.log("carts", carts);
-
-  // ✅ subtotal (đã giảm)
+  // ✅ subtotal
   const subtotal = carts.reduce((total, item) => {
     const finalPrice = getFinalPrice(item);
     return total + finalPrice * item.quantity;
@@ -33,22 +34,59 @@ const CartDetail = ({
   const calculateShipping = () => {
     if (!shippingInput) return 0;
 
-    // dạng %
     if (shippingInput.includes("%")) {
       const percent = parseInt(shippingInput.replace("%", ""));
       if (isNaN(percent)) return 0;
       return Math.round((subtotal * percent) / 100);
     }
 
-    // dạng số tiền
     const value = Number(shippingInput);
     return isNaN(value) ? 0 : value;
   };
 
   const shippingFee = calculateShipping();
-
-  // ✅ tổng cuối
   const finalTotal = subtotal + shippingFee;
+
+  // 🔥 CHECKOUT (thêm mới)
+  const handleCheckout = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        alert("Bạn cần đăng nhập");
+        return;
+      }
+
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/orders`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            items: carts,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data);
+        return;
+      }
+
+      alert("Đặt hàng thành công 🎉");
+
+      // 👉 tạm reload (sau có thể dispatch clearCart)
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+      alert("Lỗi server");
+    }
+  };
 
   return (
     <div className="cart">
@@ -63,39 +101,53 @@ const CartDetail = ({
           const finalPrice = getFinalPrice(item);
 
           return (
-            <div className="cart__item" key={item._id + item.size}>
+            <div
+              className="cart__item"
+              key={item.id + (item.option || "default")}
+            >
               {/* IMAGE */}
-              <NavLink to={`/product/${item._id}`} className="cart__item-link">
+              <NavLink
+                to={`/product/${item.id}`}
+                className="cart__item-link"
+              >
                 <img
                   src={item.image || item.images?.[0]}
                   alt={item.name}
                   className="thumb"
                 />
 
-                {/* INFO */}
                 <div className="info">
                   <h4>{item.name}</h4>
                   <div className="size">
-                    Size: <span>{item.size || "Mặc định"}</span>
+                    Size: <span>{item.option || "Mặc định"}</span>
                   </div>
                 </div>
               </NavLink>
-              
+
               {/* PRICE */}
               <div className="price">
                 <p>ĐƠN GIÁ:</p>
 
-                <span className="old-price">{formatPrice(item.price)}</span>
+                <span className="old-price">
+                  {formatPrice(item.price)}
+                </span>
 
-                <span className="new-price">{formatPrice(finalPrice)}</span>
+                <span className="new-price">
+                  {formatPrice(finalPrice)}
+                </span>
 
                 {item.discount && (
-                  <span className="discount">{item.discount}</span>
+                  <span className="discount">{item.discount}%</span>
                 )}
               </div>
+
               {/* QUANTITY */}
               <div className="qty">
-                <button onClick={() => onDecrease(item._id, item.size)}>
+                <button
+                  onClick={() =>
+                    onDecrease(item.id, item.option)
+                  }
+                >
                   -
                 </button>
 
@@ -105,23 +157,34 @@ const CartDetail = ({
                   onChange={(e) => {
                     let val = Number(e.target.value);
                     if (!val || val < 1) val = 1;
-                    onChangeQty(item._id, item.size, val);
+
+                    onChangeQty(item.id, item.option, val);
                   }}
                 />
 
-                <button onClick={() => onIncrease(item._id, item.size)}>
+                <button
+                  onClick={() =>
+                    onIncrease(item.id, item.option)
+                  }
+                >
                   +
                 </button>
               </div>
+
               {/* TOTAL */}
               <div className="total">
                 <p>TỔNG:</p>
-                <span>{formatPrice(finalPrice * item.quantity)}</span>
+                <span>
+                  {formatPrice(finalPrice * item.quantity)}
+                </span>
               </div>
+
               {/* DELETE */}
               <button
                 className="delete"
-                onClick={() => onRemove(item._id, item.size)}
+                onClick={() =>
+                  onRemove(item.id, item.option)
+                }
               >
                 <ArchiveBoxXMarkIcon className="icon-delete" />
               </button>
@@ -154,7 +217,6 @@ const CartDetail = ({
             <span>{formatPrice(subtotal)}</span>
           </div>
 
-          {/* INPUT SHIP */}
           <div className="row">
             <span>Phí vận chuyển:</span>
             <input
@@ -165,7 +227,6 @@ const CartDetail = ({
             />
           </div>
 
-          {/* HIỂN THỊ SHIP */}
           <div className="row">
             <span>Phí ship:</span>
             <span>{formatPrice(shippingFee)}</span>
@@ -178,8 +239,14 @@ const CartDetail = ({
             <span>{formatPrice(finalTotal)}</span>
           </div>
 
-          <button className="btn-cod">Thanh Toán COD</button>
-          <button className="btn-momo">Thanh Toán MoMo</button>
+          {/* 🔥 GẮN CHECKOUT */}
+          <button className="btn-cod" onClick={handleCheckout}>
+            Thanh Toán COD
+          </button>
+
+          <button className="btn-momo">
+            Thanh Toán MoMo
+          </button>
 
           <p className="secure">Giao dịch bảo mật & an toàn</p>
         </div>

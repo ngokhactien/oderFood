@@ -10,7 +10,6 @@ import menuItems from "../../data/menuHeader";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import UserMenu from "./UserMenu";
 
 const Header = () => {
@@ -19,15 +18,12 @@ const Header = () => {
   const [lang, setLang] = useState("EN");
   const user = useSelector((state) => state.auth.user);
 
-  const dispatch = useDispatch();
-  // Tính tổng số lượng sản phẩm
-  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   return (
     <header className="header">
       <div className="header-top">
         <div className="header-container">
           <div className="header-logo">
-            <span className="logo-text">Tiến NK</span>
+            <NavLink to={'/'} className="logo-text">Tiến NK</NavLink>
           </div>
 
           <nav className="nav-menu">
@@ -75,7 +71,7 @@ const Header = () => {
             <div className="cart-wrapper">
               <NavLink to="/cart" className="cart-icon-link">
                 <ShoppingCartIcon className="icon" />
-                <span className="cart-badge">{cartCount}</span>
+                <span className="cart-badge">{cartItems.length}</span>
               </NavLink>
 
               {/* DROPDOWN */}
@@ -110,7 +106,7 @@ const Header = () => {
                     </NavLink>
                   ))}
                 <div className="cart-footer">
-                  <span>{cartCount} Thêm Hàng Vào Giỏ</span>
+                  <span>{cartItems.length} Thêm Hàng Vào Giỏ</span>
                   <NavLink to="/cart">
                     <button>Xem Giỏ Hàng</button>
                   </NavLink>

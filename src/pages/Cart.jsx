@@ -12,23 +12,21 @@ const Cart = () => {
   const carts = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
 
-  const onChangeQty = (id, quantity) => {
-    dispatch(updateQuantity({ id, quantity }));
+  const onChangeQty = (id, option, quantity) => {
+    dispatch(updateQuantity({ id, option, quantity }));
   };
 
-  const onRemoveItem = (id) => {
-    dispatch(removeItem(id));
+  const onRemoveItem = (id, option) => {
+    dispatch(removeItem({ id, option }));
     toast.success("Xóa khỏi giỏ hàng thành công!");
   };
 
-  const onIncrease = (id) => {
-    dispatch(increaseQty(id));
-    toast.info("Đã tăng số lượng");
+  const onIncrease = (id, option) => {
+    dispatch(increaseQty({ id, option }));
   };
 
-  const onDecrease = (id) => {
-    dispatch(decreaseQty(id));
-    toast.info("Đã giảm số lượng");
+  const onDecrease = (id, option) => {
+    dispatch(decreaseQty({ id, option }));
   };
 
   return (

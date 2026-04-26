@@ -15,7 +15,13 @@ const Home = () => {
   const [products, setProducts] = useState([]);
 
   const handleAdd = (product) => {
-    dispatch(addToCart(product));
+    dispatch(
+      addToCart({
+        ...product,
+        id: product._id, // 🔥 FIX
+        option: "default", // hoặc size nếu có
+      }),
+    );
   };
 
   // 🔥 gọi API
@@ -26,8 +32,6 @@ const Home = () => {
         const res = await fetch(
           `${import.meta.env.VITE_API_URL}/api/products?limit=10`,
         );
-
-
         const data = await res.json();
         setProducts(data);
       } catch (err) {
