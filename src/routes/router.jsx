@@ -12,6 +12,8 @@ import ResetPassword from "../components/account/ResetPassword";
 // chặn quyền truy cập
 import ProtectedRoute from "./ProtectedRoute";
 import AuthRoute from "./AuthRoute";
+import Address from "../components/profile/Address";
+import ProfileInfo from "../components/profile/ProfileInfo";
 
 const router = createBrowserRouter([
   {
@@ -59,13 +61,28 @@ const router = createBrowserRouter([
       },
 
       // ✅ phải login mới vào được
+      // PROFILE
       {
-        path: "info",
+        path: "",
         element: (
           <ProtectedRoute>
             <Profile />
           </ProtectedRoute>
         ),
+        children: [
+          {
+            path: "info",
+            element: <ProfileInfo />,
+          },
+          {
+            path: "address",
+            element: <Address />,
+          },
+          // {
+          //   path: "orders",
+          //   element: <Orders />,
+          // },
+        ],
       },
     ],
   },

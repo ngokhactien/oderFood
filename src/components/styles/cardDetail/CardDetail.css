@@ -248,11 +248,19 @@
   margin-bottom: 12px;
 }
 
-.row {
+.cart__right .row {
   display: flex;
   justify-content: space-between;
-  margin: 10px 0;
+  margin: 2rem 0;
   font-size: 14px;
+}
+
+.cart__right .row span:nth-child(2){
+ text-align: end;
+}
+
+.cart__right .row input {
+  margin-left: auto;
 }
 
 .total-price {
@@ -260,7 +268,7 @@
   justify-content: space-between;
   font-weight: bold;
   color: #ff6a00;
-  margin: 15px 0;
+  margin: 1.5rem 0;
 }
 
 /* INPUT */

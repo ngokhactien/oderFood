@@ -40,6 +40,16 @@
   color: #555;
 }
 
+.card-textarea {
+  width: 100%;
+    min-height: 80px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px;
+    resize: none;
+    outline: none;
+}
+
 /* DEFAULT TAG */
 .default {
   background: #ff6a00;
@@ -80,6 +90,7 @@
   margin-top: 12px;
   display: flex;
   gap: 10px;
+  justify-content: end;
 }
 
 .primary {
@@ -89,6 +100,7 @@
   padding: 10px 14px;
   border-radius: 6px;
   cursor: pointer;
+  width: auto;
 }
 
 .outline {
@@ -97,4 +109,48 @@
   padding: 10px 14px;
   border-radius: 6px;
   cursor: pointer;
+}
+
+.address__add input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 8px 0 12px;
+  font-size: 14px;
+}
+
+.address__add input:focus,
+.address__add textarea:focus {
+  border-color: #ff6a00;
+  outline: none;
+}
+
+/* EDIT UPDATE */
+.address__actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.address__actions .icon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.icon.edit {
+  color: #1890ff;
+}
+
+.icon.edit:hover {
+  transform: scale(1.1);
+}
+
+.icon.delete {
+  color: #ff4d4f;
+}
+
+.icon.delete:hover {
+  transform: scale(1.1);
 }

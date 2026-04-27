@@ -1,7 +1,14 @@
+import React, { useState } from "react";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
+import ChangePasswordModal from "./ChangePasswordModal";
 import "../styles/profile/ProfileInfo.css";
 
-export default function ProfileInfo({user}) {
+export default function ProfileInfo() {
+  const user = useSelector((state) => state.auth.user);
+  const defaultAddress = user.addresses?.find((item) => item.isDefault);
+  const [showChangePassword, setShowChangePassword] = useState(false);
 
   return (
     <div className="profile__content">
@@ -41,22 +48,37 @@ export default function ProfileInfo({user}) {
         <div className="row">
           <span>Mật khẩu</span>
           <span>********</span>
-          <button className="link-btn">Thay đổi</button>
+          <button
+            className="link-btn"
+            onClick={() => setShowChangePassword(true)}
+          >
+            Thay đổi
+          </button>
         </div>
 
         <div className="row">
           <span>Địa chỉ</span>
 
           <div>
-            {user.addresses?.map((item) => (
-              <div key={item._id}>
-                {item.address} ({item.phone})
+            {defaultAddress ? (
+              <div>
+                {defaultAddress.fullName}({defaultAddress.phone})
+                <p>{defaultAddress.address}</p>
               </div>
-            ))}
+            ) : (
+              <span>Chưa có địa chỉ</span>
+            )}
           </div>
-          <button className="link-btn">Thêm địa chỉ</button>
+
+          <NavLink to="/address" className="link-btn">
+            Thêm địa chỉ
+          </NavLink>
         </div>
       </div>
+      <ChangePasswordModal
+        open={showChangePassword}
+        onClose={() => setShowChangePassword(false)}
+      />
     </div>
   );
 }

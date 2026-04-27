@@ -5,8 +5,7 @@
 
 .product-detail {
   background: #f5f5f5;
-  padding: 3% 0 40px; /* tránh header fixed */
-  min-height: 100vh;
+  padding: 3% 0 0; /* tránh header fixed */
   font-family: Arial, sans-serif;
 }
 

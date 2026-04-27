@@ -1,4 +1,4 @@
-import "../styles/profile/ConfirmLogout.css";
+import "../styles/profile/Confirm.css";
 
 export default function ConfirmLogout({ open, onClose, onConfirm }) {
   if (!open) return null;

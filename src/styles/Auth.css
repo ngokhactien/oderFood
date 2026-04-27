@@ -182,7 +182,7 @@
   cursor: pointer;
 }
 
-.primary {
+.auth .primary {
   width: 100%;
   background: #ff6a2a;
   color: #fff;
@@ -193,7 +193,7 @@
   cursor: pointer;
 }
 
-.primary:hover {
+.auth .primary:hover {
   background: #e85c1d;
 }
 

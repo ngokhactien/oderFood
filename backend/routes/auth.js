@@ -1,16 +1,30 @@
 import express from "express";
-import { register, login, forgotPassword, resetPassword } from "../controllers/authController.js";
+import {
+  register,
+  login,
+  forgotPassword,
+  resetPassword,
+  addAddress,
+  deleteAddress,
+  updateAddress,
+  changePassword,
+} from "../controllers/authController.js";
+import { verifyToken } from "../middleware/auth.js";
 
 const router = express.Router();
 
-// POST /api/auth/register
+// AUTH
 router.post("/register", register);
-
-// POST /api/auth/login
 router.post("/login", login);
-
-// POST /api/auth/forgot
 router.post("/forgot", forgotPassword);
-
 router.post("/reset-password", resetPassword);
+
+// ADDRESS
+router.post("/address", verifyToken, addAddress);
+router.delete("/address/:id", verifyToken, deleteAddress);
+router.put("/address/:id", verifyToken, updateAddress);
+
+// pass
+router.post("/change-password", verifyToken, changePassword);
+
 export default router;

@@ -186,3 +186,156 @@ export const resetPassword = async (req, res) => {
     res.status(500).json("Lỗi server");
   }
 };
+
+// khi đã đăng nhập
+// POST /api/auth/change-password
+export const changePassword = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const { oldPassword, newPassword } = req.body;
+
+    // ✅ validate
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json("Thiếu dữ liệu");
+    }
+
+    if (newPassword.length < 6) {
+      return res
+        .status(400)
+        .json("Mật khẩu mới phải >= 6 ký tự");
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json("User không tồn tại");
+    }
+
+    // 🔥 VERIFY OLD PASSWORD
+    const isMatch = await bcrypt.compare(
+      oldPassword,
+      user.password
+    );
+
+    if (!isMatch) {
+      return res.status(400).json("Mật khẩu cũ không đúng");
+    }
+
+    // ❌ tránh đổi giống mật khẩu cũ
+    const isSame = await bcrypt.compare(
+      newPassword,
+      user.password
+    );
+
+    if (isSame) {
+      return res
+        .status(400)
+        .json("Mật khẩu mới không được trùng mật khẩu cũ");
+    }
+
+    // 🔥 HASH PASSWORD MỚI
+    const hashed = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashed;
+
+    await user.save();
+
+    res.json({
+      message: "Đổi mật khẩu thành công",
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json("Lỗi server");
+  }
+};
+
+// thêm địa chỉ user
+// POST /api/auth/address
+export const addAddress = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    let { fullName, phone, address } = req.body;
+
+    // ✅ validate
+    if (!fullName || !phone || !address) {
+      return res.status(400).json("Thiếu thông tin");
+    }
+
+    fullName = fullName.trim();
+    phone = phone.trim();
+    address = address.trim();
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json("User không tồn tại");
+    }
+
+    const exists = user.addresses.find(
+      (item) =>
+        item.fullName === fullName &&
+        item.phone === phone &&
+        item.address === address,
+    );
+
+    if (exists) {
+      return res.status(400).json("Địa chỉ đã tồn tại");
+    }
+
+    // 🔥 LIMIT ADDRESS
+    const MAX_ADDRESS = 5;
+
+    if (user.addresses.length >= MAX_ADDRESS) {
+      return res
+        .status(400)
+        .json(`Chỉ được thêm tối đa ${MAX_ADDRESS} địa chỉ`);
+    }
+
+    // ✅ nếu chưa có địa chỉ → set mặc định
+    const isFirst = user.addresses.length === 0;
+
+    user.addresses.push({
+      fullName,
+      phone,
+      address,
+      isDefault: isFirst,
+    });
+
+    await user.save();
+
+    res.json({
+      message: "Thêm địa chỉ thành công",
+      addresses: user.addresses,
+    });
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+};
+
+export const deleteAddress = async (req, res) => {
+  const user = await User.findById(req.user.id);
+
+  user.addresses = user.addresses.filter(
+    (a) => a._id.toString() !== req.params.id
+  );
+
+  await user.save();
+
+  res.json({ addresses: user.addresses });
+};
+
+export const updateAddress = async (req, res) => {
+  const user = await User.findById(req.user.id);
+
+  const address = user.addresses.id(req.params.id);
+
+  if (!address) return res.status(404).json("Không tìm thấy");
+
+  address.address = req.body.address;
+
+  await user.save();
+
+  res.json({ addresses: user.addresses });
+};
