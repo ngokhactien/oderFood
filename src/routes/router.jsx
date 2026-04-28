@@ -14,6 +14,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import AuthRoute from "./AuthRoute";
 import Address from "../components/profile/Address";
 import ProfileInfo from "../components/profile/ProfileInfo";
+import CheckoutPage from "../pages/CheckoutPage";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
       { path: "product/:id", element: <Detail /> },
       { path: "cart", element: <Cart /> },
       { path: "product-card/:id", element: <ProductCard /> }, //mang về
+      { path: "checkout", element: <CheckoutPage /> }, //thanh toán momo
 
       // ❌ nếu đã login thì không vào được
       {

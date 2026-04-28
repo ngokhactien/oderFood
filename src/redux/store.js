@@ -8,6 +8,7 @@ export const store = configureStore({
     auth: authSlice,
   },
 });
+
 store.subscribe(() => {
   localStorage.setItem(
     "cart",

@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs"; // ✅ chỉ 1 lần thôi
 import jwt from "jsonwebtoken";
 import { randomBytes } from "crypto";
 import nodemailer from "nodemailer";
+import cloudinary from "../config/cloudinary.js";
+import streamifier from "streamifier";
 
 // ĐĂNG KÝ
 export const register = async (req, res) => {
@@ -338,4 +340,127 @@ export const updateAddress = async (req, res) => {
   await user.save();
 
   res.json({ addresses: user.addresses });
+};
+
+// PUT /api/auth/address/default/:id
+export const setDefaultAddress = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    if (!user) return res.status(404).json("User không tồn tại");
+
+    // 🔥 reset tất cả về false
+    user.addresses.forEach((addr) => {
+      addr.isDefault = false;
+    });
+
+    // 🔥 set cái được chọn
+    const selected = user.addresses.id(req.params.id);
+
+    if (!selected) {
+      return res.status(404).json("Không tìm thấy địa chỉ");
+    }
+
+    selected.isDefault = true;
+
+    await user.save();
+
+    res.json({
+      message: "Đã cập nhật địa chỉ mặc định",
+      addresses: user.addresses,
+    });
+  } catch (err) {
+    res.status(500).json("Lỗi server");
+  }
+};
+
+// PUT /api/auth/profile
+export const updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const { name, email, phone, username } = req.body;
+
+    const user = await User.findById(userId);
+
+    if (!user) return res.status(404).json("User không tồn tại");
+
+    // update field
+    user.name = name || user.name;
+    user.email = email || user.email;
+    user.phone = phone || user.phone;
+    user.username = username || user.username;
+
+    await user.save();
+
+    const { password, ...userData } = user._doc;
+
+    res.json({
+      message: "Cập nhật thành công",
+      user: userData,
+    });
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+}
+
+// POST /api/upload/avatar
+export const uploadAvatar1 = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json("Chưa có file");
+    }
+
+    // 🔥 upload stream lên cloudinary
+    const streamUpload = (req) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: "avatars",
+            transformation: [{ width: 300, height: 300, crop: "fill" }],
+          },
+          (error, result) => {
+            if (result) resolve(result);
+            else reject(error);
+          }
+        );
+
+        streamifier.createReadStream(req.file.buffer).pipe(stream);
+      });
+    };
+
+    const result = await streamUpload(req);
+
+    // 🔥 update user
+    const user = await User.findById(req.user.id);
+    user.avatar = result.secure_url;
+
+    await user.save();
+
+    res.json({
+      message: "Upload avatar thành công",
+      avatar: result.secure_url,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json("Lỗi upload avatar");
+  }
+};
+
+// remove ảnh set mặc định
+export const removeAvatar = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    user.avatar = "https://i.imgur.com/6VBx3io.png"; // ảnh mặc định
+
+    await user.save();
+
+    res.json({
+      message: "Đã reset avatar",
+      avatar: user.avatar,
+    });
+  } catch (err) {
+    res.status(500).json("Lỗi server");
+  }
 };

@@ -346,6 +346,22 @@ input:checked + .slider:before {
   background: #e56a2e;
 }
 
+/* avatar */
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.header-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
   .header-search {

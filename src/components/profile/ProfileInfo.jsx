@@ -4,11 +4,70 @@ import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import ChangePasswordModal from "./ChangePasswordModal";
 import "../styles/profile/ProfileInfo.css";
+import EditProfileModal from "./EditProfileModal";
+import { useDispatch } from "react-redux";
+import { updateUser } from "../../redux/authSlice";
+import ConfirmRemoveAvatar from "./ConfirmRemoveAvatar";
 
 export default function ProfileInfo() {
   const user = useSelector((state) => state.auth.user);
+  const token = useSelector((state) => state.auth.token);
   const defaultAddress = user.addresses?.find((item) => item.isDefault);
   const [showChangePassword, setShowChangePassword] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [previewAvatar, setPreviewAvatar] = useState(user.avatar || "");
+  const [showRemove, setShowRemove] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const handleUpload = async (file) => {
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/avatar`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    const data = await res.json();
+
+    // UI
+    setPreviewAvatar(data.avatar);
+
+    // 🔥 UPDATE REDUX + localStorage
+    dispatch(
+      updateUser({
+        ...user,
+        avatar: data.avatar,
+      }),
+    );
+  };
+
+  // set mặc định ảnh
+  const handleRemoveAvatar = async () => {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/avatar`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json();
+
+    setPreviewAvatar(data.avatar);
+
+    dispatch(
+      updateUser({
+        ...user,
+        avatar: data.avatar,
+      }),
+    );
+
+    setShowRemove(false);
+  };
 
   return (
     <div className="profile__content">
@@ -18,13 +77,46 @@ export default function ProfileInfo() {
           <p>Quản lý thông tin cá nhân của bạn</p>
         </div>
 
-        <button className="outline">
+        <button className="outline" onClick={() => setShowEdit(true)}>
           <PencilSquareIcon className="icon" />
           Sửa hồ sơ
         </button>
       </div>
 
       <div className="info">
+        <div className="row avatar-row">
+          <span>Ảnh đại diện</span>
+
+          <div className="avatar-box">
+            <div className="avatar-wrapper">
+              <img
+                src={previewAvatar || "https://i.imgur.com/6VBx3io.png"}
+                alt=""
+              />
+
+              {/* ❌ NÚT XOÁ */}
+              {previewAvatar && (
+                <button
+                  className="remove-avatar"
+                  onClick={() => setShowRemove(true)}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            {/* UPLOAD */}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                handleUpload(file);
+              }}
+            />
+          </div>
+        </div>
         <div className="row">
           <span>Họ tên</span>
           <span>{user.name}</span>
@@ -78,6 +170,12 @@ export default function ProfileInfo() {
       <ChangePasswordModal
         open={showChangePassword}
         onClose={() => setShowChangePassword(false)}
+      />
+      <EditProfileModal open={showEdit} onClose={() => setShowEdit(false)} />
+      <ConfirmRemoveAvatar
+        open={showRemove}
+        onClose={() => setShowRemove(false)}
+        onConfirm={handleRemoveAvatar}
       />
     </div>
   );

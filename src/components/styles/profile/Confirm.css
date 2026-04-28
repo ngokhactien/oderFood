@@ -154,6 +154,44 @@
   font-weight: 500;
 }
 
+.avatar-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 70px;
+  height: 70px;
+}
+
+.avatar-wrapper img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ❌ nút xoá */
+.remove-avatar {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.remove-avatar:hover {
+  background: #e60023;
+}
+
 /* animation */
 @keyframes fadeIn {
   from {

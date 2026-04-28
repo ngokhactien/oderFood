@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { updateAddresses } from "../../redux/authSlice";
 import { toast } from "react-toastify";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import DeleteConfirmModal from "./DeleteConfirmModal";
 
 export default function Address() {
   const addresses = useSelector((state) => state.auth.user?.addresses || []);
@@ -18,6 +19,18 @@ export default function Address() {
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [editAddress, setEditAddress] = useState("");
+  const [showDelete, setShowDelete] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+
+  const sortedAddresses = [...addresses].sort(
+    (a, b) => b.isDefault - a.isDefault,
+  );
+
+  // 🔥 map index gốc
+const indexMap = {};
+addresses.forEach((item, i) => {
+  indexMap[item._id] = i + 1;
+});
 
   // ✅ FIX BUG: sync user → input
   useEffect(() => {
@@ -87,14 +100,12 @@ export default function Address() {
   };
 
   // DELETE ADDRESS
-  const handleDelete = async (id) => {
-    if (!window.confirm("Xoá địa chỉ này?")) return;
-
+  const handleDelete = async () => {
     try {
       const token = localStorage.getItem("token");
 
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/address/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/auth/address/${deleteId}`,
         {
           method: "DELETE",
           headers: {
@@ -109,6 +120,9 @@ export default function Address() {
 
       dispatch(updateAddresses(data.addresses));
       toast.success("Đã xoá địa chỉ");
+
+      setShowDelete(false);
+      setDeleteId(null);
     } catch (err) {
       toast.error("Lỗi server");
     }
@@ -150,6 +164,32 @@ export default function Address() {
     }
   };
 
+  const handleSetDefault = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/address/default/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) return toast.warning(data);
+
+      dispatch(updateAddresses(data.addresses));
+
+      toast.success("Đã đặt làm mặc định");
+    } catch (err) {
+      toast.error("Lỗi server");
+    }
+  };
+
   return (
     <div className="address">
       {/* HEADER */}
@@ -162,16 +202,17 @@ export default function Address() {
       <div className="address__list">
         {addresses.length === 0 && <p>Chưa có địa chỉ</p>}
 
-        {addresses.map((item, index) => (
-          <div className="address__card" key={item._id || index}>
-            <div style={{width: '70%'}}>
-              <p className="title">ĐỊA CHỈ {index + 1}</p>
+        {sortedAddresses.map((item) => (
+          <div className="address__card" key={item._id}>
+            <div style={{ width: "70%" }}>
+              {/* ✅ FIX INDEX */}
+              <p className="title">ĐỊA CHỈ {indexMap[item._id]}</p>
 
               <p className="text">
                 <strong>{item.fullName}</strong> ({item.phone})
               </p>
 
-              {/* 🔥 EDIT MODE */}
+              {/* EDIT MODE */}
               {editingId === item._id ? (
                 <>
                   <textarea
@@ -201,9 +242,9 @@ export default function Address() {
               )}
             </div>
 
-            {/* 🔥 ACTION ICON */}
+            {/* ACTION */}
             <div className="address__actions">
-              {/* EDIT luôn có */}
+              {/* EDIT */}
               <PencilSquareIcon
                 className="icon edit"
                 onClick={() => {
@@ -212,15 +253,28 @@ export default function Address() {
                 }}
               />
 
-              {/* ❌ KHÔNG PHẢI DEFAULT → cho delete */}
+              {/* DELETE nếu không phải default */}
               {!item.isDefault && (
                 <TrashIcon
                   className="icon delete"
-                  onClick={() => handleDelete(item._id)}
+                  onClick={() => {
+                    setDeleteId(item._id);
+                    setShowDelete(true);
+                  }}
                 />
               )}
 
-              {item.isDefault && <span className="default">Mặc định</span>}
+              {/* DEFAULT */}
+              {item.isDefault ? (
+                <span className="default">Mặc định</span>
+              ) : (
+                <button
+                  className="set-default"
+                  onClick={() => handleSetDefault(item._id)}
+                >
+                  Đặt mặc định
+                </button>
+              )}
             </div>
           </div>
         ))}
@@ -266,6 +320,11 @@ export default function Address() {
           </button>
         </div>
       </div>
+      <DeleteConfirmModal
+        open={showDelete}
+        onClose={() => setShowDelete(false)}
+        onConfirm={handleDelete}
+      />
     </div>
   );
 }

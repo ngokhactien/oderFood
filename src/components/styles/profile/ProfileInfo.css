@@ -75,3 +75,28 @@
   margin: 0;
   color: #888;
 }
+/* avatar */
+.avatar-row {
+  align-items: flex-start;
+}
+
+.avatar-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.avatar-box img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar-link {
+  padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 8px 0 12px;
+    font-size: 14px;
+}

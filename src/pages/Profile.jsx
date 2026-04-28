@@ -28,7 +28,12 @@ export default function Profile() {
       {/* SIDEBAR */}
       <div className="profile__sidebar">
         <div className="user">
-          <div className="avatar"></div>
+          <div className="avatar">
+            <img
+              src={user?.avatar || "https://i.imgur.com/6VBx3io.png"}
+              alt="avatar"
+            />
+          </div>
           <div>
             <h4>{user?.name}</h4>
             <p className="role">{user?.role}</p>

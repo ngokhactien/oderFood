@@ -154,3 +154,17 @@
 .icon.delete:hover {
   transform: scale(1.1);
 }
+
+/* set mặc đinh */
+.set-default {
+  background: #fff;
+  border: 1px solid #ff4d4f;
+  color: #ff4d4f;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.set-default:hover {
+  background: #fff1f0;
+}

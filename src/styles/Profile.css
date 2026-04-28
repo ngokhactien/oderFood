@@ -68,3 +68,21 @@
   margin-bottom: 0.5rem;
 }
 
+/* avatar */
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile {
+  background-size: cover;
+  background-position: center;
+}

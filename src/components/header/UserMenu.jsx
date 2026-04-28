@@ -15,7 +15,11 @@ export default function UserMenu({ user }) {
 
   return (
     <div className="header-action user-menu">
-      <UserIcon className="icon" />
+      <img
+        src={user.avatar || "https://i.imgur.com/6VBx3io.png"}
+        alt="avatar"
+        className="header-avatar"
+      />
       <span>{user.username || user.name}</span>
 
       <div className="user-dropdown">

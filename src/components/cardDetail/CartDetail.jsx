@@ -244,9 +244,9 @@ const CartDetail = ({
             Thanh Toán COD
           </button>
 
-          <button className="btn-momo">
-            Thanh Toán MoMo
-          </button>
+          <NavLink to={'/checkout'} className="btn-momo">
+            Thanh toán Momo
+          </NavLink>
 
           <p className="secure">Giao dịch bảo mật & an toàn</p>
         </div>

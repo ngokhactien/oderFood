@@ -26,13 +26,18 @@ const userSchema = new mongoose.Schema(
     // 🔥 nhiều địa chỉ
     addresses: [addressSchema],
 
+    avatar: {
+      type: String,
+      default: "https://i.imgur.com/6VBx3io.png", // ảnh mặc định
+    },
+
     // 🔥 role (phân quyền)
     role: {
       type: String,
       enum: ["user", "admin"],
       default: "user",
     },
-     // 🔥 THÊM 2 FIELD NÀY
+    // 🔥 THÊM 2 FIELD NÀY
     resetToken: String,
     resetTokenExpire: Date,
   },
@@ -42,7 +47,6 @@ const userSchema = new mongoose.Schema(
 );
 
 export default mongoose.model("User", userSchema);
-
 
 // {
 //   "name": "Tiến",

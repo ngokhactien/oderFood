@@ -29,6 +29,13 @@ const authSlice = createSlice({
       }
     },
 
+    updateUser: (state, action) => {
+      state.user = action.payload;
+
+      // 🔥 QUAN TRỌNG
+      localStorage.setItem("user", JSON.stringify(action.payload));
+    },
+
     // LOGOUT
     logout: (state) => {
       state.user = null;
@@ -37,10 +44,15 @@ const authSlice = createSlice({
       localStorage.removeItem("user");
       localStorage.removeItem("token");
     },
+
+    updateUser: (state, action) => {
+      state.user = action.payload;
+      localStorage.setItem("user", JSON.stringify(action.payload));
+    },
   },
 });
 
-export const { loginSuccess, logout, updateAddresses } =
+export const { loginSuccess, logout, updateAddresses, updateUser } =
   authSlice.actions;
 
 export default authSlice.reducer;
