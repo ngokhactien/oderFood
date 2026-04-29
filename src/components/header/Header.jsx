@@ -16,63 +16,92 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 const Header = () => {
-  // Lấy danh sách sản phẩm trong giỏ hàng
   const cartItems = useSelector((state) => state.cart.items);
-  const [lang, setLang] = useState("EN");
   const user = useSelector((state) => state.auth.user);
 
   const [keyword, setKeyword] = useState("");
+  const [lang, setLang] = useState("EN");
+
   const inputRef = useRef();
+  const searchRef = useRef();
+  const lastKeyword = useRef("");
+
   const navigate = useNavigate();
   const location = useLocation();
 
+  // ✅ SEARCH
+  const handleSearch = () => {
+    const params = new URLSearchParams(location.search);
+
+    if (keyword.trim()) {
+      params.set("q", keyword);
+    } else {
+      params.delete("q");
+    }
+
+    params.set("page", 1); // reset page
+
+    navigate(`/product-card?${params.toString()}`);
+  };
+
+  // ✅ CLEAR
   const handleClear = () => {
     setKeyword("");
 
-    const params = new URLSearchParams(window.location.search);
-
-    params.delete("q"); // ❌ xoá search
+    const params = new URLSearchParams(location.search);
+    params.delete("q");
+    params.set("page", 1);
 
     navigate(`/product-card?${params.toString()}`);
 
     inputRef.current.focus();
   };
 
-  const handleSearch = () => {
-    if (!keyword.trim()) return;
-
-    const params = new URLSearchParams(window.location.search);
-
-    params.set("q", keyword); // thêm q
-    // 👇 giữ nguyên category nếu có
-
-    navigate(`/product-card?${params.toString()}`);
-  };
-
+  // ✅ ENTER
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       handleSearch();
     }
   };
 
-  // update lại input search
+  // ✅ sync input với URL
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const q = params.get("q") || "";
-
-    setKeyword(q);
+    setKeyword(params.get("q") || "");
   }, [location.search]);
+
+  // ✅ click outside → search (không spam)
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(e.target)
+      ) {
+        if (keyword !== lastKeyword.current) {
+          lastKeyword.current = keyword;
+          handleSearch();
+        }
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
+  }, [keyword]);
 
   return (
     <header className="header">
       <div className="header-top">
         <div className="header-container">
+
+          {/* LOGO */}
           <div className="header-logo">
-            <NavLink to={"/"} className="logo-text">
+            <NavLink to="/" className="logo-text">
               Tiến NK
             </NavLink>
           </div>
 
+          {/* MENU */}
           <nav className="nav-menu">
             <ul className="menu-header">
               {menuItems.map((item, index) => (
@@ -85,7 +114,8 @@ const Header = () => {
             </ul>
           </nav>
 
-          <div className="header-search">
+          {/* SEARCH */}
+          <div className="header-search" ref={searchRef}>
             <input
               type="text"
               placeholder="Tìm kiếm"
@@ -96,7 +126,6 @@ const Header = () => {
               ref={inputRef}
             />
 
-            {/* 👉 NÚT X (chỉ hiện khi có chữ) */}
             {keyword && (
               <button className="clear-btn" onClick={handleClear}>
                 <XMarkIcon className="clear-icon" />
@@ -108,8 +137,10 @@ const Header = () => {
             </button>
           </div>
 
+          {/* ACTIONS */}
           <div className="header-actions">
-            {/* Cụm Ngôn ngữ và Toggle */}
+
+            {/* LANG */}
             <div className="language-selector">
               <div className="lang-wrapper">
                 <div className="language-selector">
@@ -129,52 +160,15 @@ const Header = () => {
               </label>
             </div>
 
+            {/* CART */}
             <div className="cart-wrapper">
               <NavLink to="/cart" className="cart-icon-link">
                 <ShoppingCartIcon className="icon" />
                 <span className="cart-badge">{cartItems.length}</span>
               </NavLink>
-
-              {/* DROPDOWN */}
-              <div className="cart-dropdown">
-                <h4>Sản phẩm mới thêm</h4>
-                {[...cartItems]
-                  .reverse()
-                  .slice(0, 5)
-                  .map((item, index) => (
-                    <NavLink
-                      to={`/product/${item.id}`}
-                      className="cart-item"
-                      key={index}
-                    >
-                      <img
-                        src={item.images || "https://via.placeholder.com/40"}
-                        alt=""
-                        onError={(e) => {
-                          e.target.src = "https://via.placeholder.com/40";
-                        }}
-                      />
-
-                      <div className="cart-info">
-                        <p className="name">{item.name}</p>
-                        {/* 👉 SỐ LƯỢNG */}
-                        <span className="quantity">x{item.quantity}</span>
-                      </div>
-
-                      <span className="price">
-                        {item.price.toLocaleString("vi-VN")}đ
-                      </span>
-                    </NavLink>
-                  ))}
-                <div className="cart-footer">
-                  <span>{cartItems.length} Thêm Hàng Vào Giỏ</span>
-                  <NavLink to="/cart">
-                    <button>Xem Giỏ Hàng</button>
-                  </NavLink>
-                </div>
-              </div>
             </div>
 
+            {/* USER */}
             {user ? (
               <UserMenu user={user} />
             ) : (
@@ -183,6 +177,7 @@ const Header = () => {
                 <span>Đăng nhập</span>
               </NavLink>
             )}
+
           </div>
         </div>
       </div>

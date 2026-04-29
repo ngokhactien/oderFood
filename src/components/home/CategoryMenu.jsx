@@ -10,7 +10,7 @@ const CategoryMenu = () => {
       <div className="category-container">
         {categories.map((item) => (
           <NavLink
-            to={`/product-card/${item.id}`}   // 👉 truyền id qua URL
+            to={`/product-card?category=${item.value}&page=1`}
             key={item.id}
             className="category-card"
           >

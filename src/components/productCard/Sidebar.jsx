@@ -44,6 +44,9 @@ export default function Sidebar() {
                 params.set("category", item.value);
               }
 
+              // 🔥 QUAN TRỌNG
+              params.set("page", 1);
+
               navigate(`/product-card?${params.toString()}`);
             }}
             className={`menu-item ${
@@ -111,6 +114,9 @@ export default function Sidebar() {
 
             if (maxPrice < 5000000) params.set("maxPrice", maxPrice);
             else params.delete("maxPrice");
+
+            // 🔥 thêm dòng này
+            params.set("page", 1);
 
             navigate(`/product-card?${params.toString()}`);
           }}

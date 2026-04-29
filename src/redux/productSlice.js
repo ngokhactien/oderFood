@@ -27,9 +27,9 @@ const productSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload.data;
-        state.page = action.payload.page;
-        state.totalPages = action.payload.totalPages;
+        state.items = action.payload?.data || [];
+        state.page = action.payload?.page || 1;
+        state.totalPages = action.payload?.totalPages || 1;
       });
   },
 });

@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import Home from "../pages/Home";
-import TableOrder from "../pages/TableOrder";
 import Detail from "../pages/Detail";
 import Cart from "../pages/Cart";
 import ProductCard from "../pages/ProductCard";
@@ -15,6 +14,7 @@ import AuthRoute from "./AuthRoute";
 import Address from "../components/profile/Address";
 import ProfileInfo from "../components/profile/ProfileInfo";
 import CheckoutPage from "../pages/CheckoutPage";
+import POSLayout from "../pages/POSLayout";
 
 const router = createBrowserRouter([
   {
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <Home /> },
-      { path: "table-order", element: <TableOrder /> },
+      { path: "table-order", element: <POSLayout /> },
       { path: "product/:id", element: <Detail /> },
       { path: "cart", element: <Cart /> },
       { path: "product-card", element: <ProductCard /> }, //mang về

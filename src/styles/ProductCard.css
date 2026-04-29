@@ -1,8 +1,28 @@
+/* ===== LAYOUT ===== */
 .product-card {
-  display: flex !important;
+  display: flex;
   gap: 20px;
+}
+
+.product-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .products {
   width: 100%;
+}
+
+/* ===== SKELETON LOADING ===== */
+.skeleton-card {
+  height: 220px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #eee, #ddd, #eee);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: 200px 0; }
 }
