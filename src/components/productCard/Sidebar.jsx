@@ -1,21 +1,31 @@
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "../styles/productCard/Sidebar.css";
 import categories from "../../data/sidebar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Sidebar() {
   const navigate = useNavigate();
-  const { id } = useParams(); // 🔥 lấy id từ URL
+  const location = useLocation();
 
-  const activeIndex = Number(id) || 0;
+  const params = new URLSearchParams(location.search);
+  const currentCategory = params.get("category") || "all";
 
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(5000000);
 
   const formatPrice = (price) => price.toLocaleString("vi-VN");
-
   const parsePrice = (value) => Number(value.replace(/\D/g, ""));
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+
+    const min = params.get("minPrice");
+    const max = params.get("maxPrice");
+
+    setMinPrice(min ? Number(min) : 0);
+    setMaxPrice(max ? Number(max) : 5000000);
+  }, [location.search]);
 
   return (
     <div className="sidebar">
@@ -25,18 +35,27 @@ export default function Sidebar() {
         {categories.map((item, index) => (
           <li
             key={index}
-            onClick={() => navigate(`/product-card/${index}`)} // 🔥 đổi URL
+            onClick={() => {
+              const params = new URLSearchParams(location.search);
+
+              if (item.value === "all") {
+                params.delete("category");
+              } else {
+                params.set("category", item.value);
+              }
+
+              navigate(`/product-card?${params.toString()}`);
+            }}
             className={`menu-item ${
-              activeIndex === index ? "active" : ""
+              currentCategory === item.value ? "active" : ""
             }`}
           >
             <ChevronRightIcon className="icon" />
-            {item}
+            {item.label}
           </li>
         ))}
       </ul>
 
-      {/* FILTER GIÁ */}
       <div className="price-filter">
         <h3 className="title">TÌM THEO GIÁ</h3>
 
@@ -85,7 +104,15 @@ export default function Sidebar() {
         <button
           className="btn-filter"
           onClick={() => {
-            console.log("Filter:", minPrice, maxPrice);
+            const params = new URLSearchParams(location.search);
+
+            if (minPrice > 0) params.set("minPrice", minPrice);
+            else params.delete("minPrice");
+
+            if (maxPrice < 5000000) params.set("maxPrice", maxPrice);
+            else params.delete("maxPrice");
+
+            navigate(`/product-card?${params.toString()}`);
           }}
         >
           LỌC GIÁ

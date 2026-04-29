@@ -83,8 +83,7 @@ const CartDetail = ({
       // 👉 tạm reload (sau có thể dispatch clearCart)
       window.location.reload();
     } catch (err) {
-      console.log(err);
-      alert("Lỗi server");
+      alert("Lỗi server"+ err);
     }
   };
 

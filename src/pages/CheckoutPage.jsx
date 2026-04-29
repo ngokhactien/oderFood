@@ -10,20 +10,21 @@ export default function CheckoutPage() {
   const cartItems = useSelector((state) => state.cart.items);
 
   const [selectedAddress, setSelectedAddress] = useState(
-    user?.addresses?.find((a) => a.isDefault) || user?.addresses?.[0]
+    user?.addresses?.find((a) => a.isDefault) || user?.addresses?.[0],
   );
 
   const total = cartItems.reduce(
-    (sum, item) =>
-      sum + (item.option?.price || item.price) * item.quantity,
-    0
+    (sum, item) => sum + (item.option?.price || item.price) * item.quantity,
+    0,
   );
 
   return (
     <div className="checkout-container">
       <div className="checkout-header">
         <h2>Thanh Toán Đơn Hàng</h2>
-        <NavLink to={'/cart'} className="back">← Quay lại giỏ hàng</NavLink>
+        <NavLink to={"/cart"} className="back">
+          ← Quay lại giỏ hàng
+        </NavLink>
       </div>
 
       <div className="checkout-grid">
@@ -31,6 +32,7 @@ export default function CheckoutPage() {
           addresses={user?.addresses || []}
           selectedAddress={selectedAddress}
           setSelectedAddress={setSelectedAddress}
+          user={user}
         />
 
         <OrderSummary cartItems={cartItems} total={total} />

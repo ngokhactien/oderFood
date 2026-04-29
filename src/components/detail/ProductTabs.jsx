@@ -25,7 +25,6 @@ const ProductTabs = () => {
 
   const handleSubmit = () => {
     if (!content.trim()) return alert("Nhập nội dung!");
-    console.log("Comment:", content);
     setContent("");
   };
 

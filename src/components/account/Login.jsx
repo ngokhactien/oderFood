@@ -50,8 +50,7 @@ export default function Login({ setMode }) {
       toast.success("Đăng nhập thành công 🎉");
       navigate("/");
     } catch (err) {
-      console.log(err);
-      toast.error("Lỗi server");
+      toast.error("Lỗi server"+ err);
     }
   };
 

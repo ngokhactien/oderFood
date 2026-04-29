@@ -25,7 +25,7 @@ const router = createBrowserRouter([
       { path: "table-order", element: <TableOrder /> },
       { path: "product/:id", element: <Detail /> },
       { path: "cart", element: <Cart /> },
-      { path: "product-card/:id", element: <ProductCard /> }, //mang về
+      { path: "product-card", element: <ProductCard /> }, //mang về
       { path: "checkout", element: <CheckoutPage /> }, //thanh toán momo
 
       // ❌ nếu đã login thì không vào được

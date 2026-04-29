@@ -35,12 +35,7 @@ export default function Forgot({ setMode }) {
         toast.error(data);
         return;
       }
-
-      // 👉 hiện link (demo)
-      console.log("RESET LINK:", data.link);
-
       toast.success("Đã gửi link reset (check console)");
-
     } catch (err) {
       toast.error("Lỗi server");
     } finally {

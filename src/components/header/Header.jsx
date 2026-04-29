@@ -9,8 +9,11 @@ import "../styles/header/Header.css";
 import menuItems from "../../data/menuHeader";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import UserMenu from "./UserMenu";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Header = () => {
   // Lấy danh sách sản phẩm trong giỏ hàng
@@ -18,12 +21,56 @@ const Header = () => {
   const [lang, setLang] = useState("EN");
   const user = useSelector((state) => state.auth.user);
 
+  const [keyword, setKeyword] = useState("");
+  const inputRef = useRef();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleClear = () => {
+    setKeyword("");
+
+    const params = new URLSearchParams(window.location.search);
+
+    params.delete("q"); // ❌ xoá search
+
+    navigate(`/product-card?${params.toString()}`);
+
+    inputRef.current.focus();
+  };
+
+  const handleSearch = () => {
+    if (!keyword.trim()) return;
+
+    const params = new URLSearchParams(window.location.search);
+
+    params.set("q", keyword); // thêm q
+    // 👇 giữ nguyên category nếu có
+
+    navigate(`/product-card?${params.toString()}`);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  // update lại input search
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const q = params.get("q") || "";
+
+    setKeyword(q);
+  }, [location.search]);
+
   return (
     <header className="header">
       <div className="header-top">
         <div className="header-container">
           <div className="header-logo">
-            <NavLink to={'/'} className="logo-text">Tiến NK</NavLink>
+            <NavLink to={"/"} className="logo-text">
+              Tiến NK
+            </NavLink>
           </div>
 
           <nav className="nav-menu">
@@ -39,12 +86,26 @@ const Header = () => {
           </nav>
 
           <div className="header-search">
-            <MagnifyingGlassIcon className="search-icon" />
             <input
               type="text"
               placeholder="Tìm kiếm"
               className="search-input"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              onKeyDown={handleKeyDown}
+              ref={inputRef}
             />
+
+            {/* 👉 NÚT X (chỉ hiện khi có chữ) */}
+            {keyword && (
+              <button className="clear-btn" onClick={handleClear}>
+                <XMarkIcon className="clear-icon" />
+              </button>
+            )}
+
+            <button className="search-btn" onClick={handleSearch}>
+              <MagnifyingGlassIcon className="search-icon" />
+            </button>
           </div>
 
           <div className="header-actions">

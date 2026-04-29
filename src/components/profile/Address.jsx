@@ -92,8 +92,7 @@ addresses.forEach((item, i) => {
 
       toast.success("Thêm địa chỉ thành công 🎉");
     } catch (err) {
-      console.log(err);
-      toast.error("Lỗi server");
+      toast.error("Lỗi server"+ err);
     } finally {
       setLoading(false);
     }

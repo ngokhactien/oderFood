@@ -6,9 +6,13 @@ import {
   getProductById,
   updateProduct,
   deleteProduct,
+  searchProducts,
 } from "../controllers/productController.js";
 
 const router = express.Router();
+
+// search
+router.get("/search", searchProducts);
 
 router.post("/", createProduct);
 router.get("/", getProducts);

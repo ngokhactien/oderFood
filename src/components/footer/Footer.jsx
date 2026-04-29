@@ -1,4 +1,5 @@
-import "./styles/Footer.css";
+import '../styles/footer/Footer.css';
+
 import {
   MapPinIcon,
   PhoneIcon,

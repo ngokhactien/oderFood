@@ -46,12 +46,12 @@ const CartItem = ({ product, onAdd }) => {
           onError={handleImageError}
           loading="lazy"
         />
-        {discount && <span className="badge">{discount}%</span>}
+        {discount > 0 && <span className="badge">{discount}%</span>}
       </div>
 
       {/* Thông tin sản phẩm */}
       <div className="card-body">
-        <p className="brand">{brand}</p>
+        <p className="category">{product.category}</p>
         <h4 className="name">{name}</h4>
 
         <div className="price-box">

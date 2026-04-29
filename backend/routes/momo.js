@@ -1,5 +1,5 @@
 import express from "express";
-import { createPayment, handleIPN } from "../controllers/momo.js";
+import { createPayment, handleIPN } from "../controllers/momoController.js";
 
 const router = express.Router();
 

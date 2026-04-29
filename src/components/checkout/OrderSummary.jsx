@@ -11,7 +11,7 @@ export default function OrderSummary({ cartItems, total }) {
           <div key={index} className="order-item">
             <span>
               {index + 1}. {item.name}
-              {item.option && ` (${item.option.label})`}
+              {/* {item.option && ` (${item.option.label})`} */}
             </span>
 
             <span className="price">

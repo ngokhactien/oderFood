@@ -49,8 +49,6 @@ export default function ChangePasswordModal({ open, onClose }) {
       const data = await res.json();
 
       if (!res.ok) {
-        console.log("ok");
-
         // 🔥 bắt lỗi mật khẩu cũ
         if (data === "Mật khẩu cũ không đúng") {
           setOldError(data);
@@ -63,8 +61,7 @@ export default function ChangePasswordModal({ open, onClose }) {
       toast.success("Đổi mật khẩu thành công 🎉");
       onClose();
     } catch (err) {
-      console.log(err);
-      toast.error("Lỗi server");
+      toast.error("Lỗi server"+ err);
     }
   };
 

@@ -1,12 +1,16 @@
 import CartItem from "./CartItem";
 import "./styles/productList.css";
 
-const ProductList = ({ products, onAdd }) => {
+const ProductList = ({ products = [], onAdd }) => {
   return (
     <div className="product-list">
-      {products.map((item) => (
-        <CartItem key={item._id} product={item} onAdd={onAdd} />
-      ))}
+      {products.length > 0 ? (
+        products.map((item) => (
+          <CartItem key={item._id} product={item} onAdd={onAdd} />
+        ))
+      ) : (
+        <p style={{display:'block'}}>Không có sản phẩm</p>
+      )}
     </div>
   );
 };

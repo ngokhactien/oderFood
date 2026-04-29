@@ -1,4 +1,4 @@
-import "../styles/CustomerReviews.css";
+import "../styles/home/CustomerReviews.css";
 
 const reviews = [
   {

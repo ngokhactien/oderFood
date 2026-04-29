@@ -1,5 +1,5 @@
-import './styles/CategoryMenu.css';
-import categories from '../data/categories';
+import '../styles/home/CategoryMenu.css';
+import categories from '../../data/categories';
 import { NavLink } from "react-router-dom";
 
 const CategoryMenu = () => {

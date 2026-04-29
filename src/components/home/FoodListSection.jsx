@@ -1,4 +1,4 @@
-import "../styles/FoodListSection.css";
+import "../styles/home/FoodListSection.css";
 import foodListSection from "../../data/foodListSection.js";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 

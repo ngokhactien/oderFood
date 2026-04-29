@@ -1,6 +1,6 @@
 const menuItems = [
   { name: "Trang chủ", link: "/" },
-  { name: "Mang về", link: "/product-card/0" },
+  { name: "Mang về", link: "/product-card" },
   { name: "Tại bàn", link: "/table-order" },
 ];
 

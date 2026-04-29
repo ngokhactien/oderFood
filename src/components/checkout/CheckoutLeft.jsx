@@ -4,6 +4,7 @@ export default function CheckoutLeft({
   addresses,
   selectedAddress,
   setSelectedAddress,
+  user,
 }) {
   const [form, setForm] = useState({
     fullName: "",
@@ -19,11 +20,12 @@ export default function CheckoutLeft({
       setForm((prev) => ({
         ...prev,
         fullName: selectedAddress.fullName || "",
+        email: user?.email || "", // 👈 lấy từ user
         phone: selectedAddress.phone || "",
         address: selectedAddress.address || "",
       }));
     }
-  }, [selectedAddress]);
+  }, [selectedAddress, user]);
 
   return (
     <div className="checkout-left">
@@ -38,7 +40,7 @@ export default function CheckoutLeft({
 
         <div className="form-group">
           <label>Email *</label>
-          <input value={form.email} placeholder="Nhập email..." />
+          <input value={form.email} readOnly />
         </div>
       </div>
 
@@ -57,12 +59,11 @@ export default function CheckoutLeft({
       {/* NOTE */}
       <div className="form-group">
         <label>Ghi chú đơn hàng</label>
-        <input
+        <textarea
+          className="note-input"
           placeholder="Ghi chú về đơn hàng (tùy chọn)"
           value={form.note}
-          onChange={(e) =>
-            setForm({ ...form, note: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, note: e.target.value })}
         />
       </div>
 
@@ -74,9 +75,7 @@ export default function CheckoutLeft({
           {addresses.map((item) => (
             <button
               key={item._id}
-              className={
-                selectedAddress?._id === item._id ? "active" : ""
-              }
+              className={selectedAddress?._id === item._id ? "active" : ""}
               onClick={() => setSelectedAddress(item)}
             >
               {item.isDefault ? "🏠" : "📍"} {item.fullName}
