@@ -1,0 +1,175 @@
+/* ===== ORDER TABS ===== */
+.order-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  background: #fafafa;
+
+  min-width: 0;
+}
+
+/* SCROLL AREA */
+.tabs-scroll {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+
+  overflow-x: auto;
+  min-width: 0;
+  scroll-behavior: smooth;
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.tabs-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* TAB */
+.tab {
+  padding: 5px 10px;
+  background: #e5e9f2;
+  border-radius: 8px;
+  font-size: 12px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  cursor: pointer;
+
+  flex-shrink: 0;
+}
+
+.tab.active {
+  background: #1976d2;
+  color: #fff;
+}
+
+/* FIXED TAB */
+.tab.fixed {
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+/* CLOSE */
+.close {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* ===== HEADER ===== */
+.order-header {
+  padding: 10px;
+}
+
+.order-header input {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+/* ===== LIST ===== */
+.order-list {
+  padding: 10px;
+  overflow-y: auto;
+  min-height: 20rem;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* QTY */
+.qty {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.qty button {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+}
+
+.qty button:hover {
+  background: #eef4ff;
+}
+
+.qty span {
+  min-width: 18px;
+  text-align: center;
+}
+
+/* PRICE */
+.unit {
+  width: 70px;
+  text-align: right;
+  font-size: 12px;
+  color: #666;
+}
+
+.price {
+  width: 80px;
+  text-align: right;
+  font-weight: 500;
+}
+
+/* DELETE */
+.delete {
+  cursor: pointer;
+  padding: 4px;
+}
+
+.delete:hover {
+  background: #f1f1f1;
+  border-radius: 6px;
+}
+
+/* ===== FOOTER ===== */
+.order-footer {
+  padding: 10px;
+  border-top: 1px solid #eee;
+}
+
+.total {
+  margin-bottom: 8px;
+}
+
+.btn-pay {
+  display: flex;
+  gap: 10px;
+}
+
+.pay {
+  flex: 1;
+  padding: 10px;
+  background: #2e7d32;
+  color: #fff;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.notify {
+  flex: 1;
+  padding: 10px;
+  background: #90caf9;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}

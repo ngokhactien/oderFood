@@ -1,19 +1,10 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import '../styles/table/OrderPanel.css'
 
-export default function OrderPanel() {
-  const [tabs, setTabs] = useState([
-    {
-      id: 1,
-      name: "1",
-      items: [
-        { id: 1, name: "Phomai dây Nga", price: 125000, qty: 1 }
-      ]
-    }
-  ]);
-
-  const [activeTab, setActiveTab] = useState(1);
-
-  const currentTab = tabs.find((t) => t.id === activeTab);
+export default function OrderPanel({ tabs, setTabs, activeTab, setActiveTab }) {
+  const currentTab = tabs.find((t) => t.id === activeTab) || { items: [] };
+  const tabRefs = useRef({});
+  const tabsContainerRef = useRef(null);
 
   const updateQty = (id, delta) => {
     setTabs((prev) =>
@@ -22,13 +13,11 @@ export default function OrderPanel() {
           ? {
               ...tab,
               items: tab.items.map((i) =>
-                i.id === id
-                  ? { ...i, qty: Math.max(1, i.qty + delta) }
-                  : i
-              )
+                i.id === id ? { ...i, qty: Math.max(1, i.qty + delta) } : i,
+              ),
             }
-          : tab
-      )
+          : tab,
+      ),
     );
   };
 
@@ -37,76 +26,95 @@ export default function OrderPanel() {
       prev.map((tab) =>
         tab.id === activeTab
           ? { ...tab, items: tab.items.filter((i) => i.id !== id) }
-          : tab
-      )
+          : tab,
+      ),
     );
   };
 
-  const addTab = () => {
-    const newId = Date.now();
-    setTabs([
-      ...tabs,
-      { id: newId, name: tabs.length + 1, items: [] }
-    ]);
-    setActiveTab(newId);
-  };
-
   const removeTab = (id) => {
-    if (tabs.length === 1) return;
+    const tab = tabs.find((t) => t.id === id);
+
+    if (tab?.fixed) return;
 
     const newTabs = tabs.filter((t) => t.id !== id);
     setTabs(newTabs);
 
-    if (activeTab === id) {
+    if (activeTab === id && newTabs.length) {
       setActiveTab(newTabs[0].id);
     }
   };
 
-  const total = currentTab.items.reduce(
-    (s, i) => s + i.price * i.qty,
-    0
-  );
+  const total = currentTab.items.reduce((s, i) => s + i.price * i.qty, 0);
+
+  // scroll khi tab nhiều quá
+  useEffect(() => {
+    const el = tabRefs.current[activeTab];
+
+    if (!el) return;
+
+    requestAnimationFrame(() => {
+      el.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
+    });
+  }, [activeTab, tabs]);
 
   return (
     <div className="orders">
-
-      {/* ===== TABS ===== */}
       <div className="order-tabs">
-        {tabs.map((tab) => (
-          <div
-            key={tab.id}
-            className={`tab ${activeTab === tab.id ? "active" : ""}`}
-            onClick={() => setActiveTab(tab.id)}
-          >
-            {tab.name}
-            <span
-              className="close"
-              onClick={(e) => {
-                e.stopPropagation();
-                removeTab(tab.id);
-              }}
+        {/* 👉 TAB CỐ ĐỊNH */}
+        {tabs
+          .filter((t) => t.fixed)
+          .map((tab) => (
+            <div
+              key={tab.id}
+              className={`tab fixed ${activeTab === tab.id ? "active" : ""}`}
+              onClick={() => setActiveTab(tab.id)}
             >
-              ×
-            </span>
-          </div>
-        ))}
+              {tab.name}
+            </div>
+          ))}
 
-        <div className="tab add" onClick={addTab}>
-          +
+        {/* 👉 VÙNG SCROLL */}
+        <div className="tabs-scroll" ref={tabsContainerRef}>
+          {tabs
+            .filter((t) => !t.fixed)
+            .map((tab) => (
+              <div
+                key={tab.id}
+                ref={(el) => (tabRefs.current[tab.id] = el)}
+                className={`tab ${activeTab === tab.id ? "active" : ""}`}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                {tab.name}
+
+                <span
+                  className="close"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeTab(tab.id);
+                  }}
+                >
+                  ×
+                </span>
+              </div>
+            ))}
         </div>
       </div>
 
-      {/* ===== HEADER ===== */}
       <div className="order-header">
         <input placeholder="Tìm khách hàng" />
       </div>
 
-      {/* ===== LIST ===== */}
       <div className="order-list">
         {currentTab.items.map((item, i) => (
           <div key={item.id} className="item">
             <div className="left">
-              <b>{i + 1}. {item.name}</b>
+              <b>
+                {i + 1}. {item.name}
+              </b>
             </div>
 
             <div className="right">
@@ -116,18 +124,13 @@ export default function OrderPanel() {
                 <button onClick={() => updateQty(item.id, 1)}>+</button>
               </div>
 
-              <div className="unit">
-                {item.price.toLocaleString()}
-              </div>
+              <div className="unit">{item.price.toLocaleString()}</div>
 
               <div className="price">
                 {(item.price * item.qty).toLocaleString()}
               </div>
 
-              <div
-                className="delete"
-                onClick={() => removeItem(item.id)}
-              >
+              <div className="delete" onClick={() => removeItem(item.id)}>
                 🗑️
               </div>
             </div>
@@ -135,16 +138,15 @@ export default function OrderPanel() {
         ))}
       </div>
 
-      {/* ===== FOOTER ===== */}
       <div className="order-footer">
         <div className="total">
           Tổng tiền: <b>{total.toLocaleString()}</b>
         </div>
 
-       <div className="btn-pay">
-         <button className="pay">Thanh toán</button>
-        <button className="notify">Thông báo</button>
-       </div>
+        <div className="btn-pay">
+          <button className="pay">Thanh toán</button>
+          <button className="notify">Thông báo</button>
+        </div>
       </div>
     </div>
   );

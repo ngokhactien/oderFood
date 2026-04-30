@@ -5,13 +5,46 @@ import "../styles/POSLayout.css";
 
 export default function POSLayout() {
   const [tab, setTab] = useState("tables");
+  const [activeTab, setActiveTab] = useState("Giao đi");
+  const [tabs, setTabs] = useState([
+    {
+      id: "Giao đi",
+      name: "Giao đi",
+      fixed: true,
+      items: [],
+    },
+  ]);
+
+  const handleSelectTable = (tableName) => {
+    const existed = tabs.find((t) => t.id === tableName);
+
+    if (existed) {
+      setActiveTab(existed.id);
+    } else {
+      const newTab = {
+        id: tableName,
+        name: formatTableName(tableName),
+        items: [],
+      };
+
+      setTabs((prev) => [...prev, newTab]);
+      setActiveTab(tableName);
+    }
+  };
+
+  // format tên tab
+  const formatTableName = (name) => {
+    if (name.startsWith("Bàn ")) {
+      const num = name.replace("Bàn ", "");
+      return `B${num}`; // 👉 B1, B2
+    }
+    return name;
+  };
 
   return (
     <div className="pos-table">
-
       {/* ===== LEFT SIDE ===== */}
       <main className="tables">
-
         {/* TOP TABS */}
         <div className="top-tabs">
           <div
@@ -37,17 +70,20 @@ export default function POSLayout() {
         </div>
 
         {/* CONTENT */}
-        {tab === "tables" && <TableManager />}
+        {tab === "tables" && <TableManager onSelectTable={handleSelectTable} />}
         {tab === "menu" && <div>Menu ở đây</div>}
         {tab === "order" && <div>Order nhanh ở đây</div>}
-
       </main>
 
       {/* ===== RIGHT SIDE ===== */}
       <section className="orders">
-        <OrderPanel />
+        <OrderPanel
+          tabs={tabs}
+          setTabs={setTabs}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
       </section>
-
     </div>
   );
 }

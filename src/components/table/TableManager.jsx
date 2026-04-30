@@ -1,14 +1,36 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import Pagination from "../Pagination";
+import '../styles/table/TableManager.css'
 
-const tableList = [
-  "Giao đi",
-  ...Array.from({ length: 20 }, (_, i) => `Bàn ${i + 1}`),
-  "Phòng VIP 1",
-  "Phòng VIP"
-];
+export default function TableManager({ onSelectTable }) {
+  const [active, setActive] = useState(0);
+  const [tableCount, setTableCount] = useState(50);
+  const fixedTable = "Giao đi";
 
-export default function TableManager() {
-  const [active, setActive] = useState(null);
+  const otherTables = [
+    ...Array.from({ length: tableCount }, (_, i) => `Bàn ${i + 1}`),
+    "Phòng VIP 1",
+    "Phòng VIP",
+  ];
+
+  // pangation
+  const [page, setPage] = useState(1);
+  const pageSize = 35;
+  const totalPages = Math.ceil(otherTables.length / pageSize);
+  const start = (page - 1) * pageSize;
+  const currentTables = otherTables.slice(start, start + pageSize);
+
+  const handlePageChange = (p) => {
+    setPage(p);
+
+    // reset selected về item đầu trang để tránh lệch index
+    setActive("Giao đi");
+    // scroll lên đầu
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <div className="table_manager">
@@ -24,24 +46,53 @@ export default function TableManager() {
 
       {/* Filters */}
       <div className="filters">
-        <label><input type="radio" defaultChecked /> Tất cả (32)</label>
-        <label><input type="radio" /> Sử dụng (2)</label>
-        <label><input type="radio" /> Còn trống (30)</label>
+        <label>
+          <input name="tableStatus" type="radio" defaultChecked /> Tất cả (32)
+        </label>
+        <label>
+          <input name="tableStatus" type="radio" /> Sử dụng (2)
+        </label>
+        <label>
+          <input name="tableStatus" type="radio" /> Còn trống (30)
+        </label>
       </div>
 
       {/* Grid */}
       <div className="grid">
-        {tableList.map((name, i) => (
+        {/* 👉 Giao đi luôn đứng đầu */}
+        <div
+          className={`table ${active === "Giao đi" ? "selected" : ""}`}
+          onClick={() => {
+            setActive("Giao đi");
+            onSelectTable("Giao đi");
+          }}
+        >
+          <div className="shape"></div>
+          <span>Giao đi</span>
+        </div>
+
+        {/* 👉 phần paginate */}
+        {currentTables.map((name, i) => (
           <div
             key={i}
-            className={`table ${active === i ? "selected" : ""}`}
-            onClick={() => setActive(i)}
+            className={`table ${active === name ? "selected" : ""}`}
+            onClick={() => {
+              setActive(name);
+              onSelectTable(name);
+            }}
           >
             <div className="shape"></div>
             <span>{name}</span>
           </div>
         ))}
       </div>
+      {totalPages > 1 && (
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   );
 }
