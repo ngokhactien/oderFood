@@ -192,7 +192,7 @@ const CartDetail = ({
         })}
 
         <div className="cart__actions">
-          <NavLink to={"/product-card/0"} className="back">
+          <NavLink to={"/product-card"} className="back">
             Tiếp tục mua sắm
           </NavLink>
         </div>

@@ -1,25 +1,41 @@
+/* ===== LAYOUT ===== */
 .pos-table {
   display: flex;
   height: 100vh;
   font-family: system-ui, sans-serif;
   background: #f6f8fc;
+  gap: 12px;
+  padding: 10px;
 }
 
-/* ===== LEFT: TABLES ===== */
+/* LEFT */
 .tables {
   flex: 1;
-  padding: 12px 16px;
+  background: #fff;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Tabs */
-.tabs {
+/* RIGHT */
+.orders {
+  background: #fff;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* ===== TOP NAV (Phòng bàn | Thực đơn...) ===== */
+.top-tabs {
   display: flex;
   gap: 8px;
-  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  background: #fafafa;
 }
 
-.tabs button {
-  border: none;
+.top-tabs > div {
   padding: 6px 12px;
   background: #e5e9f2;
   border-radius: 8px;
@@ -27,43 +43,63 @@
   font-size: 13px;
 }
 
+.top-tabs > div.active {
+  background: #1976d2;
+  color: #fff;
+}
+
+/* ===== TABLE FILTER TABS ===== */
+.table_manager {
+  padding: 1.5rem 1.4rem 2rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.tabs button {
+  border: none;
+  padding: 5px 10px;
+  background: #eef1f6;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
 .tabs .active {
   background: #1976d2;
   color: #fff;
 }
 
-.search {
-  margin-left: auto;
-}
-
-/* Filters */
+/* ===== FILTER RADIO ===== */
 .filters {
-  margin: 10px 0;
   display: flex;
-  gap: 16px;
-  font-size: 13px;
+  gap: 14px;
+  font-size: 12px;
   color: #555;
+  padding: 2rem 0;
 }
 
-/* Grid bàn */
+/* ===== TABLE GRID ===== */
 .grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 18px;
+  gap: 14px;
 }
 
 .table {
   text-align: center;
-  cursor: pointer;
   font-size: 12px;
+  cursor: pointer;
 }
 
 .shape {
-  width: 58px;
+  width: 56px;
   height: 34px;
-  border: 2px solid #64b5f6;
+  border: 2px solid #90caf9;
   border-radius: 8px;
-  margin: 0 auto 5px;
+  margin: 0 auto 4px;
 }
 
 .table.selected .shape {
@@ -71,16 +107,41 @@
   border-color: #1976d2;
 }
 
-/* ===== RIGHT: ORDER ===== */
-.orders {
-  width: 360px;
-  background: #fff;
-  border-left: 1px solid #ddd;
+/* ===== ORDER TABS ===== */
+.order-tabs {
   display: flex;
-  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  border-bottom: 1px solid #eee;
+  background: #fafafa;
 }
 
-/* Header */
+.tab {
+  padding: 5px 10px;
+  background: #e5e9f2;
+  border-radius: 8px;
+  font-size: 12px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: #1976d2;
+  color: #fff;
+}
+
+.tab.add {
+  font-weight: bold;
+}
+
+.close {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* ===== ORDER HEADER ===== */
 .order-header {
   padding: 10px;
 }
@@ -88,11 +149,11 @@
 .order-header input {
   width: 100%;
   padding: 6px 8px;
-  border: 1px solid #ccc;
   border-radius: 6px;
+  border: 1px solid #ddd;
 }
 
-/* List */
+/* ===== ORDER LIST ===== */
 .order-list {
   flex: 1;
   padding: 10px;
@@ -102,38 +163,67 @@
 .item {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
-.item small {
-  color: #888;
-  font-size: 11px;
+/* RIGHT SIDE ITEM */
+.right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-/* Qty */
+/* QTY */
 .qty {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 
 .qty button {
-  width: 24px;
-  height: 24px;
-  border: 1px solid #ccc;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
   background: #fff;
-  border-radius: 5px;
   cursor: pointer;
 }
 
-/* Price */
+.qty button:hover {
+  background: #eef4ff;
+}
+
+.qty span {
+  min-width: 18px;
+  text-align: center;
+}
+
+/* PRICE */
+.unit {
+  width: 70px;
+  text-align: right;
+  font-size: 12px;
+  color: #666;
+}
+
 .price {
   width: 80px;
   text-align: right;
-  font-size: 13px;
+  font-weight: 500;
 }
 
-/* Footer */
+/* DELETE */
+.delete {
+  cursor: pointer;
+  padding: 4px;
+}
+
+.delete:hover {
+  background: #f1f1f1;
+  border-radius: 6px;
+}
+
+/* ===== FOOTER ===== */
 .order-footer {
   padding: 10px;
   border-top: 1px solid #eee;
@@ -141,7 +231,11 @@
 
 .total {
   margin-bottom: 8px;
-  font-size: 14px;
+}
+
+.btn-pay{
+  display: flex;
+  gap: 10px;
 }
 
 .pay {
@@ -149,17 +243,19 @@
   padding: 10px;
   background: #2e7d32;
   color: #fff;
-  border: none;
   border-radius: 8px;
+  border: none;
   margin-bottom: 6px;
   cursor: pointer;
+  flex: 1;
 }
 
 .notify {
   width: 100%;
   padding: 10px;
   background: #90caf9;
-  border: none;
   border-radius: 8px;
+  border: none;
   cursor: pointer;
+    flex: 1;
 }

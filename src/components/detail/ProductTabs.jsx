@@ -29,7 +29,7 @@ const ProductTabs = () => {
   };
 
   return (
-    <div className="tabs">
+    <div className="product-tabs">
       {/* HEADER */}
       <div className="tabs__header">
         <button

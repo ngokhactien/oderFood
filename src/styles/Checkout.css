@@ -131,7 +131,7 @@
   font-size: 12px;
 }
 
-.order-list {
+.checkout-container .order-list {
   border-bottom: 1px solid #eee;
   padding-bottom: 10px;
 }
@@ -192,7 +192,7 @@
 .note-input {
   width: 100%;
   min-height: 90px;
-  resize: none;          /* không cho kéo */
+  resize: none; /* không cho kéo */
   background: #fff;
   border-radius: 6px;
   border: 1px solid #ddd;

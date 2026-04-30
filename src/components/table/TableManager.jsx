@@ -11,7 +11,7 @@ export default function TableManager() {
   const [active, setActive] = useState(null);
 
   return (
-    <>
+    <div className="table_manager">
       {/* Tabs */}
       <div className="tabs">
         <button className="active">Tất cả</button>
@@ -42,6 +42,6 @@ export default function TableManager() {
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 }
