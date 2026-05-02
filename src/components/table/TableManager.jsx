@@ -1,9 +1,9 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Pagination from "../Pagination";
-import '../styles/table/TableManager.css'
+import "../styles/table/TableManager.css";
 
-export default function TableManager({ onSelectTable }) {
-  const [active, setActive] = useState(0);
+export default function TableManager({ onSelectTable, activeTable }) {
+  const [active, setActive] = useState("Giao đi");
   const [tableCount, setTableCount] = useState(50);
   const fixedTable = "Giao đi";
 
@@ -31,6 +31,10 @@ export default function TableManager({ onSelectTable }) {
       behavior: "smooth",
     });
   };
+
+  useEffect(() => {
+    setActive(activeTable);
+  }, [activeTable]);
 
   return (
     <div className="table_manager">
@@ -63,7 +67,6 @@ export default function TableManager({ onSelectTable }) {
         <div
           className={`table ${active === "Giao đi" ? "selected" : ""}`}
           onClick={() => {
-            setActive("Giao đi");
             onSelectTable("Giao đi");
           }}
         >
@@ -77,7 +80,6 @@ export default function TableManager({ onSelectTable }) {
             key={i}
             className={`table ${active === name ? "selected" : ""}`}
             onClick={() => {
-              setActive(name);
               onSelectTable(name);
             }}
           >

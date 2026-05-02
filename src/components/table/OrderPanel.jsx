@@ -70,7 +70,7 @@ export default function OrderPanel({ tabs, setTabs, activeTab, setActiveTab }) {
           .map((tab) => (
             <div
               key={tab.id}
-              className={`tab fixed ${activeTab === tab.id ? "active" : ""}`}
+              className={`tab ${activeTab === tab.id ? "active" : ""}`}
               onClick={() => setActiveTab(tab.id)}
             >
               {tab.name}
