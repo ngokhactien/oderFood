@@ -3,6 +3,21 @@ import OrderPanel from "../components/table/OrderPanel";
 import TableManager from "../components/table/TableManager";
 import "../styles/POSLayout.css";
 
+const mockItems = [
+  {
+    id: 1,
+    name: "Cà phê sữa",
+    price: 25000,
+    qty: 1,
+  },
+  {
+    id: 2,
+    name: "Trà đào",
+    price: 30000,
+    qty: 2,
+  },
+];
+
 export default function POSLayout() {
   const [tab, setTab] = useState("tables");
   const [activeTab, setActiveTab] = useState("Giao đi");
@@ -11,7 +26,7 @@ export default function POSLayout() {
       id: "Giao đi",
       name: "Giao đi",
       fixed: true,
-      items: [],
+      items: mockItems.map(i => ({ ...i })),
     },
   ]);
 
@@ -24,7 +39,7 @@ export default function POSLayout() {
       const newTab = {
         id: tableName,
         name: formatTableName(tableName),
-        items: [],
+        items: mockItems.map(i => ({ ...i })),
       };
 
       setTabs((prev) => [...prev, newTab]);
@@ -70,7 +85,7 @@ export default function POSLayout() {
         </div>
 
         {/* CONTENT */}
-        {tab === "tables" && <TableManager onSelectTable={handleSelectTable} />}
+        {tab === "tables" && <TableManager onSelectTable={handleSelectTable} activeTable={activeTab}/>}
         {tab === "menu" && <div>Menu ở đây</div>}
         {tab === "order" && <div>Order nhanh ở đây</div>}
       </main>
