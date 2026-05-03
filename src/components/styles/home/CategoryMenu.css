@@ -6,14 +6,14 @@
   text-align: center;
 }
 
-.menu-title {
+.menu-section .menu-title {
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 30px;
   color: #333;
 }
 
-.category-container {
+.menu-section .category-container {
   display: flex;
   justify-content: center;
   gap: 20px; /* Khoảng cách giữa các ô */

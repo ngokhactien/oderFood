@@ -60,7 +60,7 @@ export const deleteProduct = async (req, res) => {
 // controllers/productController.js
 export const searchProducts = async (req, res) => {
   try {
-    let { q, category, minPrice, maxPrice, page = 1, limit = 12 } = req.query;
+    let { q, category, minPrice, maxPrice, page = 1, limit = 15 } = req.query;
 
     const query = {};
 
@@ -108,6 +108,50 @@ export const searchProducts = async (req, res) => {
     });
   } catch (err) {
     console.log("❌ ERROR:", err); // 👈 BẮT BUỘC
+    res.status(500).json(err.message);
+  }
+};
+
+// search table product
+export const searchTableFood = async (req, res) => {
+  try {
+    let { q, category, page = 1, limit = 12 } = req.query;
+
+    const query = {};
+
+    // 🔍 SEARCH
+    if (q && q.trim() !== "") {
+      query.name = { $regex: q, $options: "i" };
+    }
+
+    // 📂 CATEGORY
+    if (category && category !== "all") {
+      if (category === "pizza-burger") {
+        query.category = { $in: ["pizza", "burger"] };
+      } else {
+        query.category = category;
+      }
+    }
+
+    // 📊 PAGINATION
+    const limitNum = Number(limit) || 10;
+    const pageNum = Number(page) || 1;
+
+    const total = await Product.countDocuments(query);
+
+    const products = await Product.find(query)
+      .skip((pageNum - 1) * limitNum)
+      .limit(limitNum)
+      .sort({ createdAt: -1 });
+
+    res.json({
+      data: products,
+      total,
+      page: pageNum,
+      totalPages: Math.ceil(total / limitNum),
+    });
+  } catch (err) {
+    console.log("❌ ERROR:", err);
     res.status(500).json(err.message);
   }
 };

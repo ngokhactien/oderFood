@@ -2,18 +2,17 @@ import { configureStore } from "@reduxjs/toolkit";
 import cartReducer from "./cartSlice";
 import authSlice from "./authSlice";
 import productReducer from "./productSlice";
+import tableProductReducer from "./tableFoodSlice";
 
 export const store = configureStore({
   reducer: {
     cart: cartReducer,
     auth: authSlice,
-    products: productReducer, // 👈 QUAN TRỌNG
+    products: productReducer,
+    tableProducts: tableProductReducer,
   },
 });
 
 store.subscribe(() => {
-  localStorage.setItem(
-    "cart",
-    JSON.stringify(store.getState().cart.items)
-  );
+  localStorage.setItem("cart", JSON.stringify(store.getState().cart.items));
 });

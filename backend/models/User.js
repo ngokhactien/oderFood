@@ -31,6 +31,25 @@ const userSchema = new mongoose.Schema(
       default: "https://i.imgur.com/6VBx3io.png", // ảnh mặc định
     },
 
+    floors: [
+      {
+        name: { type: String, required: true }, // Lầu 1, Lầu 2
+
+        tables: [
+          {
+            name: { type: String, required: true }, // Bàn 1
+
+            status: {
+              type: String,
+              enum: ["empty", "using", "reserved"],
+              default: "empty",
+            },
+
+            capacity: Number, // optional: số người
+          },
+        ],
+      },
+    ],
     // 🔥 role (phân quyền)
     role: {
       type: String,

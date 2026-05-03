@@ -47,3 +47,36 @@
 .empty-state:hover .empty-icon {
   transform: scale(1.1);
 }
+
+.product-list {
+  display: grid;
+  gap: 16px;
+}
+
+/* SMALL (nhỏ lại ngang) */
+.product-list.small {
+  grid-template-columns: repeat(auto-fill, minmax(8.125rem, 1fr)); /* 130px */
+  gap: 0.625rem; /* 10px */
+}
+
+/* LARGE */
+.product-list.large {
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+}
+
+/* EMPTY */
+.empty-state {
+  width: 100%;
+  height: 18rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #777;
+}
+
+.empty-icon {
+  width: 4rem;
+  height: 4rem;
+  color: #ccc;
+}

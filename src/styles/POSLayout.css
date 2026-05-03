@@ -1,7 +1,7 @@
 /* ===== LAYOUT ===== */
 .pos-table {
   display: flex;
-  height: 100vh;
+  height: 100%;
   font-family: system-ui, sans-serif;
   background: #f6f8fc;
   gap: 12px;
@@ -13,27 +13,37 @@
   flex: 1;
   background: #fff;
   border-radius: 10px;
+  min-width: 0; /* 🔥 BẮT BUỘC */
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 /* RIGHT */
 .orders {
-  flex: 1;
   min-width: 0; /* 🔥 fix overflow */
-  background: #fff;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
+  background: #fff;
+}
+
+.orders-pay {
+  flex: 1;
 }
 
 /* ===== TOP NAV ===== */
+.tables-top {
+ display: flex;
+ background: #fafafa;
+ padding: 1rem;
+ justify-content: space-between;
+}
+
 .top-tabs {
   display: flex;
   gap: 8px;
-  padding: 1rem;
   border-bottom: 1px solid #eee;
-  background: #fafafa;
 }
 
 .top-tabs > div {
@@ -45,6 +55,6 @@
 }
 
 .top-tabs > div.active {
-  background: #1976d2;
+  background: var(--primary-color);
   color: #fff;
 }

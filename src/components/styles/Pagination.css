@@ -4,7 +4,6 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
-  margin-top: 6rem;
   flex-wrap: wrap;
 }
 
@@ -53,9 +52,9 @@
 }
 
 .pagination button {
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .pagination button.active {
-  box-shadow: 0 4px 10px rgba(255,87,34,0.4);
+  box-shadow: 0 4px 10px rgba(255, 87, 34, 0.4);
 }

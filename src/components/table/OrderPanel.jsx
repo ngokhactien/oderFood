@@ -1,10 +1,19 @@
 import { useState, useRef, useEffect } from "react";
-import '../styles/table/OrderPanel.css'
+import "../styles/table/OrderPanel.css";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import Pagination from "../Pagination";
 
 export default function OrderPanel({ tabs, setTabs, activeTab, setActiveTab }) {
   const currentTab = tabs.find((t) => t.id === activeTab) || { items: [] };
   const tabRefs = useRef({});
   const tabsContainerRef = useRef(null);
+
+  const [page, setPage] = useState(1);
+  const pageSize = 6;
+
+  const totalPages = Math.ceil(currentTab.items.length / pageSize);
+  const start = (page - 1) * pageSize;
+  const currentItems = currentTab.items.slice(start, start + pageSize);
 
   const updateQty = (id, delta) => {
     setTabs((prev) =>
@@ -61,6 +70,16 @@ export default function OrderPanel({ tabs, setTabs, activeTab, setActiveTab }) {
     });
   }, [activeTab, tabs]);
 
+  const handlePageChange = (p) => {
+    setPage(p);
+
+    // scroll list lên đầu thay vì window
+    document.querySelector(".order-list")?.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <div className="orders">
       <div className="order-tabs">
@@ -97,7 +116,7 @@ export default function OrderPanel({ tabs, setTabs, activeTab, setActiveTab }) {
                     removeTab(tab.id);
                   }}
                 >
-                  ×
+                  <XMarkIcon className="icon-close" />
                 </span>
               </div>
             ))}
@@ -136,6 +155,16 @@ export default function OrderPanel({ tabs, setTabs, activeTab, setActiveTab }) {
             </div>
           </div>
         ))}
+      </div>
+
+      <div style={{margin: '1rem 0'}}>
+        {totalPages > 1 && (
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        )}
       </div>
 
       <div className="order-footer">

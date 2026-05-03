@@ -1,0 +1,102 @@
+/* ===== CONTAINER ===== */
+.menu-pos {
+  padding: 12px;
+  background: #f7f7f7;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+}
+/* ===== TABS ===== */
+.menu-pos .menu-tabs {
+  display: flex;
+  gap: 10px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  flex-wrap: nowrap;
+  white-space: nowrap;
+
+  min-width: 0;
+
+  scroll-behavior: smooth;
+
+  /* ẩn scrollbar nhưng vẫn scroll được */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.menu-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.menu-tabs .tab {
+  flex: 0 0 auto;
+
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: none;
+
+  background: #eee;
+  cursor: pointer;
+
+  white-space: nowrap;
+}
+
+.menu-tabs .tab.active {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+/* vùng scroll */
+.menu-tabs {
+  display: flex;
+  gap: 10px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  flex: 1;
+  white-space: nowrap;
+
+  scrollbar-width: none;
+}
+
+.menu-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.menu-tabs-wrapper {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+/* tab "Tất cả" đứng yên */
+.tab.fixed {
+  flex: 0 0 auto;
+  background: #ddd;
+  font-weight: 600;
+}
+
+/* vùng scroll */
+.menu-tabs {
+  display: flex;
+  gap: 10px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  flex: 1;
+  white-space: nowrap;
+
+  scrollbar-width: none;
+}
+
+.menu-tabs::-webkit-scrollbar {
+  display: none;
+}

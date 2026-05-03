@@ -1,4 +1,4 @@
-const categories = [
+const sidebar = [
   { label: "Tất cả", value: "all" },
 
   { label: "Pizza & Burger", value: "pizza-burger" },
@@ -19,4 +19,4 @@ const categories = [
   { label: "Tráng miệng", value: "dessert" },
 ];
 
-export default categories;
+export default sidebar;

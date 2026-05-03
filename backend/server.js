@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/auth.js";
 import productRoutes from "./routes/product.js";
 import momoRoutes from "./routes/momo.js";
+import floorRoutes from "./routes/floor.js";
 
 dotenv.config(); // 🔥 phải để lên trên
 
@@ -25,7 +26,10 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 
+app.use("/api/floors", floorRoutes);
+
 app.use("/api/momo", momoRoutes);
+
 
 // 🔥 MongoDB từ env
 mongoose

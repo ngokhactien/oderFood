@@ -19,7 +19,7 @@ const Card = ({ title, items }) => (
             onClick={(e) => {
               e.preventDefault(); // Ngăn NavLink chuyển trang
               e.stopPropagation(); // Ngăn bubbling
-              onAdd(product);
+              // onAdd(product);
             }}
             aria-label="Thêm vào giỏ hàng"
           >

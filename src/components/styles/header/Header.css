@@ -73,7 +73,6 @@
 /* ================= SEARCH ================= */
 
 .header-search {
-  flex: 1;
   display: flex;
   align-items: center;
   max-width: 600px;
@@ -81,6 +80,10 @@
   border-radius: 30px;
   overflow: hidden;
   box-shadow: var(--shadow-sm);
+}
+
+.header .header-search {
+  flex: 1;
 }
 
 .search-input {
@@ -220,7 +223,7 @@
   border-radius: 10px;
   padding: 12px;
 
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 
   opacity: 0;
   visibility: hidden;
@@ -357,7 +360,7 @@
 .slider {
   position: absolute;
   inset: 0;
-  background: rgba(255,255,255,0.3);
+  background: rgba(255, 255, 255, 0.3);
   border-radius: 20px;
 }
 

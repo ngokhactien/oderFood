@@ -7,12 +7,16 @@ import {
   updateProduct,
   deleteProduct,
   searchProducts,
+  searchTableFood,
 } from "../controllers/productController.js";
 
 const router = express.Router();
 
 // search
 router.get("/search", searchProducts);
+router.get("/table-food/search", searchTableFood);
+// search table
+
 
 router.post("/", createProduct);
 router.get("/", getProducts);

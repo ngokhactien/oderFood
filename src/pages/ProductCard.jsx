@@ -9,8 +9,8 @@ import Pagination from "../components/Pagination";
 
 function ProductCard() {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // 👈 thêm
-  const location = useLocation(); // 👈 thêm
+  const navigate = useNavigate();
+  const location = useLocation();
   const {
     items = [],
     loading,
@@ -64,7 +64,7 @@ function ProductCard() {
 
     params.set("page", newPage);
 
-    navigate(`/product-card?${params.toString()}`);
+    navigate(`${location.pathname}?${params.toString()}`);
 
     window.scrollTo({
       top: 0,
@@ -74,20 +74,25 @@ function ProductCard() {
 
   return (
     <div className="product-card">
-      <Sidebar />
+      <Sidebar layout="vertical" />
 
       <div className="product-content">
         <div className="products">
-          {loading ? <p>Loading...</p> : <ProductList products={items} />}
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <ProductList products={items} size={"large"} />
+          )}
         </div>
-
-        {items.length > 0 && totalPages > 1 && (
-          <Pagination
-            page={page}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        )}
+        <div style={{ margin: "3rem 0" }}>
+          {items.length > 0 && totalPages > 1 && (
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

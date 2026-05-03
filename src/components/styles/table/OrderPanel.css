@@ -30,27 +30,42 @@
 
 /* TAB */
 .tab {
-  padding: 5px 10px;
+  padding: 0.4rem 0.6rem;
   background: #e5e9f2;
   border-radius: 8px;
   font-size: 12px;
   display: flex;
-  gap: 4px;
+  gap: 0.6rem;
   align-items: center;
   cursor: pointer;
-
   flex-shrink: 0;
 }
 
 .tab.active {
-  background: #1976d2;
+  background: var(--primary-color);
   color: #fff;
 }
 
 /* CLOSE */
+.icon-close {
+  width: 16px;
+  height: 16px;
+}
+
 .close {
-  font-size: 11px;
-  opacity: 0.7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 20px;
+  height: 20px;
+
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.close:hover {
+  background: rgba(0, 0, 0, 0.1);
 }
 
 /* ===== HEADER ===== */

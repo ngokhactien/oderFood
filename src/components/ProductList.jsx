@@ -2,7 +2,7 @@ import { FaceFrownIcon } from "@heroicons/react/24/outline";
 import CartItem from "./CartItem";
 import "./styles/productList.css";
 
-const ProductList = ({ products = [], onAdd }) => {
+const ProductList = ({ products = [], onAdd, size = "small" }) => {
   if (products.length === 0) {
     return (
       <div className="empty-state">
@@ -14,9 +14,14 @@ const ProductList = ({ products = [], onAdd }) => {
   }
 
   return (
-    <div className="product-list">
+    <div className={`product-list ${size}`}>
       {products.map((item) => (
-        <CartItem key={item._id} product={item} onAdd={onAdd} />
+        <CartItem
+          key={item._id}
+          product={item}
+          onAdd={onAdd}
+          size={size}
+        />
       ))}
     </div>
   );
