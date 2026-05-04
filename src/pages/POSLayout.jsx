@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OrderPanel from "../components/table/OrderPanel";
 import TableManager from "../components/table/TableManager";
 import "../styles/POSLayout.css";
@@ -24,37 +24,76 @@ const mockItems = [
 
 export default function POSLayout() {
   const [tab, setTab] = useState("tables");
-  const [activeTab, setActiveTab] = useState("Giao đi");
   const user = useSelector((state) => state.auth.user);
-  const [tabs, setTabs] = useState([
-    {
-      id: "Giao đi",
-      name: "Giao đi",
-      fixed: true,
-      items: mockItems.map((i) => ({ ...i })),
-    },
-  ]);
-
-  console.log("user", user);
-
   const { items = [] } = useSelector((state) => state.products || {});
 
+  const STORAGE_TABS = "pos_tabs_v1";
+  const STORAGE_ACTIVE = "pos_activeTab_v1";
+
+  const [activeTab, setActiveTab] = useState(() => {
+    return localStorage.getItem(STORAGE_ACTIVE) || "Giao đi";
+  });
+
+  const [tabs, setTabs] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_TABS);
+      return saved
+        ? JSON.parse(saved)
+        : [
+            {
+              id: "Giao đi",
+              name: "Giao đi",
+              fixed: true,
+              items: [],
+            },
+          ];
+    } catch {
+      return [
+        {
+          id: "Giao đi",
+          name: "Giao đi",
+          fixed: true,
+          items: [],
+        },
+      ];
+    }
+  });
+
   const handleSelectTable = (table) => {
-    const existed = tabs.find((t) => t.id === table.id);
+    const tableId = typeof table === "string" ? table : table.id;
+    const tableName = typeof table === "string" ? table : table.tabName;
+
+    const existed = tabs.find((t) => t.id === tableId);
 
     if (existed) {
       setActiveTab(existed.id);
     } else {
       const newTab = {
-        id: table.id,
-        name: table.tabName,
+        id: tableId,
+        name: tableName,
         items: [],
       };
 
       setTabs((prev) => [...prev, newTab]);
-      setActiveTab(table.id);
+      setActiveTab(tableId);
     }
   };
+
+  //set tab localStorage
+  useEffect(() => {
+    const exists = tabs.find((t) => t.id === activeTab);
+    if (!exists && tabs.length) {
+      setActiveTab(tabs[0].id);
+    }
+  }, [tabs]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_TABS, JSON.stringify(tabs));
+  }, [tabs]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_ACTIVE, activeTab);
+  }, [activeTab]);
 
   return (
     <div className="pos-table">

@@ -50,14 +50,14 @@ const Home = () => {
 
         {/* sản phẩm khuyến mãi */}
         <PromoHeader title={"Khuyến mãi Online"} hour={true} />
-        <ProductList products={products} onAdd={handleAdd} />
+        <ProductList products={products} onAdd={handleAdd} size={"large"} />
         <ViewAllButton />
 
         <FoodHeroBanner />
 
         {/* sản bán chạy */}
         <PromoHeader title={"Sản phẩm bán chạy"} hour={false} />
-        <ProductList products={products} onAdd={handleAdd} />
+        <ProductList products={products} onAdd={handleAdd} size={"large"} />
         <ViewAllButton />
 
         <FoodListSection />

@@ -162,7 +162,12 @@ export default function TableManager({ onSelectTable, activeTable }) {
         {/* Giao đi */}
         <div
           className={`table ${active === "Giao đi" ? "selected" : ""}`}
-          onClick={() => onSelectTable("Giao đi")}
+          onClick={() =>
+            onSelectTable({
+              id: "Giao đi",
+              tabName: "Giao đi",
+            })
+          }
         >
           <div className="shape"></div>
           <span>Giao đi</span>
