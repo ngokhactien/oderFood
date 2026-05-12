@@ -1,62 +1,232 @@
-import { useState } from "react";
 import "../styles/table/OrderRequest.css";
 
+import { useMemo, useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  getOrCreateOrder,
+  addItem,
+  confirmOrder,
+  getActiveOrders,
+} from "../../redux/orderSlice";
+
+import { clearDraft, removeExpiredDrafts } from "../../redux/orderUiSlice";
+
+import { toast } from "react-toastify";
+
 export default function OrderRequest() {
-  const [selectedTable, setSelectedTable] = useState("Bàn 10 / Lầu 2");
+  const dispatch = useDispatch();
 
-  const requests = [
-    {
-      id: 1,
-      table: "Bàn 10 / Lầu 2",
-      time: "vài giây trước",
-      items: [
-        { name: "Bia Hà Nội", qty: 2, price: 30000 },
-        { name: "Đĩa thịt nguội Tây Ban Nha hảo hạng", qty: 1, price: 125000 }
-      ]
+  // =========================
+  // STORE
+  // =========================
+  const draftItems = useSelector((state) => state.orderUI.draftItems);
+
+  const orders = useSelector((state) => state.order.orders || []);
+
+  // =========================
+  // AUTO REMOVE EMPTY DRAFT
+  // =========================
+  useEffect(() => {
+    const interval = setInterval(() => {
+      dispatch(removeExpiredDrafts());
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [dispatch]);
+
+  // =========================
+  // ALL TABLES
+  // =========================
+  const tables = useMemo(() => {
+    return Object.entries(draftItems || {}).map(([tableId, draft]) => ({
+      tableId,
+      ...draft,
+    }));
+  }, [draftItems]);
+
+  // =========================
+  // SELECTED TABLE
+  // =========================
+  const [selectedTableId, setSelectedTableId] = useState(null);
+
+  // auto select first table
+  useEffect(() => {
+    if (tables.length > 0 && !selectedTableId) {
+      setSelectedTableId(tables[0].tableId);
     }
-  ];
 
-  const current = requests.find(r => r.table === selectedTable);
+    // nếu bàn hiện tại bị xoá
+    if (selectedTableId && !tables.find((t) => t.tableId === selectedTableId)) {
+      setSelectedTableId(tables[0]?.tableId || null);
+    }
+  }, [tables, selectedTableId]);
+
+  // =========================
+  // CURRENT DRAFT
+  // =========================
+  const currentDraft = draftItems?.[selectedTableId];
+
+  const items = Array.isArray(currentDraft?.items) ? currentDraft.items : [];
+
+  // =========================
+  // TABLE INFO
+  // =========================
+  const tableInfo = currentDraft?.tableInfo || {};
+
+  // =========================
+  // TOTAL
+  // =========================
+  const total = items.reduce((sum, item) => {
+    return sum + Number(item.price || 0) * Number(item.qty || 0);
+  }, 0);
+
+  // =========================
+  // CONFIRM
+  // =========================
+  const handleConfirm = async () => {
+    try {
+      if (!selectedTableId) {
+        toast.warning("Chưa chọn bàn");
+
+        return;
+      }
+
+      if (!items.length) {
+        toast.warning("Chưa có món");
+
+        return;
+      }
+
+      let order = orders.find((o) => o?.tableId === selectedTableId);
+
+      // create order
+      if (!order) {
+        const result = await dispatch(
+          getOrCreateOrder({
+            tableId: selectedTableId,
+
+            table: {
+              id: selectedTableId,
+              name: tableInfo.name,
+              floor: tableInfo.floor,
+            },
+          }),
+        );
+
+        order = result?.payload;
+      }
+
+      if (!order?._id) {
+        toast.error("Không tạo được order");
+
+        return;
+      }
+
+      // add items
+      for (const item of items) {
+        for (let i = 0; i < item.qty; i++) {
+          await dispatch(
+            addItem({
+              orderId: order._id,
+              product: item,
+            }),
+          );
+        }
+      }
+
+      // confirm
+      await dispatch(confirmOrder(order._id));
+
+      // reload
+      await dispatch(getActiveOrders());
+
+      // remove draft
+      dispatch(clearDraft(selectedTableId));
+
+      toast.success("Đã gửi bếp");
+    } catch (err) {
+      console.log(err);
+
+      toast.error("Có lỗi");
+    }
+  };
+
+  // =========================
+  // CANCEL
+  // =========================
+  const handleCancel = () => {
+    if (!selectedTableId) return;
+
+    dispatch(clearDraft(selectedTableId));
+
+    toast.info("Đã huỷ");
+  };
 
   return (
     <div className="order-container">
-      {/* LEFT */}
+      {/* SIDEBAR */}
       <div className="order-sidebar">
-        {requests.map((r) => (
-          <div
-            key={r.id}
-            className={`table-item ${
-              selectedTable === r.table ? "active" : ""
-            }`}
-            onClick={() => setSelectedTable(r.table)}
-          >
-            <div className="table-name">{r.table}</div>
-            <div className="table-time">{r.time}</div>
-          </div>
-        ))}
+        {tables.length > 0 ? (
+          tables.map((table) => (
+            <div
+              key={table.tableId}
+              className={`table-item ${
+                selectedTableId === table.tableId ? "active" : ""
+              }`}
+              onClick={() => setSelectedTableId(table.tableId)}
+            >
+              <div className="table-name">
+                {table.tableInfo?.name || table.tableId}
+
+                {table.tableInfo?.floor ? ` / ${table.tableInfo.floor}` : ""}
+              </div>
+
+              <div className="table-time">vài giây trước</div>
+            </div>
+          ))
+        ) : (
+          <div className="empty-order">Chưa có yêu cầu nào</div>
+        )}
       </div>
 
-      {/* RIGHT */}
+      {/* CONTENT */}
       <div className="order-content">
-        <h3>Yêu cầu gọi món từ {current.table}</h3>
+        <h3>
+          Yêu cầu gọi món từ {tableInfo?.name || ""}
+          {tableInfo?.floor ? ` / ${tableInfo.floor}` : ""}
+        </h3>
 
         <div className="order-list">
-          {current.items.map((item, index) => (
-            <div key={index} className="order-row">
-              <div className="left">
-                {item.qty}x {item.name}
+          {items.length > 0 ? (
+            items.map((item, index) => (
+              <div key={item._id || index} className="order-row">
+                <div className="left">
+                  <span className="name">{item.name}</span>
+
+                  <span className="qty">{item.qty}x</span>
+                </div>
+
+                <div className="right">
+                  {(item.price * item.qty).toLocaleString()}đ
+                </div>
               </div>
-              <div className="right">
-                {item.price.toLocaleString()}
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <div className="empty-order">Chưa có món nào</div>
+          )}
         </div>
 
-        {/* ACTIONS */}
+        <div className="order-total">Tổng tiền: {total.toLocaleString()}đ</div>
+
         <div className="order-actions">
-          <button className="btn cancel">Từ chối</button>
-          <button className="btn confirm">Xác nhận</button>
+          <button className="btn cancel" onClick={handleCancel}>
+            Từ chối
+          </button>
+
+          <button className="btn confirm" onClick={handleConfirm}>
+            Xác nhận
+          </button>
         </div>
       </div>
     </div>

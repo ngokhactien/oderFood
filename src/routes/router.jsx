@@ -15,8 +15,12 @@ import Address from "../components/profile/Address";
 import ProfileInfo from "../components/profile/ProfileInfo";
 import CheckoutPage from "../pages/CheckoutPage";
 import POSLayout from "../pages/POSLayout";
+import AdminLayout from "../AdminLayout";
+import Dashboard from "../pages/Dashboard";
+import OrdersTable from "../components/Dashboard/OrdersTable/OrdersTable";
 
 const router = createBrowserRouter([
+  //user
   {
     path: "/",
     element: <App />,
@@ -86,6 +90,21 @@ const router = createBrowserRouter([
           // },
         ],
       },
+    ],
+  },
+
+  // 🔥 ADMIN
+  {
+    path: "/admin",
+    element: (
+      <ProtectedRoute>
+        <AdminLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      { index: true, element: <Dashboard /> },
+      { path: "orders", element: <OrdersTable /> },
+      // { path: "products", element: <Products /> },
     ],
   },
 ]);

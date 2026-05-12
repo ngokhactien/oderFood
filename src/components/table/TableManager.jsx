@@ -1,68 +1,117 @@
+// TableManager.jsx
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+
 import Pagination from "../Pagination";
+
 import "../styles/table/TableManager.css";
 
-export default function TableManager({ onSelectTable, activeTable }) {
-  const user = useSelector((state) => state.auth.user);
+export default function TableManager({
+  onSelectTable,
+  activeTable,
+}) {
+  const user = useSelector(
+    (state) => state.auth.user,
+  );
 
   const floors = user?.floors || [];
 
-  const [selectedFloor, setSelectedFloor] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [active, setActive] = useState("Giao đi");
-  const hasVIP = floors.some((f) => f.type === "vip");
+  const [selectedFloor, setSelectedFloor] =
+    useState("all");
 
-  // ===== FILTER FLOOR =====
+  const [statusFilter, setStatusFilter] =
+    useState("all");
+
+  const [active, setActive] =
+    useState("Giao đi");
+
+  const hasVIP = floors.some(
+    (f) => f.type === "vip",
+  );
+
+  // =========================
+  // FILTER FLOOR
+  // =========================
   const filteredFloors =
     selectedFloor === "all"
       ? floors
       : floors.filter((f) =>
-          selectedFloor === "vip" ? f.type === "vip" : f.name === selectedFloor,
+          selectedFloor === "vip"
+            ? f.type === "vip"
+            : f.name === selectedFloor,
         );
 
-  // ===== FLATTEN TABLE =====
-  const allTables = filteredFloors.flatMap((f) =>
-    f.tables.map((t) => ({
-      ...t,
-      floorName: f.name,
+  // =========================
+  // FLATTEN TABLE
+  // =========================
+  const allTables =
+    filteredFloors.flatMap((f) =>
+      f.tables.map((t) => ({
+        ...t,
 
-      // 👇 id duy nhất (quan trọng)
-      id: `${f.name}-${t.name}`,
+        floorName: f.name,
 
-      // 👇 hiển thị cho UI
-      displayName: t.name,
+        id: `${f.name}-${t.name}`,
 
-      tabName:
-        f.type === "vip"
-          ? t.name // 👈 VIP chỉ hiện tên bàn
-          : `${t.name} / ${f.name}`, // 👈 thường mới có lầu
-    })),
-  );
+        displayName: t.name,
 
-  // ===== FILTER STATUS =====
+        tabName:
+          f.type === "vip"
+            ? t.name
+            : `${t.name} / ${f.name}`,
+      })),
+    );
+
+  // =========================
+  // FILTER STATUS
+  // =========================
   const filteredTables =
     statusFilter === "all"
       ? allTables
-      : allTables.filter((t) => t.status === statusFilter);
+      : allTables.filter(
+          (t) =>
+            t.status === statusFilter,
+        );
 
-  // ===== COUNT =====
+  // =========================
+  // COUNT
+  // =========================
   const countAll = allTables.length;
-  const countUsing = allTables.filter((t) => t.status === "using").length;
-  const countEmpty = allTables.filter((t) => t.status === "empty").length;
-  const countReserved = allTables.filter((t) => t.status === "reserved").length;
 
-  // ===== PAGINATION =====
+  const countUsing = allTables.filter(
+    (t) => t.status === "using",
+  ).length;
+
+  const countEmpty = allTables.filter(
+    (t) => t.status === "empty",
+  ).length;
+
+  const countReserved =
+    allTables.filter(
+      (t) => t.status === "reserved",
+    ).length;
+
+  // =========================
+  // PAGINATION
+  // =========================
   const [page, setPage] = useState(1);
+
   const pageSize = 35;
 
-  const totalPages = Math.ceil(filteredTables.length / pageSize);
+  const totalPages = Math.ceil(
+    filteredTables.length / pageSize,
+  );
+
   const start = (page - 1) * pageSize;
-  const currentTables = filteredTables.slice(start, start + pageSize);
+
+  const currentTables =
+    filteredTables.slice(
+      start,
+      start + pageSize,
+    );
 
   const handlePageChange = (p) => {
     setPage(p);
-    setActive("Giao đi");
 
     window.scrollTo({
       top: 0,
@@ -70,58 +119,84 @@ export default function TableManager({ onSelectTable, activeTable }) {
     });
   };
 
-  // ===== RESET PAGE WHEN FILTER CHANGE =====
+  // =========================
+  // RESET PAGE
+  // =========================
   useEffect(() => {
     setPage(1);
   }, [selectedFloor, statusFilter]);
 
-  // ===== ACTIVE TABLE =====
+  // =========================
+  // ACTIVE TABLE
+  // =========================
   useEffect(() => {
     setActive(activeTable);
   }, [activeTable]);
 
   return (
     <div className="table_manager">
-      {/* ===== FLOOR FILTER ===== */}
+      {/* FLOOR */}
       <div className="tabs">
         <button
-          className={selectedFloor === "all" ? "active" : ""}
-          onClick={() => setSelectedFloor("all")}
+          className={
+            selectedFloor === "all"
+              ? "active"
+              : ""
+          }
+          onClick={() =>
+            setSelectedFloor("all")
+          }
         >
           Tất cả
         </button>
 
         {floors
-          .filter((f) => f.type === "normal")
+          .filter(
+            (f) => f.type === "normal",
+          )
           .map((f) => (
             <button
               key={f._id}
-              className={selectedFloor === f.name ? "active" : ""}
-              onClick={() => setSelectedFloor(f.name)}
+              className={
+                selectedFloor === f.name
+                  ? "active"
+                  : ""
+              }
+              onClick={() =>
+                setSelectedFloor(f.name)
+              }
             >
               {f.name}
             </button>
           ))}
 
-        {/* 👉 chỉ hiện nếu có VIP */}
         {hasVIP && (
           <button
-            className={selectedFloor === "vip" ? "active" : ""}
-            onClick={() => setSelectedFloor("vip")}
+            className={
+              selectedFloor === "vip"
+                ? "active"
+                : ""
+            }
+            onClick={() =>
+              setSelectedFloor("vip")
+            }
           >
             Phòng VIP
           </button>
         )}
       </div>
 
-      {/* ===== STATUS FILTER ===== */}
+      {/* FILTER */}
       <div className="filters">
         <label>
           <input
             type="radio"
-            name="tableStatus"
-            checked={statusFilter === "all"}
-            onChange={() => setStatusFilter("all")}
+            checked={
+              statusFilter === "all"
+            }
+            onChange={() =>
+              setStatusFilter("all")
+            }
           />
           Tất cả ({countAll})
         </label>
@@ -129,9 +204,12 @@ export default function TableManager({ onSelectTable, activeTable }) {
         <label>
           <input
             type="radio"
-            name="tableStatus"
-            checked={statusFilter === "using"}
-            onChange={() => setStatusFilter("using")}
+            checked={
+              statusFilter === "using"
+            }
+            onChange={() =>
+              setStatusFilter("using")
+            }
           />
           Sử dụng ({countUsing})
         </label>
@@ -139,9 +217,12 @@ export default function TableManager({ onSelectTable, activeTable }) {
         <label>
           <input
             type="radio"
-            name="tableStatus"
-            checked={statusFilter === "empty"}
-            onChange={() => setStatusFilter("empty")}
+            checked={
+              statusFilter === "empty"
+            }
+            onChange={() =>
+              setStatusFilter("empty")
+            }
           />
           Còn trống ({countEmpty})
         </label>
@@ -149,51 +230,73 @@ export default function TableManager({ onSelectTable, activeTable }) {
         <label>
           <input
             type="radio"
-            name="tableStatus"
-            checked={statusFilter === "reserved"}
-            onChange={() => setStatusFilter("reserved")}
+            checked={
+              statusFilter === "reserved"
+            }
+            onChange={() =>
+              setStatusFilter("reserved")
+            }
           />
           Đặt trước ({countReserved})
         </label>
       </div>
 
-      {/* ===== GRID ===== */}
+      {/* GRID */}
       <div className="grid">
-        {/* Giao đi */}
+        {/* DELIVERY */}
         <div
-          className={`table ${active === "Giao đi" ? "selected" : ""}`}
+          className={`table ${
+            active === "Giao đi"
+              ? "selected"
+              : ""
+          }`}
           onClick={() =>
             onSelectTable({
               id: "Giao đi",
+              name: "Giao đi",
+              displayName: "Giao đi",
               tabName: "Giao đi",
+              fixed: true,
             })
           }
         >
           <div className="shape"></div>
+
           <span>Giao đi</span>
         </div>
 
-        {/* Tables */}
+        {/* TABLES */}
         {currentTables.map((table) => (
           <div
             key={table.id}
-            className={`table ${table.status} ${
-              active === table.id ? "selected" : ""
+            className={`table ${
+              table.status
+            } ${
+              active === table.id
+                ? "selected"
+                : ""
             }`}
-            onClick={() => onSelectTable(table)}
+            onClick={() =>
+              onSelectTable(table)
+            }
           >
             <div className="shape"></div>
-            <span>{table.displayName}</span>
+
+            <span>
+              {table.displayName}
+            </span>
           </div>
         ))}
       </div>
 
-      {/* ===== PAGINATION ===== */}
+      {/* PAGINATION */}
       {totalPages > 1 && (
         <Pagination
           page={page}
           totalPages={totalPages}
-          onPageChange={handlePageChange}
+          onPageChange={
+            handlePageChange
+          }
         />
       )}
     </div>

@@ -1,105 +1,57 @@
+// POSLayout.jsx
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import OrderPanel from "../components/table/OrderPanel";
 import TableManager from "../components/table/TableManager";
-import "../styles/POSLayout.css";
 import MenuPOS from "../components/table/MenuPOS";
-import { useSelector } from "react-redux";
 import SearchBar from "../components/header/SearchBar";
 import OrderRequest from "../components/table/OrderRequest";
 
-const mockItems = [
-  {
-    id: 1,
-    name: "Cà phê sữa",
-    price: 25000,
-    qty: 1,
-  },
-  {
-    id: 2,
-    name: "Trà đào",
-    price: 30000,
-    qty: 2,
-  },
-];
+import "../styles/POSLayout.css";
+
+import { openTab, addDraftItem } from "../redux/orderUiSlice";
+import { getActiveOrders } from "../redux/orderSlice";
 
 export default function POSLayout() {
+  const dispatch = useDispatch();
+
   const [tab, setTab] = useState("tables");
-  const user = useSelector((state) => state.auth.user);
-  const { items = [] } = useSelector((state) => state.products || {});
 
-  const STORAGE_TABS = "pos_tabs_v1";
-  const STORAGE_ACTIVE = "pos_activeTab_v1";
+  const loading = useSelector((state) => state.order.loading);
+  const actionType = useSelector((state) => state.order.actionType);
 
-  const [activeTab, setActiveTab] = useState(() => {
-    return localStorage.getItem(STORAGE_ACTIVE) || "Giao đi";
-  });
+  const activeTable = useSelector((state) => state.orderUI.activeTable);
 
-  const [tabs, setTabs] = useState(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_TABS);
-      return saved
-        ? JSON.parse(saved)
-        : [
-            {
-              id: "Giao đi",
-              name: "Giao đi",
-              fixed: true,
-              items: [],
-            },
-          ];
-    } catch {
-      return [
-        {
-          id: "Giao đi",
-          name: "Giao đi",
-          fixed: true,
-          items: [],
-        },
-      ];
-    }
-  });
+  // =========================
+  // LOAD ACTIVE ORDERS
+  // =========================
+  useEffect(() => {
+    dispatch(getActiveOrders());
+  }, [dispatch]);
 
+  // =========================
+  // SELECT TABLE
+  // =========================
   const handleSelectTable = (table) => {
-    const tableId = typeof table === "string" ? table : table.id;
-    const tableName = typeof table === "string" ? table : table.tabName;
-
-    const existed = tabs.find((t) => t.id === tableId);
-
-    if (existed) {
-      setActiveTab(existed.id);
-    } else {
-      const newTab = {
-        id: tableId,
-        name: tableName,
-        items: [],
-      };
-
-      setTabs((prev) => [...prev, newTab]);
-      setActiveTab(tableId);
-    }
+    dispatch(
+      openTab({
+        ...table,
+        id: table.id,
+        name: table.displayName || table.name,
+        tabName: table.tabName || table.name,
+        floor: table.floorName || "",
+        fixed: table.fixed || false,
+      }),
+    );
   };
-
-  //set tab localStorage
-  useEffect(() => {
-    const exists = tabs.find((t) => t.id === activeTab);
-    if (!exists && tabs.length) {
-      setActiveTab(tabs[0].id);
-    }
-  }, [tabs]);
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_TABS, JSON.stringify(tabs));
-  }, [tabs]);
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_ACTIVE, activeTab);
-  }, [activeTab]);
 
   return (
     <div className="pos-table">
-      {/* ===== LEFT SIDE ===== */}
+      {/* ========================= */}
+      {/* LEFT */}
+      {/* ========================= */}
       <main className="tables">
-        {/* TOP TABS */}
         <div className="tables-top">
           <div className="top-tabs">
             <div
@@ -123,56 +75,69 @@ export default function POSLayout() {
               Đặt gọi món
             </div>
           </div>
+
           <SearchBar />
         </div>
 
+        {/* ========================= */}
+        {/* LOADING */}
+        {/* ========================= */}
+        {loading && (
+          <div className="loading-overlay">
+            {actionType === "pay" && "Đang thanh toán..."}
+            {actionType === "confirm" && "Đang xác nhận..."}
+            {actionType === "addItem" && "Đang thêm món..."}
+            {actionType === "updateQty" && "Đang cập nhật..."}
+            {actionType === "removeItem" && "Đang xoá món..."}
+            {actionType === "getOrCreate" && "Đang mở bàn..."}
+            {actionType === "getActive" && "Đang tải đơn..."}
+          </div>
+        )}
+
+        {/* ========================= */}
         {/* CONTENT */}
+        {/* ========================= */}
+
         {tab === "tables" && (
           <TableManager
             onSelectTable={handleSelectTable}
-            activeTable={activeTab}
+            activeTable={activeTable?.id}
           />
         )}
+
         {tab === "menu" && (
           <MenuPOS
-            products={items}
             onAdd={(item) => {
-              setTabs((prev) =>
-                prev.map((t) => {
-                  if (t.id !== activeTab) return t;
+              if (!activeTable) {
+                alert("Chọn bàn trước!");
+                return;
+              }
 
-                  const existed = t.items.find((i) => i.id === item._id);
+              dispatch(
+                addDraftItem({
+                  tableId: activeTable.id,
 
-                  if (existed) {
-                    return {
-                      ...t,
-                      items: t.items.map((i) =>
-                        i.id === item._id ? { ...i, qty: i.qty + 1 } : i,
-                      ),
-                    };
-                  }
+                  product: item,
 
-                  return {
-                    ...t,
-                    items: [...t.items, { ...item, id: item._id, qty: 1 }],
-                  };
+                  tableInfo: {
+                    id: activeTable.id,
+                    name: activeTable.name,
+                    floor: activeTable.floor,
+                  },
                 }),
               );
             }}
           />
         )}
+
         {tab === "order" && <OrderRequest />}
       </main>
 
-      {/* ===== RIGHT SIDE ===== */}
-      {/* <section className="order-container"> */}
+      {/* ========================= */}
+      {/* RIGHT */}
+      {/* ========================= */}
       <section className="orders-pay">
-        <OrderPanel
-          tabs={tabs}
-          setTabs={setTabs}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-        />
+        <OrderPanel />
       </section>
     </div>
   );
