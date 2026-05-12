@@ -10,7 +10,12 @@ import {
   getActiveOrders,
 } from "../../redux/orderSlice";
 
-import { clearDraft, removeExpiredDrafts } from "../../redux/orderUiSlice";
+import {
+  clearDraft,
+  removeExpiredDrafts,
+  setActiveTab,
+  openTab,
+} from "../../redux/orderUiSlice";
 
 import { toast } from "react-toastify";
 
@@ -39,10 +44,15 @@ export default function OrderRequest() {
   // ALL TABLES
   // =========================
   const tables = useMemo(() => {
-    return Object.entries(draftItems || {}).map(([tableId, draft]) => ({
-      tableId,
-      ...draft,
-    }));
+    return (
+      Object.entries(draftItems || {})
+        .map(([tableId, draft]) => ({
+          tableId,
+          ...draft,
+        }))
+        // sort cũ -> mới
+        .sort((a, b) => a.updatedAt - b.updatedAt)
+    );
   }, [draftItems]);
 
   // =========================
@@ -54,11 +64,45 @@ export default function OrderRequest() {
   useEffect(() => {
     if (tables.length > 0 && !selectedTableId) {
       setSelectedTableId(tables[0].tableId);
+
+      dispatch(
+        openTab({
+          id: tables[0].tableId,
+
+          name: tables[0].tableInfo?.name || tables[0].tableId,
+
+          tabName: `${tables[0].tableInfo?.name || ""}${
+            tables[0].tableInfo?.floor ? ` / ${tables[0].tableInfo.floor}` : ""
+          }`,
+        }),
+      );
     }
 
     // nếu bàn hiện tại bị xoá
     if (selectedTableId && !tables.find((t) => t.tableId === selectedTableId)) {
-      setSelectedTableId(tables[0]?.tableId || null);
+      const nextTable = tables[0]?.tableId || null;
+
+      setSelectedTableId(nextTable);
+
+      if (nextTable) {
+        const nextData = tables.find((t) => t.tableId === nextTable);
+
+        if (nextData) {
+          dispatch(
+            openTab({
+              id: nextData.tableId,
+
+              name: nextData.tableInfo?.name || nextData.tableId,
+
+              tabName: `${nextData.tableInfo?.name || ""}${
+                nextData.tableInfo?.floor
+                  ? ` / ${nextData.tableInfo.floor}`
+                  : ""
+              }`,
+            }),
+          );
+        }
+      }
     }
   }, [tables, selectedTableId]);
 
@@ -163,6 +207,34 @@ export default function OrderRequest() {
     toast.info("Đã huỷ");
   };
 
+  // =========================
+  // TIME AGO
+  // =========================
+  const getTimeAgo = (time) => {
+    if (!time) return "vài giây trước";
+
+    const diff = Date.now() - time;
+
+    const seconds = Math.floor(diff / 1000);
+
+    const minutes = Math.floor(diff / 60000);
+
+    const hours = Math.floor(diff / 3600000);
+
+    // < 1 phút
+    if (seconds < 60) {
+      return `${seconds} giây trước`;
+    }
+
+    // < 1 giờ
+    if (minutes < 60) {
+      return `${minutes} phút trước`;
+    }
+
+    // >= 1 giờ
+    return `${hours} giờ trước`;
+  };
+
   return (
     <div className="order-container">
       {/* SIDEBAR */}
@@ -174,7 +246,23 @@ export default function OrderRequest() {
               className={`table-item ${
                 selectedTableId === table.tableId ? "active" : ""
               }`}
-              onClick={() => setSelectedTableId(table.tableId)}
+              onClick={() => {
+                setSelectedTableId(table.tableId);
+
+                dispatch(
+                  openTab({
+                    id: table.tableId,
+
+                    name: table.tableInfo?.name || table.tableId,
+
+                    tabName: `${table.tableInfo?.name || ""}${
+                      table.tableInfo?.floor
+                        ? ` / ${table.tableInfo.floor}`
+                        : ""
+                    }`,
+                  }),
+                );
+              }}
             >
               <div className="table-name">
                 {table.tableInfo?.name || table.tableId}
@@ -182,7 +270,7 @@ export default function OrderRequest() {
                 {table.tableInfo?.floor ? ` / ${table.tableInfo.floor}` : ""}
               </div>
 
-              <div className="table-time">vài giây trước</div>
+              <div className="table-time">{getTimeAgo(table.updatedAt)}</div>
             </div>
           ))
         ) : (

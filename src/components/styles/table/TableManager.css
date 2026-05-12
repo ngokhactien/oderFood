@@ -71,3 +71,27 @@
 .table_manager .pagination {
   margin-top: 3rem !important;
 }
+
+/* đang chọn */
+.table.selected .shape {
+  background: #eb6b2d;
+  border-color: #eb6b2d;
+}
+
+/* có món chờ xác nhận */
+.table.pending .shape {
+  background: #ffd54f;
+  border-color: #ffd54f;
+}
+
+/* đã xác nhận order */
+.table.confirmed .shape {
+  background: #4caf50;
+  border-color: #4caf50;
+}
+
+/* đang chọn ưu tiên màu cam */
+.table.selected .shape {
+  background: #eb6b2d !important;
+  border-color: #eb6b2d !important;
+}

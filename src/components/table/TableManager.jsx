@@ -1,5 +1,6 @@
 // TableManager.jsx
-import { useState, useEffect } from "react";
+
+import { useState, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 
 import Pagination from "../Pagination";
@@ -12,6 +13,22 @@ export default function TableManager({
 }) {
   const user = useSelector(
     (state) => state.auth.user,
+  );
+
+  // =========================
+  // DRAFT ITEMS
+  // bàn chờ xác nhận
+  // =========================
+  const draftItems = useSelector(
+    (state) => state.orderUI.draftItems || {},
+  );
+
+  // =========================
+  // ORDERS
+  // bàn đã xác nhận
+  // =========================
+  const orders = useSelector(
+    (state) => state.order.orders || [],
   );
 
   const floors = user?.floors || [];
@@ -63,29 +80,119 @@ export default function TableManager({
     );
 
   // =========================
-  // FILTER STATUS
+  // ACTIVE TABLE
   // =========================
-  const filteredTables =
-    statusFilter === "all"
-      ? allTables
-      : allTables.filter(
-          (t) =>
-            t.status === statusFilter,
-        );
+  useEffect(() => {
+    setActive(activeTable);
+  }, [activeTable]);
 
   // =========================
-  // COUNT
+  // PENDING TABLE IDS
+  // bàn đang chờ xác nhận
+  // =========================
+  const pendingTableIds = useMemo(() => {
+    return Object.keys(draftItems || {});
+  }, [draftItems]);
+
+  // =========================
+  // CONFIRMED TABLE IDS
+  // bàn đã xác nhận order
+  // =========================
+  const confirmedTableIds = useMemo(() => {
+    return orders
+      .filter(
+        (o) =>
+          o?.status === "active" ||
+          o?.status === "confirmed",
+      )
+      .map((o) => o.tableId);
+  }, [orders]);
+
+  // =========================
+  // FILTER STATUS
+  // =========================
+  const filteredTables = allTables.filter(
+    (t) => {
+      const isPending =
+        pendingTableIds.includes(t.id);
+
+      const isConfirmed =
+        confirmedTableIds.includes(t.id);
+
+      // tất cả
+      if (statusFilter === "all") {
+        return true;
+      }
+
+      // sử dụng
+      if (statusFilter === "using") {
+        return (
+          isPending || isConfirmed
+        );
+      }
+
+      // còn trống
+      if (statusFilter === "empty") {
+        return (
+          !isPending &&
+          !isConfirmed
+        );
+      }
+
+      // đặt trước
+      if (statusFilter === "reserved") {
+        return (
+          t.status === "reserved"
+        );
+      }
+
+      return true;
+    },
+  );
+
+  // =========================
+  // COUNT ALL
   // =========================
   const countAll = allTables.length;
 
+  // =========================
+  // COUNT USING
+  // =========================
   const countUsing = allTables.filter(
-    (t) => t.status === "using",
+    (t) => {
+      const isPending =
+        pendingTableIds.includes(t.id);
+
+      const isConfirmed =
+        confirmedTableIds.includes(t.id);
+
+      return (
+        isPending || isConfirmed
+      );
+    },
   ).length;
 
+  // =========================
+  // COUNT EMPTY
+  // =========================
   const countEmpty = allTables.filter(
-    (t) => t.status === "empty",
+    (t) => {
+      const isPending =
+        pendingTableIds.includes(t.id);
+
+      const isConfirmed =
+        confirmedTableIds.includes(t.id);
+
+      return (
+        !isPending &&
+        !isConfirmed
+      );
+    },
   ).length;
 
+  // =========================
+  // COUNT RESERVED
+  // =========================
   const countReserved =
     allTables.filter(
       (t) => t.status === "reserved",
@@ -125,13 +232,6 @@ export default function TableManager({
   useEffect(() => {
     setPage(1);
   }, [selectedFloor, statusFilter]);
-
-  // =========================
-  // ACTIVE TABLE
-  // =========================
-  useEffect(() => {
-    setActive(activeTable);
-  }, [activeTable]);
 
   return (
     <div className="table_manager">
@@ -266,27 +366,52 @@ export default function TableManager({
         </div>
 
         {/* TABLES */}
-        {currentTables.map((table) => (
-          <div
-            key={table.id}
-            className={`table ${
-              table.status
-            } ${
-              active === table.id
-                ? "selected"
-                : ""
-            }`}
-            onClick={() =>
-              onSelectTable(table)
-            }
-          >
-            <div className="shape"></div>
+        {currentTables.map((table) => {
+          // pending
+          const isPending =
+            pendingTableIds.includes(
+              table.id,
+            );
 
-            <span>
-              {table.displayName}
-            </span>
-          </div>
-        ))}
+          // confirmed
+          const isConfirmed =
+            confirmedTableIds.includes(
+              table.id,
+            );
+
+          return (
+            <div
+              key={table.id}
+              className={`
+                table
+                ${
+                  active === table.id
+                    ? "selected"
+                    : ""
+                }
+                ${
+                  isPending
+                    ? "pending"
+                    : ""
+                }
+                ${
+                  isConfirmed
+                    ? "confirmed"
+                    : ""
+                }
+              `}
+              onClick={() =>
+                onSelectTable(table)
+              }
+            >
+              <div className="shape"></div>
+
+              <span>
+                {table.displayName}
+              </span>
+            </div>
+          );
+        })}
       </div>
 
       {/* PAGINATION */}
