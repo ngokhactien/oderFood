@@ -1,5 +1,3 @@
-// orderUiSlice.js
-
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -19,18 +17,6 @@ const initialState = {
     tabName: "Giao đi",
     fixed: true,
   },
-
-  /*
-    draftItems = {
-      "Lầu 1-Bàn 1": {
-        items: [],
-        createdAt: number,
-        updatedAt: number,
-        tableInfo: {}
-      }
-    }
-  */
-
   draftItems: {},
 };
 

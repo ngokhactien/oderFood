@@ -203,3 +203,127 @@ BADGE
 
   font-weight: 600;
 }
+
+.tooltip-item {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+
+  padding: 8px 0;
+
+  border-bottom: 1px solid #eee;
+}
+
+.tooltip-item:last-child {
+  border-bottom: none;
+}
+
+.tooltip-item span {
+  font-size: 12px;
+
+  color: #7c3aed;
+}
+
+.tooltip-item strong {
+  font-size: 13px;
+
+  color: #111;
+}
+
+.tooltip-item small {
+  color: #666;
+
+  font-size: 11px;
+}
+
+.reserve-wrapper {
+  position: relative;
+
+  display: inline-block;
+}
+
+.reserve-badge {
+  font-size: 11px;
+
+  color: #7c3aed;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+/* TOOLTIP */
+.reserve-tooltip {
+  position: absolute;
+
+  top: 120%;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  min-width: 220px;
+
+  background: white;
+
+  border-radius: 12px;
+
+  padding: 10px;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,.15);
+
+  opacity: 0;
+
+  visibility: hidden;
+
+  transition: .2s;
+
+  z-index: 100;
+}
+
+.reserve-wrapper:hover .reserve-tooltip {
+  opacity: 1;
+
+  visibility: visible;
+}
+
+.tooltip-item {
+  padding: 8px 0;
+
+  border-bottom: 1px solid #eee;
+}
+
+.tooltip-item:last-child {
+  border-bottom: none;
+}
+
+.tooltip-top {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 4px;
+}
+
+.tooltip-top span {
+  font-size: 12px;
+
+  color: #7c3aed;
+
+  font-weight: 600;
+}
+
+.tooltip-top small {
+  font-size: 11px;
+
+  color: #666;
+}
+
+.tooltip-item strong {
+  font-size: 13px;
+
+  color: #111;
+}

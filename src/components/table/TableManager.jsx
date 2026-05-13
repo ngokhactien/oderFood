@@ -196,52 +196,57 @@ export default function TableManager({ onSelectTable, activeTable }) {
   // =========================
   // CHECK RESERVATION ( check bàn đó đã đặt trước hay chưa)
   // =========================
-  const getReservationStatus = (tableId) => {
+  const getTableReservations = (tableId) => {
     const now = new Date();
 
-    const reservation = reservations.find((r) => {
-      if (r.tableId !== tableId) return false;
+    // lấy reservation của bàn
+    const tableReservations = reservations
+      .filter((r) => {
+        if (r.tableId !== tableId) {
+          return false;
+        }
 
-      const reserveDate = new Date(`${r.date}T${r.time}`);
+        const reserveDate = new Date(`${r.date}T${r.time}`);
 
-      // chỉ lấy reservation chưa hết
-      return reserveDate > now;
-    });
+        // chỉ lấy reservation còn hiệu lực
+        return reserveDate > now;
+      })
 
-    if (!reservation) {
+      // sort gần nhất -> xa nhất
+      .sort((a, b) => {
+        const aTime = new Date(`${a.date}T${a.time}`);
+
+        const bTime = new Date(`${b.date}T${b.time}`);
+
+        return aTime - bTime;
+      });
+
+    if (!tableReservations.length) {
       return null;
     }
 
-    const reserveTime = new Date(`${reservation.date}T${reservation.time}`);
+    // reservation gần nhất
+    const current = tableReservations[0];
+
+    const reserveTime = new Date(`${current.date}T${current.time}`);
 
     const diff = reserveTime - now;
 
-    // <= 0
-    if (diff <= 0) {
-      return {
-        type: "reserved-active",
-
-        reservation,
-      };
-    }
+    let type = "reserved-future";
 
     // < 2 tiếng
     if (diff <= 2 * 60 * 60 * 1000) {
-      return {
-        type: "reserved-soon",
-
-        reservation,
-      };
+      type = "reserved-soon";
     }
 
-    // tương lai xa
     return {
-      type: "reserved-future",
+      type,
 
-      reservation,
+      current,
+
+      all: tableReservations,
     };
   };
-
 
   useEffect(() => {
     dispatch(getReservations());
@@ -347,7 +352,7 @@ export default function TableManager({ onSelectTable, activeTable }) {
           // confirmed
           const isConfirmed = confirmedTableIds.includes(table.id);
           // đặt trước
-          const reservationStatus = getReservationStatus(table.id);
+          const reservationStatus = getTableReservations(table.id);
 
           return (
             <div
@@ -370,10 +375,53 @@ export default function TableManager({ onSelectTable, activeTable }) {
                 <span>{table.displayName}</span>
 
                 {reservationStatus && (
-                  <small className="reserve-badge">
-                    🕒
-                    {reservationStatus.reservation.time}
-                  </small>
+                  <div className="reserve-wrapper">
+                    {/* chỉ hiện reservation gần nhất */}
+                    <small className="reserve-badge">
+                      🕒
+                      {reservationStatus.current.time}
+                    </small>
+
+                    {/* hover mới hiện */}
+                    <div className="reserve-tooltip">
+                      {reservationStatus.all.map((r) => {
+                        const reserveDate = new Date(r.date);
+
+                        const today = new Date();
+
+                        // reset giờ
+                        today.setHours(0, 0, 0, 0);
+
+                        const compareDate = new Date(reserveDate);
+
+                        compareDate.setHours(0, 0, 0, 0);
+
+                        // diff ngày
+                        const diffDays =
+                          (compareDate - today) / (1000 * 60 * 60 * 24);
+
+                        let displayDate = r.date;
+
+                        if (diffDays === 0) {
+                          displayDate = "Hôm nay";
+                        } else if (diffDays === 1) {
+                          displayDate = "Ngày mai";
+                        }
+
+                        return (
+                          <div key={r._id} className="tooltip-item">
+                            <div className="tooltip-top">
+                              <span>🕒 {r.time}</span>
+
+                              <small>{displayDate}</small>
+                            </div>
+
+                            <strong>{r.customerName}</strong>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
