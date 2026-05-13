@@ -5,6 +5,7 @@ import productReducer from "./productSlice";
 import tableProductReducer from "./tableFoodSlice";
 import orderReducer from "./orderSlice";
 import orderUiReducer from "./orderUiSlice";
+import reservationReducer from "./reservationSlice";
 
 const saved = localStorage.getItem("orderUI");
 
@@ -15,7 +16,8 @@ export const store = configureStore({
     products: productReducer,
     tableProducts: tableProductReducer,
     order: orderReducer,
-    orderUI: orderUiReducer, // ❗ thiếu cái này
+    orderUI: orderUiReducer, 
+    reservation: reservationReducer,
   },
   preloadedState: {
     orderUI: saved ? JSON.parse(saved) : undefined,

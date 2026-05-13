@@ -95,3 +95,111 @@
   background: #eb6b2d !important;
   border-color: #eb6b2d !important;
 }
+
+.table-menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.2);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 999;
+}
+
+.table-menu {
+  width: 220px;
+
+  background: white;
+
+  border-radius: 16px;
+
+  padding: 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,.15);
+}
+
+.table-menu button {
+  border: none;
+
+  padding: 12px;
+
+  border-radius: 10px;
+
+  background: #f3f4f6;
+
+  cursor: pointer;
+
+  font-size: 15px;
+
+  transition: .2s;
+}
+
+.table-menu button:hover {
+  background: #e5e7eb;
+}
+
+.table-menu .close {
+  background: #ef4444;
+  color: white;
+  width: 100%;
+  height: 2rem;
+}
+
+/* =========================
+RESERVED FUTURE
+ngày mai / còn xa
+========================= */
+
+.table.reserved-future .shape {
+  border: 2px dashed #a855f7;
+}
+
+/* =========================
+RESERVED SOON
+< 2 tiếng
+========================= */
+
+.table.reserved-soon .shape {
+  border: 2px solid #a855f7;
+
+  box-shadow: 0 0 10px rgba(168, 85, 247, .4);
+}
+
+/* =========================
+RESERVED ACTIVE
+tới giờ đặt
+========================= */
+
+.table.reserved-active .shape {
+  background: #a855f7;
+
+  border-color: #a855f7;
+}
+
+/* =========================
+BADGE
+========================= */
+
+.table-info {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 2px;
+}
+
+.reserve-badge {
+  font-size: 10px;
+
+  color: #7e22ce;
+
+  font-weight: 600;
+}

@@ -1,50 +1,53 @@
 // TableManager.jsx
 
 import { useState, useEffect, useMemo } from "react";
-import { useSelector } from "react-redux";
-
+import { useSelector, useDispatch } from "react-redux";
 import Pagination from "../Pagination";
 
 import "../styles/table/TableManager.css";
+import "../styles/table/Modal.css";
+import TableActionMenu from "./MenuTable/TableActionMenu";
+import ReserveTableModal from "./MenuTable/ReserveTableModal";
+import MergeTableModal from "./MenuTable/MergeTableModal";
+import TransferTableModal from "./MenuTable/TransferTableModal";
+import { getReservations } from "../../redux/reservationSlice";
 
-export default function TableManager({
-  onSelectTable,
-  activeTable,
-}) {
-  const user = useSelector(
-    (state) => state.auth.user,
+export default function TableManager({ onSelectTable, activeTable }) {
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+  const reservations = useSelector(
+    (state) => state.reservation.reservations || [],
   );
 
+  const [menuTable, setMenuTable] = useState(null);
+
+  const [reserveOpen, setReserveOpen] = useState(false);
+
+  const [mergeOpen, setMergeOpen] = useState(false);
+
+  const [transferOpen, setTransferOpen] = useState(false);
+  const [actionTable, setActionTable] = useState(null);
   // =========================
   // DRAFT ITEMS
   // bàn chờ xác nhận
   // =========================
-  const draftItems = useSelector(
-    (state) => state.orderUI.draftItems || {},
-  );
+  const draftItems = useSelector((state) => state.orderUI.draftItems || {});
 
   // =========================
   // ORDERS
   // bàn đã xác nhận
   // =========================
-  const orders = useSelector(
-    (state) => state.order.orders || [],
-  );
+  const orders = useSelector((state) => state.order.orders || []);
 
   const floors = user?.floors || [];
 
-  const [selectedFloor, setSelectedFloor] =
-    useState("all");
+  const [selectedFloor, setSelectedFloor] = useState("all");
 
-  const [statusFilter, setStatusFilter] =
-    useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
 
-  const [active, setActive] =
-    useState("Giao đi");
+  const [active, setActive] = useState("Giao đi");
 
-  const hasVIP = floors.some(
-    (f) => f.type === "vip",
-  );
+  const hasVIP = floors.some((f) => f.type === "vip");
 
   // =========================
   // FILTER FLOOR
@@ -53,31 +56,25 @@ export default function TableManager({
     selectedFloor === "all"
       ? floors
       : floors.filter((f) =>
-          selectedFloor === "vip"
-            ? f.type === "vip"
-            : f.name === selectedFloor,
+          selectedFloor === "vip" ? f.type === "vip" : f.name === selectedFloor,
         );
 
   // =========================
   // FLATTEN TABLE
   // =========================
-  const allTables =
-    filteredFloors.flatMap((f) =>
-      f.tables.map((t) => ({
-        ...t,
+  const allTables = filteredFloors.flatMap((f) =>
+    f.tables.map((t) => ({
+      ...t,
 
-        floorName: f.name,
+      floorName: f.name,
 
-        id: `${f.name}-${t.name}`,
+      id: `${f.name}-${t.name}`,
 
-        displayName: t.name,
+      displayName: t.name,
 
-        tabName:
-          f.type === "vip"
-            ? t.name
-            : `${t.name} / ${f.name}`,
-      })),
-    );
+      tabName: f.type === "vip" ? t.name : `${t.name} / ${f.name}`,
+    })),
+  );
 
   // =========================
   // ACTIVE TABLE
@@ -100,55 +97,40 @@ export default function TableManager({
   // =========================
   const confirmedTableIds = useMemo(() => {
     return orders
-      .filter(
-        (o) =>
-          o?.status === "active" ||
-          o?.status === "confirmed",
-      )
+      .filter((o) => o?.status === "active" || o?.status === "confirmed")
       .map((o) => o.tableId);
   }, [orders]);
 
   // =========================
   // FILTER STATUS
   // =========================
-  const filteredTables = allTables.filter(
-    (t) => {
-      const isPending =
-        pendingTableIds.includes(t.id);
+  const filteredTables = allTables.filter((t) => {
+    const isPending = pendingTableIds.includes(t.id);
 
-      const isConfirmed =
-        confirmedTableIds.includes(t.id);
+    const isConfirmed = confirmedTableIds.includes(t.id);
 
-      // tất cả
-      if (statusFilter === "all") {
-        return true;
-      }
-
-      // sử dụng
-      if (statusFilter === "using") {
-        return (
-          isPending || isConfirmed
-        );
-      }
-
-      // còn trống
-      if (statusFilter === "empty") {
-        return (
-          !isPending &&
-          !isConfirmed
-        );
-      }
-
-      // đặt trước
-      if (statusFilter === "reserved") {
-        return (
-          t.status === "reserved"
-        );
-      }
-
+    // tất cả
+    if (statusFilter === "all") {
       return true;
-    },
-  );
+    }
+
+    // sử dụng
+    if (statusFilter === "using") {
+      return isPending || isConfirmed;
+    }
+
+    // còn trống
+    if (statusFilter === "empty") {
+      return !isPending && !isConfirmed;
+    }
+
+    // đặt trước
+    if (statusFilter === "reserved") {
+      return t.status === "reserved";
+    }
+
+    return true;
+  });
 
   // =========================
   // COUNT ALL
@@ -158,45 +140,29 @@ export default function TableManager({
   // =========================
   // COUNT USING
   // =========================
-  const countUsing = allTables.filter(
-    (t) => {
-      const isPending =
-        pendingTableIds.includes(t.id);
+  const countUsing = allTables.filter((t) => {
+    const isPending = pendingTableIds.includes(t.id);
 
-      const isConfirmed =
-        confirmedTableIds.includes(t.id);
+    const isConfirmed = confirmedTableIds.includes(t.id);
 
-      return (
-        isPending || isConfirmed
-      );
-    },
-  ).length;
+    return isPending || isConfirmed;
+  }).length;
 
   // =========================
   // COUNT EMPTY
   // =========================
-  const countEmpty = allTables.filter(
-    (t) => {
-      const isPending =
-        pendingTableIds.includes(t.id);
+  const countEmpty = allTables.filter((t) => {
+    const isPending = pendingTableIds.includes(t.id);
 
-      const isConfirmed =
-        confirmedTableIds.includes(t.id);
+    const isConfirmed = confirmedTableIds.includes(t.id);
 
-      return (
-        !isPending &&
-        !isConfirmed
-      );
-    },
-  ).length;
+    return !isPending && !isConfirmed;
+  }).length;
 
   // =========================
   // COUNT RESERVED
   // =========================
-  const countReserved =
-    allTables.filter(
-      (t) => t.status === "reserved",
-    ).length;
+  const countReserved = allTables.filter((t) => t.status === "reserved").length;
 
   // =========================
   // PAGINATION
@@ -205,17 +171,11 @@ export default function TableManager({
 
   const pageSize = 35;
 
-  const totalPages = Math.ceil(
-    filteredTables.length / pageSize,
-  );
+  const totalPages = Math.ceil(filteredTables.length / pageSize);
 
   const start = (page - 1) * pageSize;
 
-  const currentTables =
-    filteredTables.slice(
-      start,
-      start + pageSize,
-    );
+  const currentTables = filteredTables.slice(start, start + pageSize);
 
   const handlePageChange = (p) => {
     setPage(p);
@@ -233,38 +193,78 @@ export default function TableManager({
     setPage(1);
   }, [selectedFloor, statusFilter]);
 
+  // =========================
+  // CHECK RESERVATION ( check bàn đó đã đặt trước hay chưa)
+  // =========================
+  const getReservationStatus = (tableId) => {
+    const now = new Date();
+
+    const reservation = reservations.find((r) => {
+      if (r.tableId !== tableId) return false;
+
+      const reserveDate = new Date(`${r.date}T${r.time}`);
+
+      // chỉ lấy reservation chưa hết
+      return reserveDate > now;
+    });
+
+    if (!reservation) {
+      return null;
+    }
+
+    const reserveTime = new Date(`${reservation.date}T${reservation.time}`);
+
+    const diff = reserveTime - now;
+
+    // <= 0
+    if (diff <= 0) {
+      return {
+        type: "reserved-active",
+
+        reservation,
+      };
+    }
+
+    // < 2 tiếng
+    if (diff <= 2 * 60 * 60 * 1000) {
+      return {
+        type: "reserved-soon",
+
+        reservation,
+      };
+    }
+
+    // tương lai xa
+    return {
+      type: "reserved-future",
+
+      reservation,
+    };
+  };
+
+
+  useEffect(() => {
+    dispatch(getReservations());
+  }, [dispatch]);
+
   return (
     <div className="table_manager">
       {/* FLOOR */}
       <div className="tabs">
         <button
-          className={
-            selectedFloor === "all"
-              ? "active"
-              : ""
-          }
-          onClick={() =>
-            setSelectedFloor("all")
-          }
+          className={selectedFloor === "all" ? "active" : ""}
+          onClick={() => setSelectedFloor("all")}
         >
           Tất cả
         </button>
 
         {floors
-          .filter(
-            (f) => f.type === "normal",
-          )
+          .filter((f) => f.type === "normal")
           .map((f) => (
             <button
               key={f._id}
-              className={
-                selectedFloor === f.name
-                  ? "active"
-                  : ""
-              }
-              onClick={() =>
-                setSelectedFloor(f.name)
-              }
+              className={selectedFloor === f.name ? "active" : ""}
+              onClick={() => setSelectedFloor(f.name)}
             >
               {f.name}
             </button>
@@ -272,14 +272,8 @@ export default function TableManager({
 
         {hasVIP && (
           <button
-            className={
-              selectedFloor === "vip"
-                ? "active"
-                : ""
-            }
-            onClick={() =>
-              setSelectedFloor("vip")
-            }
+            className={selectedFloor === "vip" ? "active" : ""}
+            onClick={() => setSelectedFloor("vip")}
           >
             Phòng VIP
           </button>
@@ -291,12 +285,8 @@ export default function TableManager({
         <label>
           <input
             type="radio"
-            checked={
-              statusFilter === "all"
-            }
-            onChange={() =>
-              setStatusFilter("all")
-            }
+            checked={statusFilter === "all"}
+            onChange={() => setStatusFilter("all")}
           />
           Tất cả ({countAll})
         </label>
@@ -304,12 +294,8 @@ export default function TableManager({
         <label>
           <input
             type="radio"
-            checked={
-              statusFilter === "using"
-            }
-            onChange={() =>
-              setStatusFilter("using")
-            }
+            checked={statusFilter === "using"}
+            onChange={() => setStatusFilter("using")}
           />
           Sử dụng ({countUsing})
         </label>
@@ -317,12 +303,8 @@ export default function TableManager({
         <label>
           <input
             type="radio"
-            checked={
-              statusFilter === "empty"
-            }
-            onChange={() =>
-              setStatusFilter("empty")
-            }
+            checked={statusFilter === "empty"}
+            onChange={() => setStatusFilter("empty")}
           />
           Còn trống ({countEmpty})
         </label>
@@ -330,12 +312,8 @@ export default function TableManager({
         <label>
           <input
             type="radio"
-            checked={
-              statusFilter === "reserved"
-            }
-            onChange={() =>
-              setStatusFilter("reserved")
-            }
+            checked={statusFilter === "reserved"}
+            onChange={() => setStatusFilter("reserved")}
           />
           Đặt trước ({countReserved})
         </label>
@@ -345,11 +323,7 @@ export default function TableManager({
       <div className="grid">
         {/* DELIVERY */}
         <div
-          className={`table ${
-            active === "Giao đi"
-              ? "selected"
-              : ""
-          }`}
+          className={`table ${active === "Giao đi" ? "selected" : ""}`}
           onClick={() =>
             onSelectTable({
               id: "Giao đi",
@@ -368,60 +342,114 @@ export default function TableManager({
         {/* TABLES */}
         {currentTables.map((table) => {
           // pending
-          const isPending =
-            pendingTableIds.includes(
-              table.id,
-            );
+          const isPending = pendingTableIds.includes(table.id);
 
           // confirmed
-          const isConfirmed =
-            confirmedTableIds.includes(
-              table.id,
-            );
+          const isConfirmed = confirmedTableIds.includes(table.id);
+          // đặt trước
+          const reservationStatus = getReservationStatus(table.id);
 
           return (
             <div
               key={table.id}
               className={`
                 table
-                ${
-                  active === table.id
-                    ? "selected"
-                    : ""
-                }
-                ${
-                  isPending
-                    ? "pending"
-                    : ""
-                }
-                ${
-                  isConfirmed
-                    ? "confirmed"
-                    : ""
-                }
+                ${active === table.id ? "selected" : ""}
+                ${isPending ? "pending" : ""}
+                ${isConfirmed ? "confirmed" : ""}
+                ${reservationStatus?.type || ""}
               `}
-              onClick={() =>
-                onSelectTable(table)
-              }
+              // onClick={() =>
+              //    onSelectTable(table)
+              // }
+              onClick={() => setMenuTable(table)}
             >
               <div className="shape"></div>
 
-              <span>
-                {table.displayName}
-              </span>
+              <div className="table-info">
+                <span>{table.displayName}</span>
+
+                {reservationStatus && (
+                  <small className="reserve-badge">
+                    🕒
+                    {reservationStatus.reservation.time}
+                  </small>
+                )}
+              </div>
             </div>
           );
         })}
       </div>
+
+      <TableActionMenu
+        table={menuTable}
+        onClose={() => setMenuTable(null)}
+        onOpen={(table) => {
+          onSelectTable(table);
+
+          setMenuTable(null);
+        }}
+        onReserve={(table) => {
+          setActionTable(table);
+
+          setReserveOpen(true);
+
+          setMenuTable(null);
+        }}
+        onMerge={(table) => {
+          setActionTable(table);
+
+          setMergeOpen(true);
+
+          setMenuTable(null);
+        }}
+        onTransfer={(table) => {
+          setActionTable(table);
+
+          setTransferOpen(true);
+
+          setMenuTable(null);
+        }}
+      />
+
+      <ReserveTableModal
+        open={reserveOpen}
+        table={actionTable}
+        onClose={() => {
+          setReserveOpen(false);
+
+          setActionTable(null);
+        }}
+      />
+
+      <MergeTableModal
+        open={mergeOpen}
+        table={actionTable}
+        tables={allTables}
+        onClose={() => {
+          setMergeOpen(false);
+
+          setActionTable(null);
+        }}
+      />
+
+      <TransferTableModal
+        open={transferOpen}
+        table={actionTable}
+        tables={allTables}
+        onClose={() => {
+          setTransferOpen(false);
+
+          setActionTable(null);
+        }}
+      />
 
       {/* PAGINATION */}
       {totalPages > 1 && (
         <Pagination
           page={page}
           totalPages={totalPages}
-          onPageChange={
-            handlePageChange
-          }
+          onPageChange={handlePageChange}
         />
       )}
     </div>

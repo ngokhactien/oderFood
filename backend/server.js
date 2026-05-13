@@ -7,7 +7,7 @@ import productRoutes from "./routes/product.js";
 import momoRoutes from "./routes/momo.js";
 import floorRoutes from "./routes/floor.js";
 import orderRoutes from "./routes/order.js";
-
+import tableReservationRoutes from "./routes/tableReservation.js";
 dotenv.config(); // 🔥 phải để lên trên
 
 const app = express();
@@ -20,7 +20,7 @@ app.use(
   cors({
     origin: process.env.CLIENT_URL,
     credentials: true,
-  })
+  }),
 );
 
 // routes
@@ -33,6 +33,8 @@ app.use("/api/orders", orderRoutes);
 
 app.use("/api/momo", momoRoutes);
 
+// dùng để xem user đặt bàn
+app.use("/api/reservations", tableReservationRoutes);
 
 // 🔥 MongoDB từ env
 mongoose
