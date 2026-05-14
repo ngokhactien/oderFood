@@ -132,6 +132,26 @@ export const getActiveOrders = createAsyncThunk(
   },
 );
 
+// chuyen ban
+export const transferTable = createAsyncThunk(
+  "order/transferTable",
+  async ({ orderId, newTableId }, { getState }) => {
+    const token = getState().auth.token;
+
+    const res = await axiosClient.put(
+      `/orders/${orderId}/transfer`,
+      { newTableId },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    return res.data;
+  },
+);
+
 // =======================
 // SLICE
 // =======================
@@ -142,7 +162,7 @@ const orderSlice = createSlice({
     // currentOrder: null,
     loading: false,
     actionType: null,
-     requests: [],
+    requests: [],
   },
   reducers: {
     clearOrder: (state) => {
@@ -268,6 +288,30 @@ const orderSlice = createSlice({
         state.actionType = null;
       })
       .addCase(getActiveOrders.rejected, (state) => {
+        state.loading = false;
+        state.actionType = null;
+      })
+      // =======================
+      // TRANSFER TABLE
+      // =======================
+      .addCase(transferTable.pending, (state) => {
+        state.loading = true;
+        state.actionType = "transferTable";
+      })
+
+      .addCase(transferTable.fulfilled, (state, action) => {
+        state.loading = false;
+
+        const updatedOrder = action.payload;
+
+        state.orders = state.orders.map((o) =>
+          o._id === updatedOrder._id ? updatedOrder : o,
+        );
+
+        state.actionType = null;
+      })
+
+      .addCase(transferTable.rejected, (state) => {
         state.loading = false;
         state.actionType = null;
       });

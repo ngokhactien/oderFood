@@ -200,6 +200,35 @@ export const getActiveOrders = async (req, res) => {
   }
 };
 
+// chuyển bàn
+export const transferTable = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { newTableId } = req.body;
+
+    // tìm order
+    const order = await Order.findById(id);
+
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not found",
+      });
+    }
+
+    // update bàn mới
+    order.tableId = newTableId;
+
+    await order.save();
+
+    res.json(order);
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
+
 // Click bàn
 //    ↓
 // getOrCreateOrder

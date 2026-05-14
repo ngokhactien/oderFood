@@ -13,7 +13,6 @@ import {
 import {
   clearDraft,
   removeExpiredDrafts,
-  setActiveTab,
   openTab,
 } from "../../redux/orderUiSlice";
 
@@ -25,12 +24,16 @@ export default function OrderRequest() {
   // =========================
   // STORE
   // =========================
-  const draftItems = useSelector((state) => state.orderUI.draftItems);
+  const draftItems = useSelector(
+    (state) => state.orderUI.draftItems || {},
+  );
 
-  const orders = useSelector((state) => state.order.orders || []);
+  const orders = useSelector(
+    (state) => state.order.orders || [],
+  );
 
   // =========================
-  // AUTO REMOVE EMPTY DRAFT
+  // AUTO REMOVE
   // =========================
   useEffect(() => {
     const interval = setInterval(() => {
@@ -41,89 +44,127 @@ export default function OrderRequest() {
   }, [dispatch]);
 
   // =========================
-  // ALL TABLES
+  // TABLES
   // =========================
   const tables = useMemo(() => {
-    return (
-      Object.entries(draftItems || {})
-        .map(([tableId, draft]) => ({
-          tableId,
-          ...draft,
-        }))
-        // sort cũ -> mới
-        .sort((a, b) => a.updatedAt - b.updatedAt)
-    );
+    return Object.entries(draftItems)
+      .map(([tableId, draft]) => ({
+        tableId,
+        ...draft,
+      }))
+      .sort((a, b) => a.updatedAt - b.updatedAt);
   }, [draftItems]);
 
   // =========================
   // SELECTED TABLE
   // =========================
-  const [selectedTableId, setSelectedTableId] = useState(null);
+  const [selectedTableId, setSelectedTableId] =
+    useState(null);
 
-  // auto select first table
+  // =========================
+  // AUTO SELECT TABLE
+  // =========================
   useEffect(() => {
-    if (tables.length > 0 && !selectedTableId) {
-      setSelectedTableId(tables[0].tableId);
+    // chưa có selected
+    if (
+      tables.length > 0 &&
+      !selectedTableId
+    ) {
+      const firstTable = tables[0];
+
+      setSelectedTableId(firstTable.tableId);
 
       dispatch(
         openTab({
-          id: tables[0].tableId,
-
-          name: tables[0].tableInfo?.name || tables[0].tableId,
-
-          tabName: `${tables[0].tableInfo?.name || ""}${
-            tables[0].tableInfo?.floor ? ` / ${tables[0].tableInfo.floor}` : ""
+          id: firstTable.tableId,
+          name:
+            firstTable.tableInfo?.name ||
+            firstTable.tableId,
+          tabName: `${
+            firstTable.tableInfo?.name || ""
+          }${
+            firstTable.tableInfo?.floor
+              ? ` / ${firstTable.tableInfo.floor}`
+              : ""
           }`,
         }),
       );
+
+      return;
     }
 
-    // nếu bàn hiện tại bị xoá
-    if (selectedTableId && !tables.find((t) => t.tableId === selectedTableId)) {
-      const nextTable = tables[0]?.tableId || null;
+    // selected bị xoá sau khi chuyển bàn
+    const stillExists = tables.some(
+      (t) => t.tableId === selectedTableId,
+    );
 
-      setSelectedTableId(nextTable);
+    if (
+      selectedTableId &&
+      !stillExists
+    ) {
+      const nextTable = tables[0] || null;
 
       if (nextTable) {
-        const nextData = tables.find((t) => t.tableId === nextTable);
+        setSelectedTableId(
+          nextTable.tableId,
+        );
 
-        if (nextData) {
-          dispatch(
-            openTab({
-              id: nextData.tableId,
-
-              name: nextData.tableInfo?.name || nextData.tableId,
-
-              tabName: `${nextData.tableInfo?.name || ""}${
-                nextData.tableInfo?.floor
-                  ? ` / ${nextData.tableInfo.floor}`
-                  : ""
-              }`,
-            }),
-          );
-        }
+        dispatch(
+          openTab({
+            id: nextTable.tableId,
+            name:
+              nextTable.tableInfo?.name ||
+              nextTable.tableId,
+            tabName: `${
+              nextTable.tableInfo?.name || ""
+            }${
+              nextTable.tableInfo?.floor
+                ? ` / ${nextTable.tableInfo.floor}`
+                : ""
+            }`,
+          }),
+        );
+      } else {
+        setSelectedTableId(null);
       }
     }
-  }, [tables, selectedTableId]);
+  }, [
+    tables,
+    selectedTableId,
+    dispatch,
+  ]);
 
   // =========================
   // CURRENT DRAFT
   // =========================
-  const currentDraft = draftItems?.[selectedTableId];
+  const currentDraft =
+    draftItems?.[selectedTableId] || {};
 
-  const items = Array.isArray(currentDraft?.items) ? currentDraft.items : [];
+  const items = Array.isArray(
+    currentDraft?.items,
+  )
+    ? currentDraft.items
+    : [];
 
   // =========================
   // TABLE INFO
   // =========================
-  const tableInfo = currentDraft?.tableInfo || {};
+  const tableInfo =
+    currentDraft?.tableInfo || {};
 
   // =========================
   // TOTAL
   // =========================
-  const total = items.reduce((sum, item) => {
-    return sum + Number(item.price || 0) * Number(item.qty || 0);
-  }, 0);
+  const total = items.reduce(
+    (sum, item) => {
+      return (
+        sum +
+        Number(item.price || 0) *
+          Number(item.qty || 0)
+      );
+    },
+    0,
+  );
 
   // =========================
   // CONFIRM
@@ -142,7 +183,10 @@ export default function OrderRequest() {
         return;
       }
 
-      let order = orders.find((o) => o?.tableId === selectedTableId);
+      let order = orders.find(
+        (o) =>
+          o?.tableId === selectedTableId,
+      );
 
       // create order
       if (!order) {
@@ -162,14 +206,20 @@ export default function OrderRequest() {
       }
 
       if (!order?._id) {
-        toast.error("Không tạo được order");
+        toast.error(
+          "Không tạo được order",
+        );
 
         return;
       }
 
       // add items
       for (const item of items) {
-        for (let i = 0; i < item.qty; i++) {
+        for (
+          let i = 0;
+          i < item.qty;
+          i++
+        ) {
           await dispatch(
             addItem({
               orderId: order._id,
@@ -180,13 +230,19 @@ export default function OrderRequest() {
       }
 
       // confirm
-      await dispatch(confirmOrder(order._id));
+      await dispatch(
+        confirmOrder(order._id),
+      );
 
       // reload
-      await dispatch(getActiveOrders());
+      await dispatch(
+        getActiveOrders(),
+      );
 
-      // remove draft
-      dispatch(clearDraft(selectedTableId));
+      // clear draft
+      dispatch(
+        clearDraft(selectedTableId),
+      );
 
       toast.success("Đã gửi bếp");
     } catch (err) {
@@ -200,9 +256,13 @@ export default function OrderRequest() {
   // CANCEL
   // =========================
   const handleCancel = () => {
-    if (!selectedTableId) return;
+    if (!selectedTableId) {
+      return;
+    }
 
-    dispatch(clearDraft(selectedTableId));
+    dispatch(
+      clearDraft(selectedTableId),
+    );
 
     toast.info("Đã huỷ");
   };
@@ -211,27 +271,32 @@ export default function OrderRequest() {
   // TIME AGO
   // =========================
   const getTimeAgo = (time) => {
-    if (!time) return "vài giây trước";
+    if (!time) {
+      return "vài giây trước";
+    }
 
     const diff = Date.now() - time;
 
-    const seconds = Math.floor(diff / 1000);
+    const seconds = Math.floor(
+      diff / 1000,
+    );
 
-    const minutes = Math.floor(diff / 60000);
+    const minutes = Math.floor(
+      diff / 60000,
+    );
 
-    const hours = Math.floor(diff / 3600000);
+    const hours = Math.floor(
+      diff / 3600000,
+    );
 
-    // < 1 phút
     if (seconds < 60) {
       return `${seconds} giây trước`;
     }
 
-    // < 1 giờ
     if (minutes < 60) {
       return `${minutes} phút trước`;
     }
 
-    // >= 1 giờ
     return `${hours} giờ trước`;
   };
 
@@ -244,19 +309,29 @@ export default function OrderRequest() {
             <div
               key={table.tableId}
               className={`table-item ${
-                selectedTableId === table.tableId ? "active" : ""
+                selectedTableId ===
+                table.tableId
+                  ? "active"
+                  : ""
               }`}
               onClick={() => {
-                setSelectedTableId(table.tableId);
+                setSelectedTableId(
+                  table.tableId,
+                );
 
                 dispatch(
                   openTab({
                     id: table.tableId,
-
-                    name: table.tableInfo?.name || table.tableId,
-
-                    tabName: `${table.tableInfo?.name || ""}${
-                      table.tableInfo?.floor
+                    name:
+                      table.tableInfo
+                        ?.name ||
+                      table.tableId,
+                    tabName: `${
+                      table.tableInfo
+                        ?.name || ""
+                    }${
+                      table.tableInfo
+                        ?.floor
                         ? ` / ${table.tableInfo.floor}`
                         : ""
                     }`,
@@ -265,54 +340,92 @@ export default function OrderRequest() {
               }}
             >
               <div className="table-name">
-                {table.tableInfo?.name || table.tableId}
+                {table.tableInfo?.name ||
+                  table.tableId}
 
-                {table.tableInfo?.floor ? ` / ${table.tableInfo.floor}` : ""}
+                {table.tableInfo?.floor
+                  ? ` / ${table.tableInfo.floor}`
+                  : ""}
               </div>
 
-              <div className="table-time">{getTimeAgo(table.updatedAt)}</div>
+              <div className="table-time">
+                {getTimeAgo(
+                  table.updatedAt,
+                )}
+              </div>
             </div>
           ))
         ) : (
-          <div className="empty-order">Chưa có yêu cầu nào</div>
+          <div className="empty-order">
+            Chưa có yêu cầu nào
+          </div>
         )}
       </div>
 
       {/* CONTENT */}
       <div className="order-content">
         <h3>
-          Yêu cầu gọi món từ {tableInfo?.name || ""}
-          {tableInfo?.floor ? ` / ${tableInfo.floor}` : ""}
+          Yêu cầu gọi món từ{" "}
+          {tableInfo?.name || ""}
+
+          {tableInfo?.floor
+            ? ` / ${tableInfo.floor}`
+            : ""}
         </h3>
 
         <div className="order-list">
           {items.length > 0 ? (
             items.map((item, index) => (
-              <div key={item._id || index} className="order-row">
+              <div
+                key={
+                  item._id || index
+                }
+                className="order-row"
+              >
                 <div className="left">
-                  <span className="name">{item.name}</span>
+                  <span className="name">
+                    {item.name}
+                  </span>
 
-                  <span className="qty">{item.qty}x</span>
+                  <span className="qty">
+                    {item.qty}x
+                  </span>
                 </div>
 
                 <div className="right">
-                  {(item.price * item.qty).toLocaleString()}đ
+                  {(
+                    item.price *
+                    item.qty
+                  ).toLocaleString()}
+                  đ
                 </div>
               </div>
             ))
           ) : (
-            <div className="empty-order">Chưa có món nào</div>
+            <div className="empty-order">
+              Chưa có món nào
+            </div>
           )}
         </div>
 
-        <div className="order-total">Tổng tiền: {total.toLocaleString()}đ</div>
+        <div className="order-total">
+          Tổng tiền:
+          {" "}
+          {total.toLocaleString()}đ
+        </div>
 
         <div className="order-actions">
-          <button className="btn cancel" onClick={handleCancel}>
+          <button
+            className="btn cancel"
+            onClick={handleCancel}
+          >
             Từ chối
           </button>
 
-          <button className="btn confirm" onClick={handleConfirm}>
+          <button
+            className="btn confirm"
+            onClick={handleConfirm}
+          >
             Xác nhận
           </button>
         </div>

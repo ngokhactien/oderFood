@@ -12,6 +12,10 @@ import MergeTableModal from "./MenuTable/MergeTableModal";
 import TransferTableModal from "./MenuTable/TransferTableModal";
 import { getReservations } from "../../redux/reservationSlice";
 
+import { transferTable } from "../../redux/orderSlice";
+
+import { transferDraftTable } from "../../redux/orderUiSlice";
+
 export default function TableManager({ onSelectTable, activeTable }) {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
@@ -27,6 +31,7 @@ export default function TableManager({ onSelectTable, activeTable }) {
 
   const [transferOpen, setTransferOpen] = useState(false);
   const [actionTable, setActionTable] = useState(null);
+
   // =========================
   // DRAFT ITEMS
   // bàn chờ xác nhận

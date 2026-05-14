@@ -8,6 +8,7 @@ import {
   updateItemStatus,
   payOrder,
   getActiveOrders,
+  transferTable,
 } from "../controllers/orderController.js";
 import { verifyToken } from "../middleware/auth.js";
 
@@ -23,5 +24,8 @@ router.delete("/:orderId/item/:itemId", verifyToken, removeItem);
 router.put("/:orderId/confirm", verifyToken, confirmOrder);
 router.put("/:orderId/item/:itemId/status", verifyToken, updateItemStatus);
 router.put("/:orderId/pay", verifyToken, payOrder);
+
+// chuyển bàn
+router.put("/:id/transfer", verifyToken, transferTable);
 
 export default router;

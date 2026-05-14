@@ -220,3 +220,33 @@
 
   margin-bottom: 8px;
 }
+
+.empty-warning {
+  padding: 12px;
+
+  border-radius: 10px;
+
+  background: #fef2f2;
+
+  color: #dc2626;
+
+  font-size: 14px;
+
+  margin: 12px 0;
+}
+
+.actions button:disabled {
+  opacity: .5;
+
+  cursor: not-allowed;
+}
+
+.disabled-btn {
+  opacity: .5;
+
+  cursor: not-allowed !important;
+
+  background: #e5e7eb !important;
+
+  color: #999;
+}

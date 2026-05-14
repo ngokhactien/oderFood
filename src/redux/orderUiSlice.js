@@ -186,6 +186,20 @@ const orderUiSlice = createSlice({
         }
       });
     },
+
+    transferDraftTable: (state, action) => {
+      const { fromTableId, toTableId } = action.payload;
+
+      const draft = state.draftItems[fromTableId];
+
+      if (!draft) {
+        return;
+      }
+
+      state.draftItems[toTableId] = draft;
+
+      delete state.draftItems[fromTableId];
+    },
   },
 });
 
@@ -198,6 +212,7 @@ export const {
   removeDraftItem,
   clearDraft,
   removeExpiredDrafts,
+  transferDraftTable,
 } = orderUiSlice.actions;
 
 export default orderUiSlice.reducer;
