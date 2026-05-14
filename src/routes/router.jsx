@@ -18,6 +18,9 @@ import POSLayout from "../pages/POSLayout";
 import AdminLayout from "../AdminLayout";
 import Dashboard from "../pages/Dashboard";
 import OrdersTable from "../components/Dashboard/OrdersTable/OrdersTable";
+import TransferTable from "../components/Dashboard/TransferTable/TransferTable";
+import RevenueOverview from "../components/Dashboard/RevenueOverview/RevenueOverview";
+import Products from "../components/Dashboard/Products/Products";
 
 const router = createBrowserRouter([
   //user
@@ -104,7 +107,9 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Dashboard /> },
       { path: "orders", element: <OrdersTable /> },
-      // { path: "products", element: <Products /> },
+      { path: "products", element: <Products /> },
+      { path: "bookings", element: <TransferTable /> },
+      { path: "revenue", element: <RevenueOverview /> },
     ],
   },
 ]);

@@ -4,6 +4,8 @@ import {
   HomeIcon,
   ShoppingCartIcon,
   CubeIcon,
+  CalendarIcon,
+  CurrencyDollarIcon
 } from "@heroicons/react/24/outline";
 
 const Sidebar = ({ open }) => {
@@ -22,6 +24,12 @@ const Sidebar = ({ open }) => {
 
         <NavLink to="/admin/products">
           <CubeIcon /> Sản phẩm
+        </NavLink>
+       <NavLink to="/admin/bookings">
+          <CalendarIcon/>  Đặt bàn
+        </NavLink>
+        <NavLink to="/admin/revenue">
+          <CurrencyDollarIcon />  Doanh Thu
         </NavLink>
       </nav>
     </div>
