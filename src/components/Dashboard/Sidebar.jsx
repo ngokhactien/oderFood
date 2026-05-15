@@ -5,7 +5,11 @@ import {
   ShoppingCartIcon,
   CubeIcon,
   CalendarIcon,
-  CurrencyDollarIcon
+  CurrencyDollarIcon,
+  ArchiveBoxIcon,
+  UsersIcon,
+  ChatBubbleLeftRightIcon,
+  DocumentChartBarIcon,
 } from "@heroicons/react/24/outline";
 
 const Sidebar = ({ open }) => {
@@ -25,11 +29,31 @@ const Sidebar = ({ open }) => {
         <NavLink to="/admin/products">
           <CubeIcon /> Sản phẩm
         </NavLink>
-       <NavLink to="/admin/bookings">
-          <CalendarIcon/>  Đặt bàn
+        <NavLink to="/admin/bookings">
+          <CalendarIcon /> Đặt bàn
         </NavLink>
         <NavLink to="/admin/revenue">
-          <CurrencyDollarIcon />  Doanh Thu
+          <CurrencyDollarIcon /> Doanh Thu
+        </NavLink>
+
+         <NavLink to="/admin/categories">
+          <CurrencyDollarIcon /> Doanh Mục
+        </NavLink>
+
+        <NavLink to="/admin/inventory">
+          <ArchiveBoxIcon /> Quản lý Kho
+        </NavLink>
+
+        <NavLink to="/admin/comments">
+          <ChatBubbleLeftRightIcon /> Bình Luận
+        </NavLink>
+
+        <NavLink to="/admin/reports">
+          <DocumentChartBarIcon /> Báo cáo
+        </NavLink>
+
+        <NavLink to="/admin/members">
+          <UsersIcon /> Thành Viên
         </NavLink>
       </nav>
     </div>

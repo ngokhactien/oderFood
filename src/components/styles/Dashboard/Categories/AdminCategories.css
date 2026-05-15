@@ -1,0 +1,220 @@
+/* styles/AdminCategories.css */
+
+.admin-categories {
+  width: 100%;
+  padding: 24px;
+  background: #f5f6fa;
+}
+
+.admin-categories__card {
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.admin-categories__header {
+  padding: 20px 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid #eee;
+}
+
+.admin-categories__header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.admin-categories__add-btn {
+  height: 44px;
+  border: none;
+  border-radius: 10px;
+  padding: 0 18px;
+
+  background: #3b82f6;
+  color: white;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-categories__add-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.admin-categories__top {
+  padding: 20px 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.admin-categories__show {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-categories__show select {
+  width: 70px;
+  height: 38px;
+
+  border: 1px solid #ddd;
+  border-radius: 8px;
+
+  padding: 0 10px;
+  outline: none;
+}
+
+.admin-categories__search {
+  position: relative;
+}
+
+.admin-categories__search input {
+  width: 260px;
+  height: 40px;
+
+  border: 1px solid #ddd;
+  border-radius: 10px;
+
+  padding: 0 14px 0 40px;
+  outline: none;
+}
+
+.admin-categories__search-icon {
+  width: 18px;
+  height: 18px;
+
+  position: absolute;
+  top: 50%;
+  left: 12px;
+
+  transform: translateY(-50%);
+  color: #999;
+}
+
+.admin-categories__table-wrap {
+  overflow-x: auto;
+}
+
+.admin-categories__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-categories__table thead {
+  background: #f8fafc;
+}
+
+.admin-categories__table th,
+.admin-categories__table td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.admin-categories__table th {
+  font-size: 14px;
+  font-weight: 700;
+  color: #374151;
+}
+
+.admin-categories__table td {
+  font-size: 14px;
+  color: #555;
+}
+
+.admin-categories__name {
+  font-weight: 600;
+  color: #111827;
+}
+
+.admin-categories__image {
+  width: 54px;
+  height: 54px;
+
+  border-radius: 12px;
+  object-fit: cover;
+
+  border: 1px solid #eee;
+}
+
+.admin-categories__status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 34px;
+  padding: 0 14px;
+
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.admin-categories__status--show {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.admin-categories__status--hide {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.admin-categories__action-btn {
+  width: 36px;
+  height: 36px;
+
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.admin-categories__action-btn:hover {
+  background: #f3f4f6;
+}
+
+.admin-categories__action-icon {
+  width: 20px;
+  height: 20px;
+  color: #666;
+}
+
+.admin-categories__bottom {
+  padding: 20px 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .admin-categories__header,
+  .admin-categories__top,
+  .admin-categories__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-categories__search input {
+    width: 100%;
+  }
+}

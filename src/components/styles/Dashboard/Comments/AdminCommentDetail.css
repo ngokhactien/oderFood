@@ -1,0 +1,174 @@
+/* styles/AdminCommentDetail.css */
+
+.admin-comment-detail {
+  width: 100%;
+  padding: 24px;
+  background: #f5f6fa;
+}
+
+.admin-comment-detail__card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.admin-comment-detail__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-bottom: 30px;
+  font-size: 15px;
+}
+
+/* link Bình luận */
+.admin-comment-detail__breadcrumb a {
+  color: black;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.admin-comment-detail__breadcrumb a:hover {
+  color: #2563eb;
+}
+
+/* dấu / */
+.admin-comment-detail__breadcrumb span {
+  color: #888;
+}
+
+/* chữ cuối */
+.admin-comment-detail__breadcrumb span:last-child {
+  color: #444;
+  font-weight: 500;
+}
+
+.admin-comment-detail__breadcrumb span:first-child {
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.admin-comment-detail__section h3 {
+  font-size: 18px;
+  margin-bottom: 14px;
+  color: #222;
+}
+
+.admin-comment-detail__content {
+  min-height: 120px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 20px;
+  font-size: 16px;
+  color: #333;
+  background: #fff;
+}
+
+.admin-comment-detail__bottom {
+  margin-top: 40px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.admin-comment-detail__box {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 22px;
+  background: #fff;
+}
+
+.admin-comment-detail__status-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 20px;
+}
+
+.admin-comment-detail__label {
+  font-weight: 700;
+  color: #222;
+}
+
+.admin-comment-detail__status {
+  background: #dcfce7;
+  color: #16a34a;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.admin-comment-detail__select {
+  width: 100%;
+  height: 42px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+
+  padding: 0 12px;
+  margin-bottom: 20px;
+
+  outline: none;
+}
+
+.admin-comment-detail__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.admin-comment-detail__update-btn,
+.admin-comment-detail__delete-btn {
+  border: none;
+  height: 42px;
+  padding: 0 22px;
+  border-radius: 8px;
+
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-comment-detail__update-btn {
+  background: #3b82f6;
+}
+
+.admin-comment-detail__delete-btn {
+  background: #ef4444;
+}
+
+.admin-comment-detail__info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 16px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.admin-comment-detail__info:last-child {
+  border-bottom: none;
+}
+
+.admin-comment-detail__info span {
+  color: #666;
+}
+
+.admin-comment-detail__info strong {
+  color: #222;
+}
+
+@media (max-width: 768px) {
+  .admin-comment-detail__bottom {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-comment-detail__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

@@ -1,0 +1,133 @@
+.admin-product-page {
+  width: 100%;
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 20px;
+}
+
+.admin-product-page .product-form {
+  display: flex;
+  gap: 20px;
+}
+
+.admin-product-page .left-content {
+  flex: 3;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.admin-product-page .right-content {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin-product-page .card-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.admin-product-page h2 {
+  font-size: 26px;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.admin-product-page .form-group {
+  margin-bottom: 22px;
+}
+
+.admin-product-page .form-group label,
+.admin-product-page .card-box label {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #444;
+}
+
+.admin-product-page .form-group input,
+.admin-product-page .form-group textarea,
+.admin-product-page .card-box select,
+.admin-product-page .card-box input[type="file"] {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 15px;
+  outline: none;
+}
+
+.admin-product-page .form-group textarea {
+  resize: vertical;
+}
+
+.admin-product-page .preview-image {
+  width: 100%;
+  margin-top: 20px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.admin-product-page .submit-btn {
+  width: 100%;
+  margin-top: 20px;
+  border: none;
+  background: #2563eb;
+  color: #fff;
+  padding: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.admin-product-page .submit-btn:hover {
+  background: #1d4ed8;
+}
+
+@media screen and (max-width: 992px) {
+  .admin-product-page .product-form {
+    flex-direction: column;
+  }
+}
+
+.admin-product-page .product-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 25px;
+  font-size: 24px;
+  font-weight: 600;
+  flex-wrap: wrap;
+}
+
+.admin-product-page .product-header a {
+  text-decoration: none;
+  color: black;
+}
+
+.admin-product-page .product-header span {
+  color: #333;
+}
+
+.admin-product-page .product-mode {
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.admin-product-page .product-mode.edit {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.admin-product-page .product-mode.add {
+  background: #dcfce7;
+  color: #16a34a;
+}

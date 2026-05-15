@@ -1,0 +1,43 @@
+.reservation-page {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+}
+
+.reservation-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.reservation-header input {
+  width: 250px;
+  height: 40px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0 12px;
+}
+
+.reservation-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.reservation-table th {
+  background: #f5f5f5;
+  padding: 16px;
+  text-align: left;
+}
+
+.reservation-table td {
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.status {
+  background: #d4f8dd;
+  color: green;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+}

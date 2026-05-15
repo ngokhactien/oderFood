@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../../styles/Dashboard/OrdersTable/OrdersTable.css";
 import Pagination from "../../Pagination";
+import { NavLink } from "react-router-dom";
 
 const mockData = [
   {
@@ -79,10 +80,7 @@ const OrdersTable = () => {
 
         <div>
           Search:{" "}
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <input value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
       </div>
 
@@ -110,8 +108,13 @@ const OrdersTable = () => {
                 <span className="status">{item.status}</span>
               </td>
               <td>
-                <button className="btn view">Xem</button>
-                <button className="btn edit">Sửa</button>
+                <NavLink to={"detail/V"} className="btn view">
+                  Xem
+                </NavLink>
+
+                <NavLink to={"detail/E"} className="btn edit">
+                  Sửa
+                </NavLink>
               </td>
             </tr>
           ))}
@@ -121,8 +124,7 @@ const OrdersTable = () => {
       {/* bottom */}
       <div className="table-footer">
         <span>
-          Showing {start + 1} to{" "}
-          {Math.min(start + entries, filtered.length)} of{" "}
+          Showing {start + 1} to {Math.min(start + entries, filtered.length)} of{" "}
           {filtered.length} entries
         </span>
 

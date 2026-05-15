@@ -15,12 +15,24 @@ import Address from "../components/profile/Address";
 import ProfileInfo from "../components/profile/ProfileInfo";
 import CheckoutPage from "../pages/CheckoutPage";
 import POSLayout from "../pages/POSLayout";
+
+// admin
 import AdminLayout from "../AdminLayout";
-import Dashboard from "../pages/Dashboard";
 import OrdersTable from "../components/Dashboard/OrdersTable/OrdersTable";
-import TransferTable from "../components/Dashboard/TransferTable/TransferTable";
 import RevenueOverview from "../components/Dashboard/RevenueOverview/RevenueOverview";
 import Products from "../components/Dashboard/Products/Products";
+import OrderDetail from "../components/Dashboard/OrdersTable/OrderDetail";
+import ProductForm from "../components/Dashboard/Products/ProductForm";
+import AdminInventory from "../components/Dashboard/Inventory/AdminInventory";
+import AdminImportInventory from "../components/Dashboard/Inventory/AdminImportInventory";
+import AdminComments from "../components/Dashboard/Comments/AdminComments";
+import AdminCommentDetail from "../components/Dashboard/Comments/AdminCommentDetail";
+import AdminUsers from "../components/Dashboard/Users/AdminUsers";
+import AdminCategories from "../components/Dashboard/Categories/AdminCategories";
+import Dashboard from "../components/Dashboard/Home/AdminReport";
+import AdminProductsReport from "../components/Dashboard/Reports/AdminProductsReport";
+import AdminTransferTable from "../components/Dashboard/TransferTable/AdminTransferTable";
+// import AdminReport from "../components/Dashboard/Home/AdminReport";
 
 const router = createBrowserRouter([
   //user
@@ -107,9 +119,18 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Dashboard /> },
       { path: "orders", element: <OrdersTable /> },
-      { path: "products", element: <Products /> },
-      { path: "bookings", element: <TransferTable /> },
+      { path: "orders/detail/:mode", element: <OrderDetail /> },
+      { path: "products", element: <Products /> },  
+      { path: "products/form/:mode", element: <ProductForm /> },
+      { path: "bookings", element: <AdminTransferTable /> },
       { path: "revenue", element: <RevenueOverview /> },
+      { path: "inventory", element: <AdminInventory /> },
+      { path: "inventory/import", element: <AdminImportInventory /> },
+      { path: "comments", element: <AdminComments /> },
+      { path: "comments/detail", element: <AdminCommentDetail /> },
+      { path: "members", element: <AdminUsers /> },
+      { path: "categories", element: <AdminCategories /> },
+      { path: "reports", element: <AdminProductsReport /> },
     ],
   },
 ]);

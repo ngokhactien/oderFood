@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+// đặt bàn
 const tableReservationSchema =
   new mongoose.Schema(
     {
