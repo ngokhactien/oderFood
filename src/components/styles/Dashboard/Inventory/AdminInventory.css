@@ -279,3 +279,105 @@
     justify-content: center;
   }
 }
+
+/* LOW STOCK */
+.inventory-product-status.low-stock {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+/* LINK BUTTON */
+.inventory-import-btn,
+.inventory-add-btn {
+  text-decoration: none;
+}
+
+/* ACTION LINK */
+.inventory-edit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* FOOTER */
+.products-footer {
+  padding: 18px 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  border-top: 1px solid #eee;
+}
+
+.products-footer span {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* TABLE ROW HOVER */
+.inventory-management-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* BUTTON HOVER */
+.inventory-import-btn:hover {
+  opacity: 0.9;
+}
+
+.inventory-add-btn:hover {
+  opacity: 0.9;
+}
+
+.inventory-edit-btn:hover {
+  background: #f3f4f6;
+}
+
+/* RESPONSIVE FOOTER */
+@media (max-width: 576px) {
+  .products-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.inventory-management-filter {
+  padding: 18px 20px;
+
+  display: grid;
+  grid-template-columns: 120px 1fr 220px 160px;
+  gap: 14px;
+
+  border-bottom: 1px solid #eee;
+  align-items: center;
+}
+
+.inventory-management-filter button {
+  height: 48px;
+}
+
+.inventory-management-filter {
+  padding: 18px 20px;
+
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+
+  border-bottom: 1px solid #eee;
+}
+
+.inventory-management-filter select,
+.inventory-management-filter input,
+.inventory-management-filter button {
+  height: 48px;
+}
+
+.inventory-management-filter input {
+  flex: 1;
+  min-width: 260px;
+}
+
+.inventory-management-filter button {
+  min-width: 160px;
+}

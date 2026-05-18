@@ -1,6 +1,7 @@
 // src/pages/AdminInventory.jsx
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
 import {
   CubeIcon,
   ExclamationTriangleIcon,
@@ -11,48 +12,98 @@ import {
   PlusIcon,
   ArrowDownTrayIcon,
 } from "@heroicons/react/24/outline";
-import "../../styles/Dashboard/Inventory/AdminInventory.css";
-import Pagination from "../../Pagination";
+
+import { useDispatch, useSelector } from "react-redux";
+
 import { NavLink } from "react-router-dom";
 
+import Pagination from "../../Pagination";
+
+import { fetchProducts } from "../../../redux/admin/products/adminProductSlice";
+
+import "../../styles/Dashboard/Inventory/AdminInventory.css";
+import { getShowCategories } from "../../../redux/categorySlice";
+
 const AdminInventory = () => {
+  const dispatch = useDispatch();
+
+  const { products, loading } = useSelector((state) => state.adminProducts);
+
+  const { categories } = useSelector((state) => state.menuCategories);
+
   const [page, setPage] = useState(1);
 
-  const products = [
-    {
-      id: 1,
-      image:
-        "https://png.pngtree.com/png-vector/20240622/ourmid/pngtree-tasty-cheeseburger-on-transparent-background-png-image_12807020.png",
-      name: "Burger Bò Sốt Tiêu Đen",
-      category: "Pizza & Burger",
-      stock: 249,
-      sold: 15,
-      price: "65,000đ",
-      status: "Còn hàng",
-    },
-    {
-      id: 2,
-      image:
-        "https://png.pngtree.com/png-vector/20240622/ourmid/pngtree-tasty-cheeseburger-on-transparent-background-png-image_12807020.png",
-      name: "Burger Gà Quay Flava",
-      category: "Pizza & Burger",
-      stock: 90,
-      sold: 22,
-      price: "60,000đ",
-      status: "Còn hàng",
-    },
-    {
-      id: 3,
-      image:
-        "https://png.pngtree.com/png-vector/20240622/ourmid/pngtree-tasty-cheeseburger-on-transparent-background-png-image_12807020.png",
-      name: "Burger Tôm Phô Mai",
-      category: "Pizza & Burger",
-      stock: 0,
-      sold: 40,
-      price: "75,000đ",
-      status: "Hết hàng",
-    },
-  ];
+  const [search, setSearch] = useState("");
+
+  const [category, setCategory] = useState("all");
+
+  const [entries, setEntries] = useState(5);
+
+  //
+  // FETCH PRODUCTS
+  //
+  useEffect(() => {
+    dispatch(fetchProducts());
+
+    dispatch(getShowCategories());
+  }, [dispatch]);
+
+  //
+  // FILTER PRODUCTS
+  //
+  const filteredProducts = useMemo(() => {
+    let data = [...products];
+
+    //
+    // SEARCH
+    //
+    if (search) {
+      data = data.filter((item) =>
+        item.name.toLowerCase().includes(search.toLowerCase()),
+      );
+    }
+
+    //
+    // CATEGORY
+    //
+    if (category !== "all") {
+      data = data.filter((item) => item.category === category);
+    }
+
+    return data;
+  }, [products, search, category]);
+
+  //
+  // PAGINATION
+  //
+  const totalPages = Math.ceil(filteredProducts.length / entries);
+
+  const start = (page - 1) * entries;
+
+  const currentData = filteredProducts.slice(start, start + entries);
+
+  //
+  // STATS
+  //
+  const totalProducts = products.length;
+
+  const totalStock = products.reduce(
+    (total, item) => total + Number(item.stock || 0),
+    0,
+  );
+
+  const lowStock = products.filter(
+    (item) => item.stock > 0 && item.stock <= 10,
+  ).length;
+
+  const outOfStock = products.filter((item) => item.stock === 0).length;
+
+  //
+  // FORMAT PRICE
+  //
+  const formatPrice = (price) => {
+    return Number(price).toLocaleString("vi-VN") + "₫";
+  };
 
   return (
     <div className="inventory-management-page">
@@ -65,7 +116,7 @@ const AdminInventory = () => {
 
           <div>
             <p>TỔNG SẢN PHẨM</p>
-            <h3>20</h3>
+            <h3>{totalProducts}</h3>
           </div>
         </div>
 
@@ -76,7 +127,7 @@ const AdminInventory = () => {
 
           <div>
             <p>TỔNG TỒN KHO</p>
-            <h3>4,952</h3>
+            <h3>{totalStock.toLocaleString("vi-VN")}</h3>
           </div>
         </div>
 
@@ -87,7 +138,7 @@ const AdminInventory = () => {
 
           <div>
             <p>SẮP HẾT HÀNG</p>
-            <h3>0</h3>
+            <h3>{lowStock}</h3>
           </div>
         </div>
 
@@ -98,7 +149,7 @@ const AdminInventory = () => {
 
           <div>
             <p>HẾT HÀNG</p>
-            <h3>1</h3>
+            <h3>{outOfStock}</h3>
           </div>
         </div>
       </div>
@@ -110,12 +161,15 @@ const AdminInventory = () => {
           <h2>Quản lý kho hàng</h2>
 
           <div className="inventory-management-actions">
-            <NavLink to={'import'} className="inventory-import-btn">
+            <NavLink to="import" className="inventory-import-btn">
               <ArrowDownTrayIcon />
               Nhập hàng
             </NavLink>
 
-            <NavLink to={'/admin/products/form/add'} className="inventory-add-btn">
+            <NavLink
+              to="/admin/products/form/add"
+              className="inventory-add-btn"
+            >
               <PlusIcon />
               Thêm sản phẩm mới
             </NavLink>
@@ -124,16 +178,50 @@ const AdminInventory = () => {
 
         {/* FILTER */}
         <div className="inventory-management-filter">
+          {/* ENTRIES */}
+          <select
+            value={entries}
+            onChange={(e) => {
+              setEntries(Number(e.target.value));
+
+              setPage(1);
+            }}
+          >
+            <option value={5}>5</option>
+
+            <option value={10}>10</option>
+
+            <option value={20}>20</option>
+          </select>
+
+          {/* SEARCH */}
           <input
             type="text"
             placeholder="Tìm theo tên sản phẩm..."
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+
+              setPage(1);
+            }}
           />
 
-          <select>
-            <option>Tất cả danh mục</option>
-            <option>Pizza & Burger</option>
-            <option>Gà rán</option>
-            <option>Nước uống</option>
+          {/* CATEGORY */}
+          <select
+            value={category}
+            onChange={(e) => {
+              setCategory(e.target.value);
+
+              setPage(1);
+            }}
+          >
+            <option value="all">Tất cả danh mục</option>
+
+            {categories.map((item) => (
+              <option key={item._id} value={item.slug}>
+                {item.name}
+              </option>
+            ))}
           </select>
 
           <button>
@@ -148,71 +236,111 @@ const AdminInventory = () => {
             <thead>
               <tr>
                 <th>#</th>
+
                 <th>HÌNH ẢNH</th>
+
                 <th>TÊN SẢN PHẨM</th>
+
                 <th>DANH MỤC</th>
+
                 <th>TỒN KHO</th>
+
                 <th>ĐÃ BÁN</th>
+
                 <th>TRẠNG THÁI</th>
+
                 <th>GIÁ BÁN</th>
+
                 <th>THAO TÁC</th>
               </tr>
             </thead>
 
             <tbody>
-              {products.map((item, index) => (
-                <tr key={item.id}>
-                  <td>{index + 1}</td>
-
-                  <td>
-                    <img src={item.image} alt={item.name} />
-                  </td>
-
-                  <td className="inventory-product-name">
-                    {item.name}
-                  </td>
-
-                  <td>{item.category}</td>
-
-                  <td className="inventory-product-stock">
-                    {item.stock}
-                  </td>
-
-                  <td>{item.sold}</td>
-
-                  <td>
-                    <span
-                      className={`inventory-product-status ${
-                        item.status === "Hết hàng"
-                          ? "out-stock"
-                          : ""
-                      }`}
-                    >
-                      {item.status}
-                    </span>
-                  </td>
-
-                  <td className="inventory-product-price">
-                    {item.price}
-                  </td>
-
-                  <td>
-                    <button className="inventory-edit-btn">
-                      <PencilSquareIcon />
-                    </button>
+              {loading ? (
+                <tr>
+                  <td colSpan="9" align="center">
+                    Đang tải...
                   </td>
                 </tr>
-              ))}
+              ) : currentData.length === 0 ? (
+                <tr>
+                  <td colSpan="9" align="center">
+                    Không có sản phẩm
+                  </td>
+                </tr>
+              ) : (
+                currentData.map((item, index) => {
+                  const status =
+                    item.stock === 0
+                      ? "Hết hàng"
+                      : item.stock <= 10
+                        ? "Sắp hết"
+                        : "Còn hàng";
+
+                  return (
+                    <tr key={item._id}>
+                      <td>{start + index + 1}</td>
+
+                      <td>
+                        <img src={item.images?.[0]} alt={item.name} />
+                      </td>
+
+                      <td className="inventory-product-name">{item.name}</td>
+
+                      <td>{item.category}</td>
+
+                      <td className="inventory-product-stock">{item.stock}</td>
+
+                      <td>{item.sold || 0}</td>
+
+                      <td>
+                        <span
+                          className={`inventory-product-status ${
+                            status === "Hết hàng"
+                              ? "out-stock"
+                              : status === "Sắp hết"
+                                ? "low-stock"
+                                : ""
+                          }`}
+                        >
+                          {status}
+                        </span>
+                      </td>
+
+                      <td className="inventory-product-price">
+                        {formatPrice(item.price)}
+                      </td>
+
+                      <td>
+                        <NavLink
+                          to={`/admin/products/form/edit/${item._id}`}
+                          className="inventory-edit-btn"
+                        >
+                          <PencilSquareIcon />
+                        </NavLink>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
 
-        {/* PAGINATION */}
-        <Pagination
-          page={page}
-          totalPages={20}
-          onPageChange={setPage}
-        />
+        {/* FOOTER */}
+        <div className="products-footer">
+          <span>
+            Showing {filteredProducts.length > 0 ? start + 1 : 0} to{" "}
+            {Math.min(start + entries, filteredProducts.length)} of{" "}
+            {filteredProducts.length} entries
+          </span>
+
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
+        </div>
       </div>
     </div>
   );

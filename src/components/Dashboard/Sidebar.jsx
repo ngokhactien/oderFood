@@ -42,7 +42,7 @@ const Sidebar = ({ open }) => {
   return (
     <>
       <div className={`admin-sidebar ${open ? "" : "close"}`}>
-        <h2 className="logo">EGA FOODY</h2>
+        <h2 className="logo">Tiến NK</h2>
 
         <nav>
           <NavLink to="/admin">
