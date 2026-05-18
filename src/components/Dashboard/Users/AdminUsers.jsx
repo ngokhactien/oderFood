@@ -1,6 +1,11 @@
 // pages/admin/AdminUsers.jsx
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+
+import { useDispatch, useSelector } from "react-redux";
+
+import { toast } from "react-toastify";
+
 import {
   MagnifyingGlassIcon,
   EnvelopeIcon,
@@ -9,93 +14,189 @@ import {
   PlusIcon,
 } from "@heroicons/react/24/outline";
 
-import "../../styles/Dashboard/Users/AdminUsers.css";
 import Pagination from "../../Pagination";
 
-const usersData = [
-  {
-    id: 1,
-    avatar:
-      "https://i.pravatar.cc/100?img=1",
-    name: "Nguyễn Anh Lộc",
-    email: "khachvip@gmail.com",
-    phone: "0336999111",
-    role: "Khách hàng",
-  },
-  {
-    id: 2,
-    avatar:
-      "https://i.pravatar.cc/100?img=2",
-    name: "Trần Thị Ngân",
-    email: "tranthingan@gmail.com",
-    phone: "0336999555",
-    role: "Khách hàng",
-  },
-  {
-    id: 3,
-    avatar:
-      "https://i.pravatar.cc/100?img=3",
-    name: "Nguyễn Long Nhật",
-    email: "khachhang01@gmail.com",
-    phone: "0336456113",
-    role: "Khách hàng",
-  },
-  {
-    id: 4,
-    avatar:
-      "https://i.pravatar.cc/100?img=4",
-    name: "Nguyễn Bảo Long",
-    email: "taikhoan3@gmail.com",
-    phone: "0336999111",
-    role: "Khách hàng",
-  },
-  {
-    id: 5,
-    avatar:
-      "https://i.pravatar.cc/100?img=5",
-    name: "Nguyễn Khoa Nè",
-    email: "k2003@gmail.com",
-    phone: "0336216113",
-    role: "Khách hàng",
-  },
-  {
-    id: 6,
-    avatar:
-      "https://i.pravatar.cc/100?img=6",
-    name: "Nguyễn Văn A",
-    email: "vana@gmail.com",
-    phone: "0988888888",
-    role: "Admin",
-  },
-];
+import "./styles/AdminUsers.css";
+
+import {
+  fetchUsers,
+  deleteUser,
+  createUser,
+  updateUser,
+} from "../../../redux/admin/users/userSlice";
+
+import UserModal from "./UserModal";
+import DeleteModal from "../../../common/DeleteModal";
 
 export default function AdminUsers() {
+  const dispatch = useDispatch();
+
+  const { users, totalPages, total, loading } = useSelector(
+    (state) => state.users,
+  );
+
+  // ======================
+  // STATE
+  // ======================
   const [page, setPage] = useState(1);
+
   const [limit, setLimit] = useState(5);
+
+  const [searchInput, setSearchInput] = useState("");
+
   const [search, setSearch] = useState("");
 
-  // search
-  const filteredData = useMemo(() => {
-    return usersData.filter(
-      (item) =>
-        item.name.toLowerCase().includes(search.toLowerCase()) ||
-        item.email.toLowerCase().includes(search.toLowerCase()) ||
-        item.phone.includes(search),
+  const [openModal, setOpenModal] = useState(false);
+
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  // DELETE MODAL
+  const [openDelete, setOpenDelete] = useState(false);
+
+  const [deleteItem, setDeleteItem] = useState(null);
+
+  // ======================
+  // DEBOUNCE SEARCH
+  // ======================
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearch(searchInput);
+
+      setPage(1);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  // ======================
+  // FETCH USERS
+  // ======================
+  useEffect(() => {
+    dispatch(
+      fetchUsers({
+        page,
+        limit,
+        search,
+      }),
     );
-  }, [search]);
+  }, [dispatch, page, limit, search]);
 
-  // total page
-  const totalPages = Math.ceil(filteredData.length / limit);
+  // ======================
+  // ADD USER
+  // ======================
+  const handleAdd = () => {
+    setSelectedUser(null);
 
-  // current data
-  const currentData = filteredData.slice(
-    (page - 1) * limit,
-    page * limit,
-  );
+    setOpenModal(true);
+  };
+
+  // ======================
+  // EDIT USER
+  // ======================
+  const handleEdit = (user) => {
+    setSelectedUser(user);
+
+    setOpenModal(true);
+  };
+
+  // ======================
+  // OPEN DELETE MODAL
+  // ======================
+  const handleDelete = (user) => {
+    setDeleteItem(user);
+
+    setOpenDelete(true);
+  };
+
+  // ======================
+  // CONFIRM DELETE
+  // ======================
+  const handleConfirmDelete = async () => {
+    if (!deleteItem) return;
+
+    try {
+      await dispatch(deleteUser(deleteItem._id));
+
+      toast.success("Xóa tài khoản thành công");
+
+      setOpenDelete(false);
+
+      setDeleteItem(null);
+
+      dispatch(
+        fetchUsers({
+          page,
+          limit,
+          search,
+        }),
+      );
+    } catch (err) {
+      console.log(err);
+
+      toast.error("Xóa thất bại");
+    }
+  };
+
+  // ======================
+  // SUBMIT
+  // ======================
+  const handleSubmit = async (formData) => {
+    let result;
+
+    // avatar mặc định
+    const submitData = {
+      ...formData,
+
+      avatar: formData.avatar?.trim() || "/default-avatar.png",
+    };
+
+    if (selectedUser) {
+      result = await dispatch(
+        updateUser({
+          id: selectedUser._id,
+          data: submitData,
+        }),
+      );
+    } else {
+      result = await dispatch(createUser(submitData));
+    }
+
+    // FAIL
+    if (result.meta.requestStatus === "rejected") {
+      return {
+        success: false,
+
+        message: result.payload?.message || "Có lỗi xảy ra",
+
+        errors: result.payload?.errors || {},
+      };
+    }
+
+    // SUCCESS
+    toast.success(
+      selectedUser ? "Cập nhật thành công" : "Tạo tài khoản thành công",
+    );
+
+    setOpenModal(false);
+
+    setSelectedUser(null);
+
+    dispatch(
+      fetchUsers({
+        page,
+        limit,
+        search,
+      }),
+    );
+
+    return {
+      success: true,
+    };
+  };
 
   return (
     <div className="admin-users">
-      {/* header */}
+      {/* HEADER */}
       <div className="admin-users__header">
         <div>
           <h1>Danh sách tài khoản</h1>
@@ -103,16 +204,17 @@ export default function AdminUsers() {
           <p>Quản lý người dùng trong hệ thống</p>
         </div>
 
-        <button className="admin-users__add-btn">
+        <button className="admin-users__add-btn" onClick={handleAdd}>
           <PlusIcon className="admin-users__add-icon" />
           Thêm tài khoản
         </button>
       </div>
 
-      {/* card */}
+      {/* CARD */}
       <div className="admin-users__card">
-        {/* top */}
+        {/* TOP */}
         <div className="admin-users__top">
+          {/* SHOW */}
           <div className="admin-users__show">
             <span>Show</span>
 
@@ -120,104 +222,222 @@ export default function AdminUsers() {
               value={limit}
               onChange={(e) => {
                 setLimit(Number(e.target.value));
+
                 setPage(1);
               }}
             >
               <option value={5}>5</option>
+
               <option value={10}>10</option>
+
               <option value={20}>20</option>
             </select>
 
             <span>entries</span>
           </div>
 
+          {/* SEARCH */}
           <div className="admin-users__search">
             <MagnifyingGlassIcon className="admin-users__search-icon" />
 
             <input
               type="text"
               placeholder="Search..."
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(1);
-              }}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
         </div>
 
-        {/* table */}
+        {/* TABLE */}
         <div className="admin-users__table-wrap">
           <table className="admin-users__table">
             <thead>
               <tr>
                 <th>#</th>
+
                 <th>ẢNH</th>
+
                 <th>HỌ TÊN</th>
+
                 <th>EMAIL</th>
+
                 <th>SỐ ĐIỆN THOẠI</th>
+
+                <th>ĐỊA CHỈ</th>
+
                 <th>VAI TRÒ</th>
+
+                <th>ACTION</th>
               </tr>
             </thead>
 
             <tbody>
-              {currentData.map((user, index) => (
-                <tr key={user.id}>
-                  <td>{(page - 1) * limit + index + 1}</td>
-
-                  <td>
-                    <img
-                      src={user.avatar}
-                      alt={user.name}
-                      className="admin-users__avatar"
-                    />
-                  </td>
-
-                  <td className="admin-users__name">
-                    {user.name}
-                  </td>
-
-                  <td>
-                    <div className="admin-users__info">
-                      <EnvelopeIcon className="admin-users__info-icon" />
-                      {user.email}
-                    </div>
-                  </td>
-
-                  <td>
-                    <div className="admin-users__info">
-                      <PhoneIcon className="admin-users__info-icon" />
-                      {user.phone}
-                    </div>
-                  </td>
-
-                  <td>
-                    <div className="admin-users__role">
-                      <UserIcon className="admin-users__role-icon" />
-                      {user.role}
-                    </div>
+              {loading ? (
+                <tr>
+                  <td
+                    colSpan="8"
+                    style={{
+                      textAlign: "center",
+                    }}
+                  >
+                    Loading...
                   </td>
                 </tr>
-              ))}
+              ) : users?.length > 0 ? (
+                users.map((user, index) => (
+                  <tr key={user._id}>
+                    {/* STT */}
+                    <td>{(page - 1) * limit + index + 1}</td>
+
+                    {/* AVATAR */}
+                    <td>
+                      <img
+                        src={user.avatar || "/default-avatar.png"}
+                        alt={user.name}
+                        className="admin-users__avatar"
+                        onError={(e) => {
+                          e.target.src = "/default-avatar.png";
+                        }}
+                      />
+                    </td>
+
+                    {/* NAME */}
+                    <td className="admin-users__name">{user.name}</td>
+
+                    {/* EMAIL */}
+                    <td>
+                      <div className="admin-users__info">
+                        <EnvelopeIcon className="admin-users__info-icon" />
+
+                        {user.email}
+                      </div>
+                    </td>
+
+                    {/* PHONE */}
+                    <td>
+                      <div className="admin-users__info">
+                        <PhoneIcon className="admin-users__info-icon" />
+
+                        {user.phone || "Chưa có"}
+                      </div>
+                    </td>
+
+                    {/* ADDRESS */}
+                    <td>
+                      {(() => {
+                        const defaultAddress = user.addresses?.find(
+                          (a) => a.isDefault,
+                        );
+
+                        if (!defaultAddress) return "Chưa có";
+
+                        return (
+                          <div className="admin-users__tooltip">
+                            <span className="admin-users__address">
+                              {defaultAddress.address}
+                            </span>
+
+                            <div className="admin-users__tooltip-content">
+                              {defaultAddress.address}
+
+                              {defaultAddress.ward &&
+                                `, ${defaultAddress.ward}`}
+
+                              {defaultAddress.district &&
+                                `, ${defaultAddress.district}`}
+                            </div>
+                          </div>
+                        );
+                      })()}
+                    </td>
+
+                    {/* ROLE */}
+                    <td>
+                      <div className="admin-users__role">
+                        <UserIcon className="admin-users__role-icon" />
+
+                        {user.role}
+                      </div>
+                    </td>
+
+                    {/* ACTION */}
+                    <td>
+                      <div className="admin-users__actions">
+                        <button
+                          className="btn-edit"
+                          onClick={() => handleEdit(user)}
+                        >
+                          Sửa
+                        </button>
+
+                        <button
+                          className="btn-delete"
+                          onClick={() => handleDelete(user)}
+                        >
+                          Xóa
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="8"
+                    style={{
+                      textAlign: "center",
+                    }}
+                  >
+                    Không có dữ liệu
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
 
-        {/* bottom */}
+        {/* BOTTOM */}
         <div className="admin-users__bottom">
           <p>
-            Showing {(page - 1) * limit + 1} to{" "}
-            {Math.min(page * limit, filteredData.length)} of{" "}
-            {filteredData.length} entries
+            Showing {total === 0 ? 0 : (page - 1) * limit + 1} to{" "}
+            {Math.min(page * limit, total)} of {total} entries
           </p>
 
-          <Pagination
-            page={page}
-            totalPages={totalPages}
-            onPageChange={setPage}
-          />
+          {totalPages > 1 && (
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
+          )}
         </div>
       </div>
+
+      {/* USER MODAL */}
+      <UserModal
+        open={openModal}
+        onClose={() => {
+          setOpenModal(false);
+
+          setSelectedUser(null);
+        }}
+        onSubmit={handleSubmit}
+        loading={loading}
+        user={selectedUser}
+      />
+
+      {/* DELETE MODAL */}
+      <DeleteModal
+        open={openDelete}
+        onClose={() => {
+          setOpenDelete(false);
+
+          setDeleteItem(null);
+        }}
+        onConfirm={handleConfirmDelete}
+        productName={deleteItem?.name || ""}
+      />
     </div>
   );
 }

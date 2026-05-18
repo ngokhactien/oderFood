@@ -1,3 +1,5 @@
+/* ProductForm.css */
+
 .admin-product-page {
   width: 100%;
   min-height: 100vh;
@@ -14,7 +16,7 @@
   flex: 3;
   background: #fff;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 .admin-product-page .right-content {
@@ -27,13 +29,7 @@
 .admin-product-page .card-box {
   background: #fff;
   padding: 20px;
-  border-radius: 8px;
-}
-
-.admin-product-page h2 {
-  font-size: 26px;
-  margin-bottom: 25px;
-  color: #333;
+  border-radius: 10px;
 }
 
 .admin-product-page .form-group {
@@ -52,7 +48,8 @@
 .admin-product-page .form-group input,
 .admin-product-page .form-group textarea,
 .admin-product-page .card-box select,
-.admin-product-page .card-box input[type="file"] {
+.admin-product-page .card-box input[type="file"],
+.admin-product-page .option-item input {
   width: 100%;
   border: 1px solid #ddd;
   border-radius: 6px;
@@ -83,17 +80,10 @@
   cursor: pointer;
   font-size: 16px;
   font-weight: 600;
-  transition: 0.3s;
 }
 
 .admin-product-page .submit-btn:hover {
   background: #1d4ed8;
-}
-
-@media screen and (max-width: 992px) {
-  .admin-product-page .product-form {
-    flex-direction: column;
-  }
 }
 
 .admin-product-page .product-header {
@@ -111,10 +101,6 @@
   color: black;
 }
 
-.admin-product-page .product-header span {
-  color: #333;
-}
-
 .admin-product-page .product-mode {
   font-size: 13px;
   padding: 4px 10px;
@@ -130,4 +116,133 @@
 .admin-product-page .product-mode.add {
   background: #dcfce7;
   color: #16a34a;
+}
+
+.admin-product-page .option-btn {
+  width: 100%;
+  border: none;
+  background: #16a34a;
+  color: white;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.admin-product-page .option-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.admin-product-page .option-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  margin-top: 14px;
+  background: #f9fafb;
+}
+
+.admin-product-page .remove-option-btn {
+  width: 100%;
+  border: none;
+  background: #ef4444;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.admin-product-page .remove-option-btn:hover {
+  background: #dc2626;
+}
+
+.admin-product-page .option-item input {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 14px;
+  outline: none;
+}
+
+.admin-product-page .option-btn {
+  width: 100%;
+  border: none;
+  background: #16a34a;
+  color: white;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+.admin-product-page .option-btn:hover {
+  background: #15803d;
+}
+
+.admin-product-page .preview-list {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(120px, 1fr)
+  );
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.admin-product-page .preview-item {
+  position: relative;
+}
+
+.admin-product-page .preview-image {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.admin-product-page .remove-image-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+
+  width: 24px;
+  height: 24px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #ef4444;
+  color: white;
+
+  cursor: pointer;
+
+  font-size: 16px;
+  font-weight: bold;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-product-page .remove-image-btn:hover {
+  background: #dc2626;
+}
+
+@media screen and (max-width: 992px) {
+  .admin-product-page .product-form {
+    flex-direction: column;
+  }
 }

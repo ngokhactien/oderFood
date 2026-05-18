@@ -5,6 +5,7 @@ const optionSchema = new mongoose.Schema({
   label: String,
   price: Number,
   stock: Number, // mỗi size có kho riêng
+  importPrice: Number, // giá nhập riêng từng option
 });
 
 const productSchema = new mongoose.Schema(
@@ -14,15 +15,21 @@ const productSchema = new mongoose.Schema(
     category: String,
 
     price: Number,
+
+    // GIÁ NHẬP
+    importPrice: {
+      type: Number,
+      default: 0,
+    },
     discount: Number,
 
     images: [String],
 
     options: [optionSchema],
 
-    views: { type: Number, default: 0 },  // để tính độ hot
+    views: { type: Number, default: 0 }, // để tính độ hot
     rating: { type: Number, default: 0 },
-    reviews: { type: Number, default: 0 }, // số người đánh giá 
+    reviews: { type: Number, default: 0 }, // số người đánh giá
     sold: { type: Number, default: 0 },
 
     stock: Number,
@@ -40,7 +47,7 @@ const productSchema = new mongoose.Schema(
       default: "available",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default mongoose.model("Product", productSchema);

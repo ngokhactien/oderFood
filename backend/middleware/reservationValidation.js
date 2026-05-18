@@ -13,7 +13,7 @@ const reservationValidation = (
 
   if (!customerName) {
     return res.status(400).json({
-      message: "Thiếu tên khách hàng",
+      message: "Thiếu tên khách",
     });
   }
 
@@ -25,19 +25,19 @@ const reservationValidation = (
 
   if (!date) {
     return res.status(400).json({
-      message: "Thiếu ngày đặt",
+      message: "Thiếu ngày",
     });
   }
 
   if (!time) {
     return res.status(400).json({
-      message: "Thiếu giờ đặt",
+      message: "Thiếu giờ",
     });
   }
 
   if (!guests) {
     return res.status(400).json({
-      message: "Thiếu số lượng khách",
+      message: "Thiếu số khách",
     });
   }
 

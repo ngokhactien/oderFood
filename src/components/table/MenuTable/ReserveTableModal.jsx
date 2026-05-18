@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 import { useDispatch } from "react-redux";
+import { createReservation } from "../../../redux/admin/reservation/reservationSlice";
 
-import { createReservation } from "../../../redux/reservationSlice";
 
 export default function ReserveTableModal({ table, open, onClose }) {
   const dispatch = useDispatch();

@@ -7,7 +7,12 @@ import productRoutes from "./routes/product.js";
 import momoRoutes from "./routes/momo.js";
 import floorRoutes from "./routes/floor.js";
 import orderRoutes from "./routes/order.js";
-import tableReservationRoutes from "./routes/tableReservation.js";
+import categoryRoutes from "./routes/category.js";
+import tableReservationRoutes from "./routes/Admin/tableReservation.js";
+import adminUserRoutes from "./routes/admin/adminUserRoutes.js";
+import adminProductRoutes from "./routes/admin/adminProductRoutes.js";
+import adminCategoryRoutes from "./routes/admin/adminCategoryRoutes.js";
+
 dotenv.config(); // 🔥 phải để lên trên
 
 const app = express();
@@ -33,8 +38,25 @@ app.use("/api/orders", orderRoutes);
 
 app.use("/api/momo", momoRoutes);
 
+// CATEGORY HIỂN THỊ CHO CLIENT
+app.use("/api/categories", categoryRoutes);
+
 // dùng để xem user đặt bàn
 app.use("/api/reservations", tableReservationRoutes);
+
+//admin user
+app.use(
+  "/api/admin/users",
+  adminUserRoutes,
+);
+
+// admin products
+app.use(
+  "/api/admin/products",
+  adminProductRoutes,
+);
+// admin mục lục
+app.use("/api/categories", adminCategoryRoutes);
 
 // 🔥 MongoDB từ env
 mongoose

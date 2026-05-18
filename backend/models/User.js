@@ -53,7 +53,7 @@ const userSchema = new mongoose.Schema(
     // 🔥 role (phân quyền)
     role: {
       type: String,
-      enum: ["user", "admin"],
+      enum: ["user", "admin", "staff"],
       default: "user",
     },
     // 🔥 THÊM 2 FIELD NÀY

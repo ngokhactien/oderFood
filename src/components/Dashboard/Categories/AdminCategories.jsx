@@ -1,127 +1,213 @@
-// pages/admin/AdminCategories.jsx
+import { useEffect, useMemo, useState } from "react";
 
-import { useMemo, useState } from "react";
 import {
   MagnifyingGlassIcon,
   PlusIcon,
-  EllipsisVerticalIcon,
 } from "@heroicons/react/24/outline";
-import "../../styles/Dashboard/Categories/AdminCategories.css";
+
+import {
+  PencilSquareIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
+
+import { useDispatch, useSelector } from "react-redux";
+
+import "./styles/AdminCategories.css";
+
 import Pagination from "../../Pagination";
 
-const categoriesData = [
-  {
-    id: 1,
-    name: "Chưa có danh mục",
-    image:
-      "https://cdn-icons-png.flaticon.com/512/1829/1829586.png",
-    products: 0,
-    status: "Hiển thị",
-  },
-  {
-    id: 2,
-    name: "Gà rán",
-    image:
-      "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58",
-    products: 1,
-    status: "Hiển thị",
-  },
-  {
-    id: 3,
-    name: "Mì Ý",
-    image:
-      "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9",
-    products: 2,
-    status: "Hiển thị",
-  },
-  {
-    id: 4,
-    name: "Pizza & Burger",
-    image:
-      "https://images.unsplash.com/photo-1513104890138-7c749659a591",
-    products: 5,
-    status: "Hiển thị",
-  },
-  {
-    id: 5,
-    name: "Cơm",
-    image:
-      "https://images.unsplash.com/photo-1512058564366-18510be2db19",
-    products: 2,
-    status: "Hiển thị",
-  },
-  {
-    id: 6,
-    name: "Trà sữa",
-    image:
-      "https://images.unsplash.com/photo-1558857563-b371033873b8",
-    products: 4,
-    status: "Ẩn",
-  },
-  {
-    id: 7,
-    name: "Đồ ăn vặt",
-    image:
-      "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
-    products: 3,
-    status: "Hiển thị",
-  },
-];
+import {
+  fetchCategories,
+  deleteCategory,
+} from "../../../redux/admin/category/categorySlice";
+
+import CategoryFormModal from "./CategoryFormModal";
+import DeleteModal from "../../../common/DeleteModal";
 
 export default function AdminCategories() {
+  const dispatch = useDispatch();
+
+  const { categories, loading } = useSelector(
+    (state) => state.categories
+  );
+
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
+
   const [search, setSearch] = useState("");
 
-  // search
+  // FILTER STATUS
+  const [statusFilter, setStatusFilter] =
+    useState("all");
+
+  // MODAL
+  const [openModal, setOpenModal] =
+    useState(false);
+
+  const [editItem, setEditItem] =
+    useState(null);
+
+  // DELETE
+  const [openDelete, setOpenDelete] =
+    useState(false);
+
+  const [deleteItem, setDeleteItem] =
+    useState(null);
+
+  const defaultImage =
+    "https://cdn-icons-png.flaticon.com/512/1829/1829586.png";
+
+  /**
+   * FETCH DATA
+   */
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
+  /**
+   * CREATE
+   */
+  const handleCreate = () => {
+    setEditItem(null);
+    setOpenModal(true);
+  };
+
+  /**
+   * EDIT
+   */
+  const handleEdit = (item) => {
+    setEditItem(item);
+    setOpenModal(true);
+  };
+
+  /**
+   * OPEN DELETE
+   */
+  const handleOpenDelete = (item) => {
+    setDeleteItem(item);
+    setOpenDelete(true);
+  };
+
+  /**
+   * CONFIRM DELETE
+   */
+  const handleConfirmDelete = async () => {
+    if (!deleteItem) return;
+
+    await dispatch(deleteCategory(deleteItem._id));
+
+    setOpenDelete(false);
+    setDeleteItem(null);
+  };
+
+  /**
+   * FILTER DATA
+   */
   const filteredData = useMemo(() => {
-    return categoriesData.filter((item) =>
-      item.name.toLowerCase().includes(search.toLowerCase()),
-    );
-  }, [search]);
+    if (!categories) return [];
 
-  // total pages
-  const totalPages = Math.ceil(filteredData.length / limit);
+    return categories
+      .filter((item) =>
+        item.name
+          .toLowerCase()
+          .includes(search.toLowerCase())
+      )
 
-  // current data
+      // FILTER STATUS
+      .filter((item) => {
+        if (statusFilter === "all") {
+          return true;
+        }
+
+        return item.status === statusFilter;
+      })
+
+      .map((item) => ({
+        ...item,
+        products: item.products || 0,
+      }));
+  }, [categories, search, statusFilter]);
+
+  /**
+   * PAGINATION
+   */
+  const totalPages = Math.ceil(
+    filteredData.length / limit
+  );
+
   const currentData = filteredData.slice(
     (page - 1) * limit,
-    page * limit,
+    page * limit
   );
 
   return (
     <div className="admin-categories">
       <div className="admin-categories__card">
-        {/* header */}
+        {/* HEADER */}
         <div className="admin-categories__header">
           <h2>Danh mục</h2>
 
-          <button className="admin-categories__add-btn">
+          <button
+            className="admin-categories__add-btn"
+            onClick={handleCreate}
+          >
             <PlusIcon className="admin-categories__add-icon" />
             Thêm danh mục
           </button>
         </div>
 
-        {/* top */}
+        {/* TOP */}
         <div className="admin-categories__top">
-          <div className="admin-categories__show">
-            <span>Show</span>
+          <div className="admin-categories__top-left">
+            {/* SHOW */}
+            <div className="admin-categories__show">
+              <span>Show</span>
 
-            <select
-              value={limit}
-              onChange={(e) => {
-                setLimit(Number(e.target.value));
-                setPage(1);
-              }}
-            >
-              <option value={5}>5</option>
-              <option value={10}>10</option>
-              <option value={20}>20</option>
-            </select>
+              <select
+                value={limit}
+                onChange={(e) => {
+                  setLimit(Number(e.target.value));
+                  setPage(1);
+                }}
+              >
+                <option value={5}>5</option>
 
-            <span>entries</span>
+                <option value={10}>10</option>
+
+                <option value={20}>20</option>
+              </select>
+
+              <span>entries</span>
+            </div>
+
+            {/* FILTER STATUS */}
+            <div className="admin-categories__filter">
+              <select
+                value={statusFilter}
+                onChange={(e) => {
+                  setStatusFilter(
+                    e.target.value
+                  );
+
+                  setPage(1);
+                }}
+              >
+                <option value="all">
+                  Tất cả
+                </option>
+
+                <option value="show">
+                  Hiển thị
+                </option>
+
+                <option value="hide">
+                  Ẩn
+                </option>
+              </select>
+            </div>
           </div>
 
+          {/* SEARCH */}
           <div className="admin-categories__search">
             <MagnifyingGlassIcon className="admin-categories__search-icon" />
 
@@ -137,77 +223,171 @@ export default function AdminCategories() {
           </div>
         </div>
 
-        {/* table */}
+        {/* TABLE */}
         <div className="admin-categories__table-wrap">
           <table className="admin-categories__table">
             <thead>
               <tr>
                 <th>#</th>
+
                 <th>TÊN</th>
+
                 <th>ẢNH</th>
+
                 <th>SẢN PHẨM</th>
+
                 <th>TRẠNG THÁI</th>
+
                 <th>CHỈNH SỬA</th>
               </tr>
             </thead>
 
             <tbody>
-              {currentData.map((item, index) => (
-                <tr key={item.id}>
-                  <td>{(page - 1) * limit + index + 1}</td>
-
-                  <td className="admin-categories__name">
-                    {item.name}
-                  </td>
-
-                  <td>
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="admin-categories__image"
-                    />
-                  </td>
-
-                  <td>{item.products}</td>
-
-                  <td>
-                    <span
-                      className={`admin-categories__status ${
-                        item.status === "Hiển thị"
-                          ? "admin-categories__status--show"
-                          : "admin-categories__status--hide"
-                      }`}
-                    >
-                      {item.status}
-                    </span>
-                  </td>
-
-                  <td>
-                    <button className="admin-categories__action-btn">
-                      <EllipsisVerticalIcon className="admin-categories__action-icon" />
-                    </button>
+              {loading ? (
+                <tr>
+                  <td
+                    colSpan="6"
+                    className="admin-categories__loading"
+                  >
+                    Đang tải...
                   </td>
                 </tr>
-              ))}
+              ) : currentData.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="6"
+                    className="admin-categories__empty"
+                  >
+                    Không có dữ liệu
+                  </td>
+                </tr>
+              ) : (
+                currentData.map(
+                  (item, index) => (
+                    <tr key={item._id}>
+                      {/* STT */}
+                      <td>
+                        {(page - 1) * limit +
+                          index +
+                          1}
+                      </td>
+
+                      {/* NAME */}
+                      <td className="admin-categories__name">
+                        {item.name}
+                      </td>
+
+                      {/* IMAGE */}
+                      <td>
+                        <img
+                          src={
+                            item.image?.trim()
+                              ? item.image
+                              : defaultImage
+                          }
+                          alt={item.name}
+                          className="admin-categories__image"
+                        />
+                      </td>
+
+                      {/* PRODUCTS */}
+                      <td>
+                        {item.products}
+                      </td>
+
+                      {/* STATUS */}
+                      <td>
+                        <span
+                          className={`admin-categories__status ${
+                            item.status ===
+                            "show"
+                              ? "admin-categories__status--show"
+                              : "admin-categories__status--hide"
+                          }`}
+                        >
+                          {item.status ===
+                          "show"
+                            ? "Hiển thị"
+                            : "Ẩn"}
+                        </span>
+                      </td>
+
+                      {/* ACTION */}
+                      <td>
+                        <div className="action-icons">
+                          {/* EDIT */}
+                          <button
+                            className="action-btn edit"
+                            onClick={() =>
+                              handleEdit(
+                                item
+                              )
+                            }
+                          >
+                            <PencilSquareIcon className="action-icon" />
+                          </button>
+
+                          {/* DELETE */}
+                          <button
+                            className="action-btn delete"
+                            onClick={() =>
+                              handleOpenDelete(
+                                item
+                              )
+                            }
+                          >
+                            <TrashIcon className="action-icon" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                )
+              )}
             </tbody>
           </table>
         </div>
 
-        {/* bottom */}
+        {/* BOTTOM */}
         <div className="admin-categories__bottom">
           <p>
-            Showing {(page - 1) * limit + 1} to{" "}
-            {Math.min(page * limit, filteredData.length)} of{" "}
-            {filteredData.length} entries
+            Showing{" "}
+            {(page - 1) * limit + 1} to{" "}
+            {Math.min(
+              page * limit,
+              filteredData.length
+            )}{" "}
+            of {filteredData.length} entries
           </p>
 
-          <Pagination
-            page={page}
-            totalPages={totalPages}
-            onPageChange={setPage}
-          />
+          {filteredData.length > limit && (
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
+          )}
         </div>
       </div>
+
+      {/* CATEGORY MODAL */}
+      <CategoryFormModal
+        open={openModal}
+        onClose={() =>
+          setOpenModal(false)
+        }
+        editItem={editItem}
+      />
+
+      {/* DELETE MODAL */}
+      <DeleteModal
+        open={openDelete}
+        onClose={() =>
+          setOpenDelete(false)
+        }
+        onConfirm={handleConfirmDelete}
+        productName={deleteItem?.name}
+      />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../styles/profile/Confirm.css";
+import "../../common/styles/Confirm.css";
 import { toast } from "react-toastify";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 

@@ -1,59 +1,153 @@
 .user-menu {
   position: relative;
+
   cursor: pointer;
+
   display: flex;
+
   align-items: center;
-  gap: 6px;
+
+  gap: 8px;
 }
 
-/* dropdown ẩn mặc định */
+/* =========================
+   AVATAR
+========================= */
+.header-avatar {
+  width: 38px;
+
+  height: 38px;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+
+  border: 2px solid #fff;
+}
+
+/* =========================
+   DROPDOWN
+========================= */
 .user-dropdown {
   position: absolute;
+
   top: 120%;
+
   right: 0;
-  min-width: 180px;
+
+  min-width: 240px;
+
   background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+
+  border-radius: 16px;
+
   overflow: hidden;
 
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+
   opacity: 0;
+
   visibility: hidden;
+
   transform: translateY(10px);
-  transition: all 0.2s ease;
+
+  transition: all 0.25s ease;
+
   z-index: 1000;
 }
 
-/* 👉 hover thì hiện */
+/* SHOW */
 .user-menu:hover .user-dropdown {
   opacity: 1;
+
   visibility: visible;
+
   transform: translateY(0);
 }
 
-/* item */
+/* =========================
+   ITEM
+========================= */
 .dropdown-item {
-  padding: 10px 14px;
-  font-size: 14px;
-  display: block;
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  width: 100%;
+
+  padding: 14px 16px;
+
+  font-size: 15px;
+
+  font-weight: 500;
+
   color: #333;
+
   text-decoration: none;
-  transition: background 0.2s;
+
+  background: transparent;
+
+  border: none;
+
+  cursor: pointer;
+
+  transition: 0.2s;
 }
 
 .dropdown-item:hover {
   background: #f5f5f5;
 }
 
-/* divider */
+/* =========================
+   ICON
+========================= */
+.dropdown-icon {
+  width: 20px;
+
+  height: 20px;
+
+  flex-shrink: 0;
+
+  stroke-width: 1.8;
+}
+
+/* =========================
+   DIVIDER
+========================= */
 .dropdown-divider {
   height: 1px;
+
   background: #eee;
+
   margin: 4px 0;
 }
 
-/* logout */
+/* =========================
+   LOGOUT
+========================= */
 .logout {
-  color: red;
+  color: #ef4444;
+
+  font-weight: 600;
+}
+
+.logout .dropdown-icon {
+  color: #ef4444;
+}
+
+.logout:hover {
+  background: #fef2f2;
+}
+
+/* =========================
+   USERNAME
+========================= */
+.user-menu span {
+  font-size: 14px;
+
   font-weight: 500;
+
+  color: #fff;
 }

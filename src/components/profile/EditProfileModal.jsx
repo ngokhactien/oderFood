@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "../styles/profile/Confirm.css";
+import "../../common/styles/Confirm.css";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../redux/authSlice";

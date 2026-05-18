@@ -10,17 +10,17 @@ import TableActionMenu from "./MenuTable/TableActionMenu";
 import ReserveTableModal from "./MenuTable/ReserveTableModal";
 import MergeTableModal from "./MenuTable/MergeTableModal";
 import TransferTableModal from "./MenuTable/TransferTableModal";
-import { getReservations } from "../../redux/reservationSlice";
 
 import { transferTable } from "../../redux/orderSlice";
 
 import { transferDraftTable } from "../../redux/orderUiSlice";
+import { getReservations } from "../../redux/admin/reservation/reservationSlice";
 
 export default function TableManager({ onSelectTable, activeTable }) {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const reservations = useSelector(
-    (state) => state.reservation.reservations || [],
+    (state) => state.reservations?.reservations || [],
   );
 
   const [menuTable, setMenuTable] = useState(null);

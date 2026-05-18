@@ -3,38 +3,25 @@
 import { useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import {
-  transferTable,
-  getActiveOrders,
-} from "../../../redux/orderSlice";
+import { transferTable, getActiveOrders } from "../../../redux/orderSlice";
 
 import { transferDraftTable } from "../../../redux/orderUISlice";
 
-export default function TransferTableModal({
-  open,
-  table,
-  tables,
-  onClose,
-}) {
+export default function TransferTableModal({ open, table, tables, onClose }) {
   // =========================
   // HOOKS
   // =========================
   const dispatch = useDispatch();
 
-  const orders = useSelector(
-    (state) => state.order.orders || [],
-  );
+  const orders = useSelector((state) => state.order.orders || []);
 
   const reservations = useSelector(
-    (state) => state.reservation.reservations || [],
+    (state) => state.reservations?.reservations || [],
   );
 
-  const draftItems = useSelector(
-    (state) => state.orderUI.draftItems || {},
-  );
+  const draftItems = useSelector((state) => state.orderUI.draftItems || {});
 
-  const [targetTableId, setTargetTableId] =
-    useState("");
+  const [targetTableId, setTargetTableId] = useState("");
 
   // =========================
   // HELPER
@@ -62,25 +49,18 @@ export default function TransferTableModal({
     ? orders.find(
         (o) =>
           o.tableId === table.id &&
-          (
-            o.status === "active" ||
-            o.status === "confirmed"
-          ),
+          (o.status === "active" || o.status === "confirmed"),
       )
     : null;
 
   // =========================
   // CHECK ITEMS
   // =========================
-  const hasConfirmedItems =
-    currentOrder?.items?.length > 0;
+  const hasConfirmedItems = currentOrder?.items?.length > 0;
 
-  const hasDraftItems = table
-    ? hasDraftData(draftItems[table.id])
-    : false;
+  const hasDraftItems = table ? hasDraftData(draftItems[table.id]) : false;
 
-  const hasItems =
-    hasConfirmedItems || hasDraftItems;
+  const hasItems = hasConfirmedItems || hasDraftItems;
 
   // =========================
   // AVAILABLE TABLES
@@ -102,10 +82,7 @@ export default function TransferTableModal({
       const isUsing = orders.some(
         (o) =>
           o.tableId === t.id &&
-          (
-            o.status === "active" ||
-            o.status === "confirmed"
-          ),
+          (o.status === "active" || o.status === "confirmed"),
       );
 
       if (isUsing) {
@@ -113,27 +90,22 @@ export default function TransferTableModal({
       }
 
       // draft
-      const isPending = hasDraftData(
-        draftItems[t.id],
-      );
+      const isPending = hasDraftData(draftItems[t.id]);
 
       if (isPending) {
         return false;
       }
 
       // reservation
-      const hasReservation =
-        reservations.some((r) => {
-          if (r.tableId !== t.id) {
-            return false;
-          }
+      const hasReservation = reservations.some((r) => {
+        if (r.tableId !== t.id) {
+          return false;
+        }
 
-          const reserveDate = new Date(
-            `${r.date}T${r.time}`,
-          );
+        const reserveDate = new Date(`${r.date}T${r.time}`);
 
-          return reserveDate > now;
-        });
+        return reserveDate > now;
+      });
 
       if (hasReservation) {
         return false;
@@ -141,13 +113,7 @@ export default function TransferTableModal({
 
       return true;
     });
-  }, [
-    table,
-    tables,
-    orders,
-    reservations,
-    draftItems,
-  ]);
+  }, [table, tables, orders, reservations, draftItems]);
 
   // =========================
   // RETURN NULL SAU HOOKS
@@ -201,62 +167,39 @@ export default function TransferTableModal({
         <h3>Chuyển bàn</h3>
 
         <p>
-          Từ:
-          {" "}
-          <strong>
-            {table.displayName}
-          </strong>
+          Từ: <strong>{table.displayName}</strong>
         </p>
 
         {!hasItems && (
-          <div className="empty-warning">
-            Bàn này chưa có món để chuyển
-          </div>
+          <div className="empty-warning">Bàn này chưa có món để chuyển</div>
         )}
 
         {hasItems && (
           <>
             <select
               value={targetTableId}
-              onChange={(e) =>
-                setTargetTableId(
-                  e.target.value,
-                )
-              }
+              onChange={(e) => setTargetTableId(e.target.value)}
             >
-              <option value="">
-                Chọn bàn cần chuyển
-              </option>
+              <option value="">Chọn bàn cần chuyển</option>
 
               {availableTables.map((t) => (
-                <option
-                  key={t.id}
-                  value={t.id}
-                >
+                <option key={t.id} value={t.id}>
                   {t.tabName}
                 </option>
               ))}
             </select>
 
             {!availableTables.length && (
-              <div className="empty-warning">
-                Không còn bàn trống
-              </div>
+              <div className="empty-warning">Không còn bàn trống</div>
             )}
           </>
         )}
 
         <div className="actions">
-          <button onClick={onClose}>
-            Huỷ
-          </button>
+          <button onClick={onClose}>Huỷ</button>
 
           <button
-            disabled={
-              !hasItems ||
-              !targetTableId ||
-              !availableTables.length
-            }
+            disabled={!hasItems || !targetTableId || !availableTables.length}
             onClick={handleTransfer}
           >
             Xác nhận

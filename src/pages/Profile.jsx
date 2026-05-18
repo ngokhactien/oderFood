@@ -9,7 +9,7 @@ import "../styles/profile.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import ConfirmLogout from "../components/profile/ConfirmLogout";
+import ConfirmLogout from "../common/ConfirmLogout";
 import { logout } from "../redux/authSlice";
 
 export default function Profile() {

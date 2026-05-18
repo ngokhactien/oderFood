@@ -1,4 +1,4 @@
-import "../styles/profile/Confirm.css";
+import "../../common/styles/Confirm.css";
 
 export default function ConfirmRemoveAvatar({ open, onClose, onConfirm }) {
   if (!open) return null;

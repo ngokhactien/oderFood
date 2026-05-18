@@ -10,14 +10,14 @@
 }
 
 /* SIDEBAR */
-.order-sidebar {
+.order-container .order-sidebar {
   width: 220px;
   background: #f7f7f7;
   padding: 12px;
   border-right: 1px solid #eee;
 }
 
-.table-item {
+.order-container .table-item {
   background: #fff;
   border-radius: 12px;
   padding: 14px;
@@ -26,76 +26,76 @@
   margin-bottom: 1rem;
 }
 
-.table-item.active {
+.order-container .table-item.active {
   background: #0d6efd;
   color: white;
 }
 
-.table-name {
+.order-container .table-name {
   font-size: 15px;
   font-weight: 700;
 }
 
-.table-time {
+.order-container .table-time {
   font-size: 12px;
   margin-top: 4px;
   opacity: 0.8;
 }
 
 /* CONTENT */
-.order-content {
+.order-container .order-content {
   flex: 1;
   padding: 20px;
   display: flex;
   flex-direction: column;
 }
 
-.order-content h3 {
+.order-container .order-content h3 {
   font-size: 18px;
   font-weight: 700;
   margin-bottom: 22px;
 }
 
 /* LIST */
-.order-list {
+.order-container .order-list {
   flex: 1;
 }
 
-.order-row {
+.order-container .order-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 18px;
 }
 
-.order-row .left {
+.order-container .order-row .left {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.order-row .qty {
+.order-container .order-row .qty {
   font-weight: 700;
   color: #1f2937;
 }
 
-.order-row .name {
+.order-container .order-row .name {
   color: #111827;
   display: contents;
 }
 
-.order-row .right {
+.order-container .order-row .right {
   font-weight: 600;
   color: #374151;
 }
 
-.empty-order {
+.order-container .empty-order {
   color: #999;
   font-size: 14px;
 }
 
 /* TOTAL */
-.order-total {
+.order-container .order-total {
   margin-top: 10px;
   padding-top: 14px;
   border-top: 1px solid #eee;
@@ -104,13 +104,13 @@
 }
 
 /* BUTTONS */
-.order-actions {
+.order-container .order-actions {
   display: flex;
   gap: 12px;
   margin-top: 20px;
 }
 
-.btn {
+.order-container .btn {
   flex: 1;
   height: 46px;
   border: none;
@@ -121,20 +121,20 @@
   transition: 0.2s;
 }
 
-.cancel {
+.order-container .cancel {
   background: #dcdcdc;
   color: #333;
 }
 
-.cancel:hover {
+.order-container .cancel:hover {
   opacity: 0.9;
 }
 
-.confirm {
+.order-container .confirm {
   background: #0d6efd;
   color: white;
 }
 
-.confirm:hover {
+.order-container .confirm:hover {
   opacity: 0.9;
 }

@@ -32,7 +32,7 @@ import AdminCategories from "../components/Dashboard/Categories/AdminCategories"
 import Dashboard from "../components/Dashboard/Home/AdminReport";
 import AdminProductsReport from "../components/Dashboard/Reports/AdminProductsReport";
 import AdminTransferTable from "../components/Dashboard/TransferTable/AdminTransferTable";
-// import AdminReport from "../components/Dashboard/Home/AdminReport";
+// import AdminInfo from "../components/Dashboard/AdminInfo";
 
 const router = createBrowserRouter([
   //user
@@ -112,7 +112,7 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: (
-      <ProtectedRoute>
+      <ProtectedRoute adminOnly={true}>
         <AdminLayout />
       </ProtectedRoute>
     ),
@@ -120,8 +120,9 @@ const router = createBrowserRouter([
       { index: true, element: <Dashboard /> },
       { path: "orders", element: <OrdersTable /> },
       { path: "orders/detail/:mode", element: <OrderDetail /> },
-      { path: "products", element: <Products /> },  
-      { path: "products/form/:mode", element: <ProductForm /> },
+      { path: "products", element: <Products /> },
+      { path: "products/form/:mode/:id", element: <ProductForm /> },
+      { path: "products/form/add", element: <ProductForm /> },
       { path: "bookings", element: <AdminTransferTable /> },
       { path: "revenue", element: <RevenueOverview /> },
       { path: "inventory", element: <AdminInventory /> },

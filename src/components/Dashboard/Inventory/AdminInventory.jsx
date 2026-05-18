@@ -115,7 +115,7 @@ const AdminInventory = () => {
               Nhập hàng
             </NavLink>
 
-            <NavLink to={'/admin/products/form/A'} className="inventory-add-btn">
+            <NavLink to={'/admin/products/form/add'} className="inventory-add-btn">
               <PlusIcon />
               Thêm sản phẩm mới
             </NavLink>

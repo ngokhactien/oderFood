@@ -1,0 +1,112 @@
+.admin-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.45);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 99999;
+
+  animation: adminFadeIn 0.2s ease;
+}
+
+.admin-delete-modal {
+  width: 420px;
+  max-width: 95%;
+
+  background: white;
+
+  border-radius: 14px;
+
+  padding: 24px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.15);
+
+  animation: adminScaleIn 0.2s ease;
+}
+
+.admin-delete-modal h3 {
+  margin: 0 0 12px;
+
+  font-size: 22px;
+  font-weight: 700;
+
+  color: #111827;
+}
+
+.admin-delete-modal p {
+  margin: 0;
+
+  line-height: 1.6;
+
+  color: #6b7280;
+}
+
+.admin-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 12px;
+
+  margin-top: 24px;
+}
+
+.admin-modal-actions button {
+  border: none;
+
+  min-width: 90px;
+  height: 42px;
+
+  border-radius: 10px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.admin-modal-actions button:first-child {
+  background: #f3f4f6;
+}
+
+.admin-modal-actions button:first-child:hover {
+  background: #e5e7eb;
+}
+
+.admin-danger-btn {
+  background: #dc2626;
+  color: white;
+}
+
+.admin-danger-btn:hover {
+  background: #b91c1c;
+}
+
+@keyframes adminFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes adminScaleIn {
+  from {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

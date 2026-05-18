@@ -1,0 +1,543 @@
+/* =========================
+   USER MODAL
+========================= */
+
+.admin-user-modal-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.45);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 9999;
+
+  padding: 20px;
+}
+
+.admin-user-modal {
+  width: 100%;
+  max-width: 900px;
+
+  background: #fff;
+
+  border-radius: 20px;
+
+  padding: 24px;
+
+  max-height: 92vh;
+  overflow-y: auto;
+
+  animation: adminUserModalShow 0.25s ease;
+}
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes adminUserModalShow {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.admin-user-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 24px;
+}
+
+.admin-user-modal-header h2 {
+  font-size: 28px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.admin-user-modal-close {
+  width: 42px;
+  height: 42px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: #f3f4f6;
+
+  font-size: 24px;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.admin-user-modal-close:hover {
+  background: #e5e7eb;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.admin-user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin-user-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 18px;
+}
+
+/* =========================
+   GROUP
+========================= */
+
+.admin-user-form__group {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.admin-user-form__group label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #374151;
+}
+
+.admin-user-form__group input,
+.admin-user-form__group select,
+.admin-user-form__group textarea {
+  width: 100%;
+  min-height: 46px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+
+  padding: 0 14px;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition: 0.2s;
+}
+
+.admin-user-form__group textarea {
+  min-height: 100px;
+
+  padding-top: 12px;
+
+  resize: vertical;
+}
+
+.admin-user-form__group input:focus,
+.admin-user-form__group select:focus,
+.admin-user-form__group textarea:focus {
+  border-color: #3b82f6;
+
+  box-shadow: 0 0 0 3px
+    rgba(59, 130, 246, 0.12);
+}
+
+/* =========================
+   ADDRESS SECTION
+========================= */
+
+.admin-user-address-section {
+  margin-top: 10px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+.admin-user-address-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+}
+
+.admin-user-address-top h3 {
+  font-size: 24px;
+  font-weight: 800;
+
+  color: #111827;
+}
+
+/* =========================
+   ADD ADDRESS BUTTON
+========================= */
+
+.admin-user-btn-add-address {
+  border: none;
+  outline: none;
+
+  background: #2563eb;
+  color: white;
+
+  height: 42px;
+
+  padding: 0 18px;
+
+  border-radius: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.admin-user-btn-add-address:hover {
+  background: #1d4ed8;
+}
+
+/* =========================
+   ADDRESS CARD
+========================= */
+
+.admin-user-address-card {
+  border: 1px solid #e5e7eb;
+
+  border-radius: 18px;
+
+  padding: 20px;
+
+  background: #f9fafb;
+}
+
+/* =========================
+   ADDRESS ACTIONS
+========================= */
+
+.admin-user-address-actions {
+  margin-top: 16px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  flex-wrap: wrap;
+}
+
+.admin-user-btn-default,
+.admin-user-btn-remove-address {
+  border: none;
+
+  height: 40px;
+
+  padding: 0 16px;
+
+  border-radius: 10px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.admin-user-btn-default {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.admin-user-btn-default.active {
+  background: #22c55e;
+  color: white;
+}
+
+.admin-user-btn-remove-address {
+  background: #ef4444;
+  color: white;
+}
+
+.admin-user-btn-default:hover,
+.admin-user-btn-remove-address:hover {
+  opacity: 0.9;
+}
+
+/* =========================
+   FOOTER ACTIONS
+========================= */
+
+.admin-user-modal__actions {
+  margin-top: 10px;
+
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 12px;
+}
+
+.admin-user-btn-cancel,
+.admin-user-btn-save {
+  min-width: 120px;
+  height: 46px;
+
+  border: none;
+  border-radius: 12px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.admin-user-btn-cancel {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.admin-user-btn-save {
+  background: #2563eb;
+  color: white;
+}
+
+.admin-user-btn-cancel:hover,
+.admin-user-btn-save:hover {
+  opacity: 0.92;
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+.admin-user-modal::-webkit-scrollbar {
+  width: 8px;
+}
+
+.admin-user-modal::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 999px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+  .admin-user-modal {
+    padding: 18px;
+  }
+
+  .admin-user-form__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-user-address-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-user-modal__actions {
+    flex-direction: column;
+  }
+
+  .admin-user-btn-cancel,
+  .admin-user-btn-save,
+  .admin-user-btn-add-address {
+    width: 100%;
+  }
+
+  .admin-user-address-actions {
+    width: 100%;
+  }
+
+  .admin-user-btn-default,
+  .admin-user-btn-remove-address {
+    flex: 1;
+  }
+}
+
+/* =========================
+   ADDRESS ACTIONS
+========================= */
+
+.admin-user-address-actions {
+  margin-top: 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  flex-wrap: wrap;
+}
+
+/* DEFAULT BUTTON */
+
+.admin-user-btn-default {
+  border: none;
+
+  height: 42px;
+
+  padding: 0 16px;
+
+  border-radius: 12px;
+
+  background: #e5e7eb;
+  color: #111827;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.admin-user-btn-default:hover {
+  opacity: 0.9;
+}
+
+/* ACTIVE DEFAULT */
+
+.admin-user-btn-default.active {
+  background: #22c55e;
+  color: white;
+
+  box-shadow: 0 4px 14px
+    rgba(34, 197, 94, 0.25);
+}
+
+/* REMOVE ADDRESS */
+
+.admin-user-btn-remove-address {
+  border: none;
+
+  height: 42px;
+
+  padding: 0 16px;
+
+  border-radius: 12px;
+
+  background: #ef4444;
+  color: white;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.admin-user-btn-remove-address:hover {
+  opacity: 0.9;
+}
+
+/* ADD ADDRESS */
+
+.admin-user-btn-add-address {
+  border: none;
+
+  height: 44px;
+
+  padding: 0 18px;
+
+  border-radius: 12px;
+
+  background: #2563eb;
+  color: white;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.admin-user-btn-add-address:hover {
+  background: #1d4ed8;
+}
+
+/* DISABLED */
+
+.admin-user-btn-add-address:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.admin-user-address-card {
+  position: relative;
+  z-index: 1;
+}
+
+.admin-user-form__group {
+  position: relative;
+  z-index: 2;
+}
+
+.admin-user-form__group input {
+  position: relative;
+  z-index: 3;
+}
+
+.admin-user-address-actions {
+  position: relative;
+  z-index: 1;
+
+  margin-top: 20px;
+}
+
+.input-error {
+  border: 1px solid #ef4444 !important;
+
+  box-shadow: 0 0 0 3px
+    rgba(239, 68, 68, 0.12);
+}
+
+.error-text {
+  color: #ef4444;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  margin-top: -2px;
+}
+
+.input-error {
+  border: 1px solid #ef4444 !important;
+
+  background: #fef2f2;
+}
+
+.error-text {
+  color: #ef4444;
+
+  font-size: 13px;
+
+  margin-top: 4px;
+
+  font-weight: 500;
+}

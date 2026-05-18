@@ -1,5 +1,3 @@
-/* styles/AdminCategories.css */
-
 .admin-categories {
   width: 100%;
   padding: 24px;
@@ -12,13 +10,12 @@
   overflow: hidden;
 }
 
+/* HEADER */
 .admin-categories__header {
   padding: 20px 24px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   border-bottom: 1px solid #eee;
 }
 
@@ -33,16 +30,18 @@
   border: none;
   border-radius: 10px;
   padding: 0 18px;
-
   background: #3b82f6;
   color: white;
-
   display: flex;
   align-items: center;
   gap: 8px;
-
   font-weight: 600;
   cursor: pointer;
+  transition: 0.2s;
+}
+
+.admin-categories__add-btn:hover {
+  background: #2563eb;
 }
 
 .admin-categories__add-icon {
@@ -50,13 +49,21 @@
   height: 18px;
 }
 
+/* TOP */
 .admin-categories__top {
   padding: 20px 24px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  flex-wrap: wrap;
+}
+
+.admin-categories__top-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .admin-categories__show {
@@ -68,14 +75,31 @@
 .admin-categories__show select {
   width: 70px;
   height: 38px;
-
   border: 1px solid #ddd;
   border-radius: 8px;
-
   padding: 0 10px;
   outline: none;
+  background: white;
 }
 
+/* FILTER STATUS */
+.admin-categories__filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-categories__filter select {
+  width: 150px;
+  height: 38px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0 10px;
+  outline: none;
+  background: white;
+}
+
+/* SEARCH */
 .admin-categories__search {
   position: relative;
 }
@@ -83,26 +107,28 @@
 .admin-categories__search input {
   width: 260px;
   height: 40px;
-
   border: 1px solid #ddd;
   border-radius: 10px;
-
   padding: 0 14px 0 40px;
   outline: none;
+  transition: 0.2s;
+}
+
+.admin-categories__search input:focus {
+  border-color: #3b82f6;
 }
 
 .admin-categories__search-icon {
   width: 18px;
   height: 18px;
-
   position: absolute;
   top: 50%;
   left: 12px;
-
   transform: translateY(-50%);
   color: #999;
 }
 
+/* TABLE */
 .admin-categories__table-wrap {
   overflow-x: auto;
 }
@@ -119,7 +145,6 @@
 .admin-categories__table th,
 .admin-categories__table td {
   padding: 16px;
-  text-align: left;
   border-bottom: 1px solid #eee;
 }
 
@@ -127,11 +152,18 @@
   font-size: 14px;
   font-weight: 700;
   color: #374151;
+  text-align: center;
 }
 
 .admin-categories__table td {
   font-size: 14px;
   color: #555;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.admin-categories__table tbody tr:hover {
+  background: #fafafa;
 }
 
 .admin-categories__name {
@@ -139,74 +171,109 @@
   color: #111827;
 }
 
+/* IMAGE */
 .admin-categories__image {
   width: 54px;
   height: 54px;
-
   border-radius: 12px;
   object-fit: cover;
-
   border: 1px solid #eee;
 }
 
+/* STATUS */
 .admin-categories__status {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
+  min-width: 100px;
   height: 34px;
   padding: 0 14px;
-
   border-radius: 999px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
+/* SHOW */
 .admin-categories__status--show {
   background: #dcfce7;
   color: #16a34a;
+  border: 1px solid #86efac;
 }
 
+/* HIDE */
 .admin-categories__status--hide {
   background: #fee2e2;
   color: #dc2626;
+  border: 1px solid #fca5a5;
 }
 
-.admin-categories__action-btn {
+/* ACTION ICONS */
+.action-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.action-btn {
   width: 36px;
   height: 36px;
-
   border: none;
   background: transparent;
-  border-radius: 8px;
-
+  border-radius: 10px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  cursor: pointer;
+  transition: 0.2s;
 }
 
-.admin-categories__action-btn:hover {
+.action-btn:hover {
   background: #f3f4f6;
 }
 
-.admin-categories__action-icon {
+.action-icon {
   width: 20px;
   height: 20px;
-  color: #666;
 }
 
+.action-btn.edit svg {
+  color: #2563eb;
+}
+
+.action-btn.delete svg {
+  color: #ef4444;
+}
+
+/* BOTTOM */
 .admin-categories__bottom {
   padding: 20px 24px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
 }
 
+/* EMPTY */
+.admin-categories__empty {
+  padding: 30px 0;
+  text-align: center;
+  color: #999;
+}
+
+/* LOADING */
+.admin-categories__loading {
+  padding: 30px 0;
+  text-align: center;
+  color: #666;
+}
+
+/* RESPONSIVE */
 @media (max-width: 768px) {
+  .admin-categories {
+    padding: 14px;
+  }
+
   .admin-categories__header,
   .admin-categories__top,
   .admin-categories__bottom {
@@ -214,7 +281,25 @@
     align-items: flex-start;
   }
 
+  .admin-categories__search {
+    width: 100%;
+  }
+
   .admin-categories__search input {
+    width: 100%;
+  }
+
+  .admin-categories__top-left {
+    width: 100%;
+  }
+
+  .admin-categories__show,
+  .admin-categories__filter {
+    width: 100%;
+  }
+
+  .admin-categories__show select,
+  .admin-categories__filter select {
     width: 100%;
   }
 }
