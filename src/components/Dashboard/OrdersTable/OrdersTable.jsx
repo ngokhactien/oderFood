@@ -38,6 +38,12 @@ const mockData = [
     date: "22:08 28-01-2026",
     total: "11,000đ",
     status: "Chờ xác nhận",
+  },{
+    id: 6,
+    name: "Nguyễn Xuân Lộc",
+    date: "22:08 28-01-2026",
+    total: "11,000đ",
+    status: "Chờ xác nhận",
   },
 ];
 
@@ -122,18 +128,22 @@ const OrdersTable = () => {
       </table>
 
       {/* bottom */}
-      <div className="table-footer">
-        <span>
-          Showing {start + 1} to {Math.min(start + entries, filtered.length)} of{" "}
-          {filtered.length} entries
-        </span>
+      {filtered.length > 0 && (
+        <div className="table-footer">
+          <span>
+            Showing {start + 1} to {Math.min(start + entries, filtered.length)}{" "}
+            of {filtered.length} entries
+          </span>
 
-        <Pagination
-          page={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
-        />
-      </div>
+          {totalPages > 1 && (
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 };

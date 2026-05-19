@@ -1,53 +1,85 @@
 // models/Product.js
+
 import mongoose from "mongoose";
 
 const optionSchema = new mongoose.Schema({
-  label: String,
-  price: Number,
-  stock: Number, // mỗi size có kho riêng
-  importPrice: Number, // giá nhập riêng từng option
+  label: String, // tên option/size sản phẩm
+
+  price: Number, // giá bán của từng option
+
+  stock: Number, // số lượng hàng còn trong kho của từng option
+
+  importPrice: Number, // giá nhập của từng option
 });
 
 const productSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
-    brand: String,
-    category: String,
+    name: {
+      type: String,
+      required: true,
+    }, // tên sản phẩm
 
-    price: Number,
+    brand: String, // thương hiệu sản phẩm
 
-    // GIÁ NHẬP
+    category: String, // danh mục sản phẩm
+
+    price: Number, // giá bán sản phẩm
+
     importPrice: {
       type: Number,
       default: 0,
-    },
-    discount: Number,
+    }, // giá nhập sản phẩm
 
-    images: [String],
+    discount: Number, // phần trăm giảm giá
 
-    options: [optionSchema],
+    images: [String], // danh sách ảnh sản phẩm
 
-    views: { type: Number, default: 0 }, // để tính độ hot
-    rating: { type: Number, default: 0 },
-    reviews: { type: Number, default: 0 }, // số người đánh giá
-    sold: { type: Number, default: 0 },
+    options: [optionSchema], // danh sách option/size sản phẩm
 
-    stock: Number,
-    isBestSeller: { type: Boolean, default: false },
+    views: {
+      type: Number,
+      default: 0,
+    }, // số lượt xem sản phẩm để tính độ hot
 
-    prepTime: Number,
+    rating: {
+      type: Number,
+      default: 0,
+    }, // điểm đánh giá trung bình sản phẩm
 
-    ingredients: [String],
+    reviews: {
+      type: Number,
+      default: 0,
+    }, // số lượng người đánh giá sản phẩm
 
-    description: String,
+    sold: {
+      type: Number,
+      default: 0,
+    }, // số lượng sản phẩm đã bán
+
+    stock: Number, // số lượng hàng còn trong kho
+
+    isBestSeller: {
+      type: Boolean,
+      default: false,
+    }, // kiểm tra sản phẩm bán chạy
+
+    prepTime: Number, // thời gian chuẩn bị món ăn
+
+    ingredients: [String], // nguyên liệu của sản phẩm
+
+    description: String, // mô tả sản phẩm
 
     status: {
       type: String,
+
       enum: ["available", "out_of_stock"],
+
       default: "available",
-    },
+    }, // trạng thái còn hàng hoặc hết hàng
   },
-  { timestamps: true },
+  {
+    timestamps: true, // tự động tạo createdAt và updatedAt
+  },
 );
 
 export default mongoose.model("Product", productSchema);

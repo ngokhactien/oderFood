@@ -241,15 +241,15 @@ const AdminInventory = () => {
 
                 <th>TÊN SẢN PHẨM</th>
 
-                <th>DANH MỤC</th>
-
                 <th>TỒN KHO</th>
+
+                <th>GIÁ NHẬP</th>
+
+                <th>GIÁ BÁN</th>
 
                 <th>ĐÃ BÁN</th>
 
                 <th>TRẠNG THÁI</th>
-
-                <th>GIÁ BÁN</th>
 
                 <th>THAO TÁC</th>
               </tr>
@@ -287,9 +287,13 @@ const AdminInventory = () => {
 
                       <td className="inventory-product-name">{item.name}</td>
 
-                      <td>{item.category}</td>
-
                       <td className="inventory-product-stock">{item.stock}</td>
+
+                      <td>{item.importPrice}</td>
+
+                      <td className="inventory-product-price">
+                        {formatPrice(item.price)}
+                      </td>
 
                       <td>{item.sold || 0}</td>
 
@@ -305,10 +309,6 @@ const AdminInventory = () => {
                         >
                           {status}
                         </span>
-                      </td>
-
-                      <td className="inventory-product-price">
-                        {formatPrice(item.price)}
                       </td>
 
                       <td>
@@ -328,19 +328,23 @@ const AdminInventory = () => {
         </div>
 
         {/* FOOTER */}
-        <div className="products-footer">
-          <span>
-            Showing {filteredProducts.length > 0 ? start + 1 : 0} to{" "}
-            {Math.min(start + entries, filteredProducts.length)} of{" "}
-            {filteredProducts.length} entries
-          </span>
+        {filteredProducts.length > 0 && (
+          <div className="products-footer">
+            <span>
+              Showing {start + 1} to{" "}
+              {Math.min(start + entries, filteredProducts.length)} of{" "}
+              {filteredProducts.length} entries
+            </span>
 
-          <Pagination
-            page={page}
-            totalPages={totalPages}
-            onPageChange={setPage}
-          />
-        </div>
+            {totalPages > 1 && (
+              <Pagination
+                page={page}
+                totalPages={totalPages}
+                onPageChange={setPage}
+              />
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

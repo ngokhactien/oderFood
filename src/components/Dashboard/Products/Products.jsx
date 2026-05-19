@@ -17,34 +17,25 @@ import DeleteModal from "../../../common/DeleteModal";
 export default function Products() {
   const dispatch = useDispatch();
 
-  const { products, loading } =
-    useSelector(
-      (state) => state.adminProducts,
-    );
+  const { products, loading } = useSelector((state) => state.adminProducts);
 
-  const [search, setSearch] =
-    useState("");
+  const [search, setSearch] = useState("");
 
-  const [category, setCategory] =
-    useState("all");
+  const [category, setCategory] = useState("all");
 
-  const [entries, setEntries] =
-    useState(5);
+  const [entries, setEntries] = useState(5);
 
-  const [page, setPage] =
-    useState(1);
+  const [page, setPage] = useState(1);
 
-  const [sort, setSort] =
-    useState("newest");
+  const [sort, setSort] = useState("newest");
 
   //
   // DELETE MODAL
   //
-  const [deleteModal, setDeleteModal] =
-    useState({
-      open: false,
-      product: null,
-    });
+  const [deleteModal, setDeleteModal] = useState({
+    open: false,
+    product: null,
+  });
 
   //
   // FETCH PRODUCTS
@@ -56,113 +47,76 @@ export default function Products() {
   //
   // FILTER
   //
-  const filteredProducts =
-    useMemo(() => {
-      let data = [...products];
+  const filteredProducts = useMemo(() => {
+    let data = [...products];
 
-      //
-      // SEARCH
-      //
-      if (search) {
-        data = data.filter((item) =>
-          item.name
-            .toLowerCase()
-            .includes(
-              search.toLowerCase(),
-            ),
-        );
-      }
+    //
+    // SEARCH
+    //
+    if (search) {
+      data = data.filter((item) =>
+        item.name.toLowerCase().includes(search.toLowerCase()),
+      );
+    }
 
-      //
-      // CATEGORY
-      //
-      if (category !== "all") {
-        data = data.filter(
-          (item) =>
-            item.category === category,
-        );
-      }
+    //
+    // CATEGORY
+    //
+    if (category !== "all") {
+      data = data.filter((item) => item.category === category);
+    }
 
-      //
-      // SORT
-      //
-      switch (sort) {
-        case "price_asc":
-          data.sort(
-            (a, b) =>
-              a.price - b.price,
-          );
-          break;
+    //
+    // SORT
+    //
+    switch (sort) {
+      case "price_asc":
+        data.sort((a, b) => a.price - b.price);
+        break;
 
-        case "price_desc":
-          data.sort(
-            (a, b) =>
-              b.price - a.price,
-          );
-          break;
+      case "price_desc":
+        data.sort((a, b) => b.price - a.price);
+        break;
 
-        case "name_asc":
-          data.sort((a, b) =>
-            a.name.localeCompare(b.name),
-          );
-          break;
+      case "name_asc":
+        data.sort((a, b) => a.name.localeCompare(b.name));
+        break;
 
-        default:
-          data.reverse();
-      }
+      default:
+        data.reverse();
+    }
 
-      return data;
-    }, [
-      products,
-      search,
-      category,
-      sort,
-    ]);
+    return data;
+  }, [products, search, category, sort]);
 
   //
   // PAGINATION
   //
-  const totalPages = Math.ceil(
-    filteredProducts.length / entries,
-  );
+  const totalPages = Math.ceil(filteredProducts.length / entries);
 
   const start = (page - 1) * entries;
 
-  const currentData =
-    filteredProducts.slice(
-      start,
-      start + entries,
-    );
+  const currentData = filteredProducts.slice(start, start + entries);
 
   //
   // DELETE
   //
-  const handleDelete =
-    async () => {
-      if (!deleteModal.product)
-        return;
+  const handleDelete = async () => {
+    if (!deleteModal.product) return;
 
-      await dispatch(
-        removeProduct(
-          deleteModal.product._id,
-        ),
-      );
+    await dispatch(removeProduct(deleteModal.product._id));
 
-      setDeleteModal({
-        open: false,
-        product: null,
-      });
-    };
+    setDeleteModal({
+      open: false,
+      product: null,
+    });
+  };
 
   //
   // FORMAT PRICE
   //
   const formatPrice = (price) => {
-    return (
-      Number(price).toLocaleString(
-        "vi-VN",
-      ) + "₫"
-    );
+    return Number(price).toLocaleString("vi-VN") + "₫";
   };
 
   return (
@@ -174,24 +128,16 @@ export default function Products() {
           <select
             value={entries}
             onChange={(e) => {
-              setEntries(
-                Number(e.target.value),
-              );
+              setEntries(Number(e.target.value));
 
               setPage(1);
             }}
           >
-            <option value={5}>
-              5
-            </option>
+            <option value={5}>5</option>
 
-            <option value={10}>
-              10
-            </option>
+            <option value={10}>10</option>
 
-            <option value={20}>
-              20
-            </option>
+            <option value={20}>20</option>
           </select>
 
           {/* SEARCH */}
@@ -200,9 +146,7 @@ export default function Products() {
             placeholder="Tìm sản phẩm..."
             value={search}
             onChange={(e) => {
-              setSearch(
-                e.target.value,
-              );
+              setSearch(e.target.value);
 
               setPage(1);
             }}
@@ -212,71 +156,39 @@ export default function Products() {
           <select
             value={category}
             onChange={(e) => {
-              setCategory(
-                e.target.value,
-              );
+              setCategory(e.target.value);
 
               setPage(1);
             }}
           >
-            <option value="all">
-              Tất cả
-            </option>
+            <option value="all">Tất cả</option>
 
-            <option value="pizza">
-              Pizza
-            </option>
+            <option value="pizza">Pizza</option>
 
-            <option value="burger">
-              Burger
-            </option>
+            <option value="burger">Burger</option>
 
-            <option value="sushi">
-              Sushi
-            </option>
+            <option value="sushi">Sushi</option>
 
-            <option value="drink">
-              Drink
-            </option>
+            <option value="drink">Drink</option>
 
-            <option value="pasta">
-              Pasta
-            </option>
+            <option value="pasta">Pasta</option>
           </select>
 
           {/* SORT */}
-          <select
-            value={sort}
-            onChange={(e) =>
-              setSort(
-                e.target.value,
-              )
-            }
-          >
-            <option value="newest">
-              Mới nhất
-            </option>
+          <select value={sort} onChange={(e) => setSort(e.target.value)}>
+            <option value="newest">Mới nhất</option>
 
-            <option value="price_asc">
-              Giá tăng dần
-            </option>
+            <option value="price_asc">Giá tăng dần</option>
 
-            <option value="price_desc">
-              Giá giảm dần
-            </option>
+            <option value="price_desc">Giá giảm dần</option>
 
-            <option value="name_asc">
-              A-Z
-            </option>
+            <option value="name_asc">A-Z</option>
           </select>
         </div>
 
         {/* ADD */}
         <div className="products-left">
-          <NavLink
-            to="/admin/products/form/add"
-            className="add-product-btn"
-          >
+          <NavLink to="/admin/products/form/add" className="add-product-btn">
             + Thêm sản phẩm
           </NavLink>
         </div>
@@ -306,92 +218,63 @@ export default function Products() {
           <tbody>
             {loading ? (
               <tr>
-                <td
-                  colSpan="7"
-                  align="center"
-                >
+                <td colSpan="7" align="center">
                   Đang tải...
                 </td>
               </tr>
-            ) : currentData.length ===
-              0 ? (
+            ) : currentData.length === 0 ? (
               <tr>
-                <td
-                  colSpan="7"
-                  align="center"
-                >
+                <td colSpan="7" align="center">
                   Không có sản phẩm
                 </td>
               </tr>
             ) : (
-              currentData.map(
-                (item, index) => (
-                  <tr key={item._id}>
-                    <td>
-                      {start +
-                        index +
-                        1}
-                    </td>
+              currentData.map((item, index) => (
+                <tr key={item._id}>
+                  <td>{start + index + 1}</td>
 
-                    <td className="product-name">
-                      {item.name}
-                    </td>
+                  <td className="product-name">{item.name}</td>
 
-                    <td>
-                      <img
-                        src={
-                          item
-                            .images?.[0]
+                  <td>
+                    <img
+                      src={item.images?.[0]}
+                      alt={item.name}
+                      className="product-image"
+                    />
+                  </td>
+
+                  <td>{item.category}</td>
+
+                  <td className="new-price">{formatPrice(item.price)}</td>
+
+                  <td>{item.stock}</td>
+
+                  <td>
+                    <div className="products-actions">
+                      {/* EDIT */}
+                      <NavLink
+                        to={`/admin/products/form/edit/${item._id}`}
+                        className="edit-btn"
+                      >
+                        Sửa
+                      </NavLink>
+
+                      {/* DELETE */}
+                      <button
+                        className="delete-btn"
+                        onClick={() =>
+                          setDeleteModal({
+                            open: true,
+                            product: item,
+                          })
                         }
-                        alt={item.name}
-                        className="product-image"
-                      />
-                    </td>
-
-                    <td>
-                      {item.category}
-                    </td>
-
-                    <td className="new-price">
-                      {formatPrice(
-                        item.price,
-                      )}
-                    </td>
-
-                    <td>
-                      {item.stock}
-                    </td>
-
-                    <td>
-                      <div className="products-actions">
-                        {/* EDIT */}
-                        <NavLink
-                          to={`/admin/products/form/edit/${item._id}`}
-                          className="edit-btn"
-                        >
-                          Sửa
-                        </NavLink>
-
-                        {/* DELETE */}
-                        <button
-                          className="delete-btn"
-                          onClick={() =>
-                            setDeleteModal(
-                              {
-                                open: true,
-                                product:
-                                  item,
-                              },
-                            )
-                          }
-                        >
-                          Xóa
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ),
-              )
+                      >
+                        Xóa
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
             )}
           </tbody>
         </table>
@@ -399,26 +282,18 @@ export default function Products() {
         {/* FOOTER */}
         <div className="products-footer">
           <span>
-            Showing{" "}
-            {filteredProducts.length >
-            0
-              ? start + 1
-              : 0}{" "}
-            to{" "}
-            {Math.min(
-              start + entries,
-              filteredProducts.length,
-            )}{" "}
-            of{" "}
-            {filteredProducts.length}{" "}
-            entries
+            Showing {filteredProducts.length > 0 ? start + 1 : 0} to{" "}
+            {Math.min(start + entries, filteredProducts.length)} of{" "}
+            {filteredProducts.length} entries
           </span>
 
-          <Pagination
-            page={page}
-            totalPages={totalPages}
-            onPageChange={setPage}
-          />
+          {filteredProducts.length > 0 && totalPages > 1 && (
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
+          )}
         </div>
       </div>
 
@@ -432,9 +307,7 @@ export default function Products() {
           })
         }
         onConfirm={handleDelete}
-        productName={
-          deleteModal.product?.name
-        }
+        productName={deleteModal.product?.name}
       />
     </div>
   );

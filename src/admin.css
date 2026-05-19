@@ -5,8 +5,8 @@
 /* ===== ROOT ===== */
 .admin {
   display: flex;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 /* ===== SIDEBAR ===== */
@@ -96,10 +96,17 @@
 /* ===== HEADER ===== */
 .admin-header {
   display: flex;
+  position: fixed;
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
   background: #fff;
+  width: 100%;
+}
+
+.admin-content {
+  padding: 20px;
+  margin-top: 4rem;
 }
 
 .menu-icon {

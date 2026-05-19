@@ -1,8 +1,6 @@
 // pages/admin/AdminComments.jsx
 import { useMemo, useState } from "react";
-import {
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 import "../../styles/Dashboard/Comments/AdminComments.css";
 import Pagination from "../../Pagination";
@@ -65,17 +63,12 @@ export default function AdminComments() {
   const totalPages = Math.ceil(filteredData.length / limit);
 
   // data hiện tại
-  const currentData = filteredData.slice(
-    (page - 1) * limit,
-    page * limit,
-  );
+  const currentData = filteredData.slice((page - 1) * limit, page * limit);
 
   return (
     <div className="admin-comment">
       <div className="admin-comment__card">
-        <h2 className="admin-comment__title">
-          Danh sách bình luận
-        </h2>
+        <h2 className="admin-comment__title">Danh sách bình luận</h2>
 
         {/* top */}
         <div className="admin-comment__top">
@@ -137,7 +130,10 @@ export default function AdminComments() {
                   <td>{item.time}</td>
 
                   <td>
-                    <NavLink to={'detail'} className="admin-comment__detail-btn">
+                    <NavLink
+                      to={"detail"}
+                      className="admin-comment__detail-btn"
+                    >
                       Chi tiết
                     </NavLink>
                   </td>
@@ -148,20 +144,23 @@ export default function AdminComments() {
         </div>
 
         {/* bottom */}
-        <div className="admin-comment__bottom">
-          <p>
-            Showing {(page - 1) * limit + 1} to{" "}
-            {Math.min(page * limit, filteredData.length)} of{" "}
-            {filteredData.length} entries
-          </p>
+        {filteredData.length > 0 && (
+          <div className="admin-comment__bottom">
+            <p>
+              Showing {(page - 1) * limit + 1} to{" "}
+              {Math.min(page * limit, filteredData.length)} of{" "}
+              {filteredData.length} entries
+            </p>
 
-          {/* dùng pagination của bạn */}
-          <Pagination
-            page={page}
-            totalPages={totalPages}
-            onPageChange={setPage}
-          />
-        </div>
+            {totalPages > 1 && (
+              <Pagination
+                page={page}
+                totalPages={totalPages}
+                onPageChange={setPage}
+              />
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
