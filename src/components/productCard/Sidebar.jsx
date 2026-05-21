@@ -17,7 +17,7 @@ import {
 
 import { getShowCategories } from "../../redux/categorySlice";
 
-import "../styles/productCard/Sidebar.css";
+import "./styles/Sidebar.css";
 
 export default function Sidebar({
   layout = "horizontal",

@@ -1,7 +1,7 @@
 // pages/admin/AdminCommentDetail.jsx
 
 import { useState } from "react";
-import "../../styles/Dashboard/Comments/AdminCommentDetail.css";
+import "./styles/AdminCommentDetail.css";
 import { NavLink } from "react-router-dom";
 
 export default function AdminCommentDetail() {

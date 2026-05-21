@@ -1,4 +1,4 @@
-import '../styles/footer/Footer.css';
+import './styles/Footer.css';
 
 import {
   MapPinIcon,

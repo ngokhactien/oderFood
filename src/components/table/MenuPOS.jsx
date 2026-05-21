@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import "../styles/table/menuPOS.css";
+import "./styles/menuPOS.css";
 import ProductList from "../ProductList";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";

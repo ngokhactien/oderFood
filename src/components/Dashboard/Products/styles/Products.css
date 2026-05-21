@@ -330,6 +330,38 @@
   background: #b91c1c !important;
 }
 
+/* ===== BADGE ===== */
+
+/* ===== BADGE ===== */
+
+.products-page .product-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* OUT OF STOCK */
+.products-page .out-stock {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* LOW STOCK */
+.products-page .low-stock {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+/* IN STOCK */
+.products-page .in-stock {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+
 /* ===== ANIMATION ===== */
 
 @keyframes adminScaleIn {

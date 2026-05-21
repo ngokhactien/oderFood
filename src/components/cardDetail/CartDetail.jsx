@@ -2,8 +2,9 @@ import { useState } from "react";
 import { ArchiveBoxXMarkIcon } from "@heroicons/react/24/outline";
 import { formatPrice, calculatePrice } from "../../common/calculatePrice";
 import { CalculatorIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
-import "../styles/cardDetail/CardDetail.css";
+import "./styles/CardDetail.css";
 import { NavLink } from "react-router-dom";
+import { toast } from "react-toastify";
 
 // ✅ luôn lấy giá cuối cùng (có option nếu có)
 const getFinalPrice = (item) => {
@@ -53,37 +54,34 @@ const CartDetail = ({
       const token = localStorage.getItem("token");
 
       if (!token) {
-        alert("Bạn cần đăng nhập");
+        toast.warning("Bạn cần đăng nhập");
         return;
       }
 
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/orders`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            items: carts,
-          }),
-        }
-      );
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          items: carts,
+        }),
+      });
 
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data);
+        toast.error(data);
         return;
       }
 
-      alert("Đặt hàng thành công 🎉");
+      toast.success("Đặt hàng thành công 🎉");
 
       // 👉 tạm reload (sau có thể dispatch clearCart)
       window.location.reload();
     } catch (err) {
-      alert("Lỗi server"+ err);
+      toast.error("Lỗi server" + err);
     }
   };
 
@@ -105,10 +103,7 @@ const CartDetail = ({
               key={item.id + (item.option || "default")}
             >
               {/* IMAGE */}
-              <NavLink
-                to={`/product/${item.id}`}
-                className="cart__item-link"
-              >
+              <NavLink to={`/product/${item.id}`} className="cart__item-link">
                 <img
                   src={item.image || item.images?.[0]}
                   alt={item.name}
@@ -127,13 +122,9 @@ const CartDetail = ({
               <div className="price">
                 <p>ĐƠN GIÁ:</p>
 
-                <span className="old-price">
-                  {formatPrice(item.price)}
-                </span>
+                <span className="old-price">{formatPrice(item.price)}</span>
 
-                <span className="new-price">
-                  {formatPrice(finalPrice)}
-                </span>
+                <span className="new-price">{formatPrice(finalPrice)}</span>
 
                 {item.discount && (
                   <span className="discount">{item.discount}%</span>
@@ -142,11 +133,7 @@ const CartDetail = ({
 
               {/* QUANTITY */}
               <div className="qty">
-                <button
-                  onClick={() =>
-                    onDecrease(item.id, item.option)
-                  }
-                >
+                <button onClick={() => onDecrease(item.id, item.option)}>
                   -
                 </button>
 
@@ -161,11 +148,7 @@ const CartDetail = ({
                   }}
                 />
 
-                <button
-                  onClick={() =>
-                    onIncrease(item.id, item.option)
-                  }
-                >
+                <button onClick={() => onIncrease(item.id, item.option)}>
                   +
                 </button>
               </div>
@@ -173,17 +156,13 @@ const CartDetail = ({
               {/* TOTAL */}
               <div className="total">
                 <p>TỔNG:</p>
-                <span>
-                  {formatPrice(finalPrice * item.quantity)}
-                </span>
+                <span>{formatPrice(finalPrice * item.quantity)}</span>
               </div>
 
               {/* DELETE */}
               <button
                 className="delete"
-                onClick={() =>
-                  onRemove(item.id, item.option)
-                }
+                onClick={() => onRemove(item.id, item.option)}
               >
                 <ArchiveBoxXMarkIcon className="icon-delete" />
               </button>
@@ -243,7 +222,7 @@ const CartDetail = ({
             Thanh Toán COD
           </button>
 
-          <NavLink to={'/checkout'} className="btn-momo">
+          <NavLink to={"/checkout"} className="btn-momo">
             Thanh toán Momo
           </NavLink>
 

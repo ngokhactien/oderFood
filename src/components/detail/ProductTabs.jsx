@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import "../styles/detail/ProductTabs.css";
+import "./styles/ProductTabs.css";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const commentsData = [
   {
@@ -24,7 +25,7 @@ const ProductTabs = () => {
   const user = useSelector((state) => state.auth.user);
 
   const handleSubmit = () => {
-    if (!content.trim()) return alert("Nhập nội dung!");
+    if (!content.trim()) return toast.warning("Nhập nội dung!");
     setContent("");
   };
 

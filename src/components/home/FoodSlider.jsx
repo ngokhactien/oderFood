@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import "../styles/home/FoodSlider.css";
+import "./styles/FoodSlider.css";
 import foodMenu from '../../data/foodSlider'
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 

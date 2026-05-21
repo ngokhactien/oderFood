@@ -1,22 +1,12 @@
 // src/pages/dashboard/products/ProductForm.jsx
 
-import React, {
-  useEffect,
-  useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 
-import {
-  NavLink,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 
-import {
-  useDispatch,
-  useSelector,
-} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import "../../styles/Dashboard/Products/ProductForm.css";
+import "./styles/ProductForm.css";
 
 import {
   addProduct,
@@ -25,6 +15,7 @@ import {
 } from "../../../redux/admin/products/adminProductSlice";
 
 import { getShowCategories } from "../../../redux/categorySlice";
+import { toast } from "react-toastify";
 
 export default function ProductForm() {
   const dispatch = useDispatch();
@@ -35,148 +26,113 @@ export default function ProductForm() {
 
   const isEdit = !!id;
 
+  const [errors, setErrors] = useState({});
+
   // PRODUCT REDUX
-  const { product, loading } =
-    useSelector(
-      (state) =>
-        state.adminProducts
-    );
+  const { product, loading } = useSelector((state) => state.adminProducts);
 
   // CATEGORY REDUX
-  const { categories } =
-    useSelector(
-      (state) =>
-        state.menuCategories
-    );
+  const { categories } = useSelector((state) => state.menuCategories);
 
   // FORM
-  const [formData, setFormData] =
-    useState({
-      name: "",
+  const [formData, setFormData] = useState({
+    name: "",
 
-      brand: "",
+    brand: "",
 
-      category: "",
+    category: "",
 
-      price: "",
+    price: "",
 
-      importPrice: "",
+    importPrice: "",
 
-      discount: "",
+    discount: "",
 
-      stock: "",
+    stock: "",
 
-      prepTime: "",
+    prepTime: "",
 
-      ingredients: "",
+    ingredients: "",
 
-      description: "",
+    description: "",
 
-      status: "available",
+    status: "available",
 
-      options: [],
+    options: [],
 
-      images: [],
-    });
+    images: [],
+  });
 
   // PREVIEW
-  const [preview, setPreview] =
-    useState([]);
+  const [preview, setPreview] = useState([]);
 
   // FETCH CATEGORY
   useEffect(() => {
-    dispatch(
-      getShowCategories()
-    );
+    dispatch(getShowCategories());
   }, [dispatch]);
 
   // FETCH PRODUCT
   useEffect(() => {
     if (isEdit && id) {
-      dispatch(
-        fetchProduct(id)
-      );
+      dispatch(fetchProduct(id));
     }
-  }, [
-    dispatch,
-    isEdit,
-    id,
-  ]);
+  }, [dispatch, isEdit, id]);
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.name.trim()) newErrors.name = true;
+    if (!formData.price) newErrors.price = true;
+    if (!formData.importPrice) newErrors.importPrice = true;
+    if (!formData.stock) newErrors.stock = true;
+    if (!formData.category) newErrors.category = true;
+
+    // FIX HERE
+    if (!preview || preview.length === 0) newErrors.images = true;
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
 
   // SET EDIT DATA
   useEffect(() => {
-    if (
-      isEdit &&
-      product &&
-      product._id === id
-    ) {
+    if (isEdit && product && product._id === id) {
       setFormData({
-        name:
-          product.name || "",
+        name: product.name || "",
 
-        brand:
-          product.brand || "",
+        brand: product.brand || "",
 
-        category:
-          product.category ||
-          "",
+        category: product.category || "",
 
-        price:
-          product.price || "",
+        price: product.price || "",
 
-        importPrice:
-          product.importPrice ||
-          "",
+        importPrice: product.importPrice || "",
 
-        discount:
-          product.discount ||
-          "",
+        discount: product.discount || "",
 
-        stock:
-          product.stock || "",
+        stock: product.stock || "",
 
-        prepTime:
-          product.prepTime ||
-          "",
+        prepTime: product.prepTime || "",
 
-        ingredients:
-          product.ingredients?.join(
-            ", "
-          ) || "",
+        ingredients: product.ingredients?.join(", ") || "",
 
-        description:
-          product.description ||
-          "",
+        description: product.description || "",
 
-        status:
-          product.status ||
-          "available",
+        status: product.status || "available",
 
-        options:
-          product.options || [],
+        options: product.options || [],
 
-        images:
-          product.images || [],
+        images: product.images || [],
       });
 
-      setPreview(
-        product.images || []
-      );
+      setPreview(product.images || []);
     }
-  }, [
-    product,
-    isEdit,
-    id,
-  ]);
+  }, [product, isEdit, id]);
 
   // CHANGE
-  const handleChange = (
-    e
-  ) => {
-    const {
-      name,
-      value,
-    } = e.target;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
     setFormData((prev) => ({
       ...prev,
@@ -185,426 +141,265 @@ export default function ProductForm() {
   };
 
   // MULTIPLE IMAGE
-  const handleImage = (
-    e
-  ) => {
-    const files = Array.from(
-      e.target.files
-    );
+  const handleImage = (e) => {
+    const files = Array.from(e.target.files);
 
     if (!files.length) return;
 
     // lưu file
     setFormData((prev) => ({
       ...prev,
-      images: [
-        ...prev.images,
-        ...files,
-      ],
+      images: [...prev.images, ...files],
     }));
 
     // preview
-    const newPreview =
-      files.map((file) =>
-        URL.createObjectURL(
-          file
-        )
-      );
+    const newPreview = files.map((file) => URL.createObjectURL(file));
 
-    setPreview((prev) => [
-      ...prev,
-      ...newPreview,
-    ]);
+    setPreview((prev) => [...prev, ...newPreview]);
 
     // reset input
     e.target.value = "";
   };
 
   // REMOVE IMAGE
-  const handleRemoveImage = (
-    index
-  ) => {
-    setPreview((prev) =>
-      prev.filter(
-        (_, i) => i !== index
-      )
-    );
+  const handleRemoveImage = (index) => {
+    setPreview((prev) => prev.filter((_, i) => i !== index));
 
     setFormData((prev) => ({
       ...prev,
-      images: prev.images.filter(
-        (_, i) => i !== index
-      ),
+      images: prev.images.filter((_, i) => i !== index),
     }));
   };
 
   // ADD OPTION
-  const handleAddOption =
-    () => {
-      setFormData((prev) => ({
-        ...prev,
-        options: [
-          ...prev.options,
-          {
-            label: "",
+  const handleAddOption = () => {
+    setFormData((prev) => ({
+      ...prev,
+      options: [
+        ...prev.options,
+        {
+          label: "",
 
-            price: "",
+          price: "",
 
-            importPrice:
-              "",
+          importPrice: "",
 
-            stock: "",
-          },
-        ],
-      }));
-    };
+          stock: "",
+        },
+      ],
+    }));
+  };
 
   // CHANGE OPTION
-  const handleOptionChange =
-    (
-      index,
-      field,
-      value
-    ) => {
-      const updated = [
-        ...formData.options,
-      ];
+  const handleOptionChange = (index, field, value) => {
+    const updated = [...formData.options];
 
-      updated[index][field] =
-        value;
+    updated[index][field] = value;
 
-      setFormData((prev) => ({
-        ...prev,
-        options: updated,
-      }));
-    };
+    setFormData((prev) => ({
+      ...prev,
+      options: updated,
+    }));
+  };
 
   // REMOVE OPTION
-  const handleRemoveOption =
-    (index) => {
-      const updated =
-        formData.options.filter(
-          (_, i) =>
-            i !== index
-        );
+  const handleRemoveOption = (index) => {
+    const updated = formData.options.filter((_, i) => i !== index);
 
-      setFormData((prev) => ({
-        ...prev,
-        options: updated,
-      }));
-    };
+    setFormData((prev) => ({
+      ...prev,
+      options: updated,
+    }));
+  };
 
   // SUBMIT
-  const handleSubmit =
-    async (e) => {
-      e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-      try {
-        const submitData =
-          new FormData();
+    if (!validateForm()) return;
 
-        submitData.append(
-          "name",
-          formData.name
-        );
+    try {
+      const submitData = new FormData();
 
-        submitData.append(
-          "brand",
-          formData.brand
-        );
+      submitData.append("name", formData.name);
 
-        submitData.append(
-          "category",
-          formData.category
-        );
+      submitData.append("brand", formData.brand);
 
-        submitData.append(
-          "price",
-          formData.price
-        );
+      submitData.append("category", formData.category);
 
-        submitData.append(
-          "importPrice",
-          formData.importPrice
-        );
+      submitData.append("price", formData.price);
 
-        submitData.append(
-          "discount",
-          formData.discount
-        );
+      submitData.append("importPrice", formData.importPrice);
 
-        submitData.append(
-          "stock",
-          formData.stock
-        );
+      submitData.append("discount", formData.discount);
 
-        submitData.append(
-          "prepTime",
-          formData.prepTime
-        );
+      submitData.append("stock", formData.stock);
 
-        submitData.append(
-          "description",
-          formData.description
-        );
+      submitData.append("prepTime", formData.prepTime);
 
-        submitData.append(
-          "status",
-          formData.status
-        );
+      submitData.append("description", formData.description);
 
-        submitData.append(
-          "ingredients",
-          JSON.stringify(
-            formData.ingredients
-              .split(",")
-              .map((item) =>
-                item.trim()
-              )
-          )
-        );
+      submitData.append("status", formData.status);
 
-        submitData.append(
-          "options",
-          JSON.stringify(
-            formData.options
-          )
-        );
+      submitData.append(
+        "ingredients",
+        JSON.stringify(
+          formData.ingredients.split(",").map((item) => item.trim()),
+        ),
+      );
 
-        // MULTIPLE IMAGES
-        formData.images.forEach(
-          (img) => {
-            if (
-              img instanceof
-              File
-            ) {
-              submitData.append(
-                "images",
-                img
-              );
-            }
-          }
-        );
+      submitData.append("options", JSON.stringify(formData.options));
 
-        // EDIT
-        if (isEdit) {
-          await dispatch(
-            editProduct({
-              id,
-              product:
-                submitData,
-            })
-          ).unwrap();
-
-          alert(
-            "Cập nhật thành công"
-          );
+      // MULTIPLE IMAGES
+      formData.images.forEach((img) => {
+        if (typeof img !== "string") {
+          submitData.append("images", img);
         }
+      });
 
-        // ADD
-        else {
-          await dispatch(
-            addProduct(
-              submitData
-            )
-          ).unwrap();
+      // EDIT
+      if (isEdit) {
+        await dispatch(
+          editProduct({
+            id,
+            product: submitData,
+          }),
+        ).unwrap();
 
-          alert(
-            "Thêm sản phẩm thành công"
-          );
-        }
-
-        navigate(
-          "/admin/products"
-        );
-      } catch (error) {
-        console.log(error);
-
-        alert(
-          "Có lỗi xảy ra"
-        );
+        toast.success("Cập nhật thành công");
       }
-    };
+
+      // ADD
+      else {
+        await dispatch(addProduct(submitData)).unwrap();
+
+        toast.success("Thêm sản phẩm thành công");
+      }
+
+      navigate("/admin/products");
+    } catch (error) {
+      console.log(error);
+
+      toast.warning("Có lỗi xảy ra");
+    }
+  };
 
   return (
     <div className="admin-product-page">
-      <form
-        className="product-form"
-        onSubmit={
-          handleSubmit
-        }
-      >
+      <form className="product-form" onSubmit={handleSubmit}>
         {/* LEFT */}
         <div className="left-content">
           {/* HEADER */}
           <div className="product-header">
-            <NavLink to="/admin/products">
-              Sản phẩm
-            </NavLink>
+            <NavLink to="/admin/products">Sản phẩm</NavLink>
 
             <span>/</span>
 
-            <span>
-              {isEdit
-                ? "Cập nhật sản phẩm"
-                : "Thêm sản phẩm"}
-            </span>
+            <span>{isEdit ? "Cập nhật sản phẩm" : "Thêm sản phẩm"}</span>
 
-            <span
-              className={`product-mode ${
-                isEdit
-                  ? "edit"
-                  : "add"
-              }`}
-            >
-              {isEdit
-                ? "edit"
-                : "add"}
+            <span className={`product-mode ${isEdit ? "edit" : "add"}`}>
+              {isEdit ? "edit" : "add"}
             </span>
           </div>
 
           {/* NAME */}
           <div className="form-group">
-            <label>
-              Tên sản phẩm
-            </label>
+            <label>Tên sản phẩm<span className="required">*</span></label>
 
             <input
               type="text"
               name="name"
-              value={
-                formData.name
-              }
-              onChange={
-                handleChange
-              }
+              value={formData.name}
+              onChange={handleChange}
               required
+              className={errors.name ? "input-error" : ""}
             />
           </div>
 
           {/* BRAND */}
           <div className="form-group">
-            <label>
-              Thương hiệu
-            </label>
+            <label>Thương hiệu</label>
 
             <input
               type="text"
               name="brand"
-              value={
-                formData.brand
-              }
-              onChange={
-                handleChange
-              }
+              value={formData.brand}
+              onChange={handleChange}
             />
           </div>
 
           {/* PRICE */}
           <div className="form-group">
-            <label>
-              Giá bán
-            </label>
+            <label>Giá bán <span className="required">*</span></label>
 
             <input
               type="number"
               name="price"
-              value={
-                formData.price
-              }
-              onChange={
-                handleChange
-              }
+              value={formData.price}
+              onChange={handleChange}
+              className={errors.price ? "input-error" : ""}
             />
           </div>
 
           {/* IMPORT PRICE */}
           <div className="form-group">
-            <label>
-              Giá nhập kho
-            </label>
+            <label>Giá nhập kho <span className="required">*</span></label>
 
             <input
               type="number"
               name="importPrice"
-              value={
-                formData.importPrice
-              }
-              onChange={
-                handleChange
-              }
+              value={formData.importPrice}
+              onChange={handleChange}
+              className={errors.importPrice ? "input-error" : ""}
             />
           </div>
 
           {/* DISCOUNT */}
           <div className="form-group">
-            <label>
-              Giảm giá (%)
-            </label>
+            <label>Giảm giá (%)</label>
 
             <input
               type="number"
               name="discount"
-              value={
-                formData.discount
-              }
-              onChange={
-                handleChange
-              }
+              value={formData.discount}
+              onChange={handleChange}
             />
           </div>
 
           {/* STOCK */}
           <div className="form-group">
-            <label>
-              Tồn kho
-            </label>
+            <label>Tồn kho <span className="required">*</span></label>
 
             <input
               type="number"
               name="stock"
-              value={
-                formData.stock
-              }
-              onChange={
-                handleChange
-              }
+              value={formData.stock}
+              onChange={handleChange}
+              className={errors.stock ? "input-error" : ""}
             />
           </div>
 
           {/* PREP TIME */}
           <div className="form-group">
-            <label>
-              Thời gian chuẩn bị
-            </label>
+            <label>Thời gian chuẩn bị</label>
 
             <input
               type="number"
               name="prepTime"
-              value={
-                formData.prepTime
-              }
-              onChange={
-                handleChange
-              }
+              value={formData.prepTime}
+              onChange={handleChange}
             />
           </div>
 
           {/* INGREDIENTS */}
           <div className="form-group">
-            <label>
-              Nguyên liệu
-            </label>
+            <label>Nguyên liệu</label>
 
             <textarea
               rows="4"
               name="ingredients"
-              value={
-                formData.ingredients
-              }
-              onChange={
-                handleChange
-              }
+              value={formData.ingredients}
+              onChange={handleChange}
               placeholder="bò, phô mai..."
             />
           </div>
@@ -616,12 +411,8 @@ export default function ProductForm() {
             <textarea
               rows="7"
               name="description"
-              value={
-                formData.description
-              }
-              onChange={
-                handleChange
-              }
+              value={formData.description}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -629,237 +420,129 @@ export default function ProductForm() {
         {/* RIGHT */}
         <div className="right-content">
           {/* IMAGE */}
-          <div className="card-box">
-            <label>
-              Hình ảnh
-            </label>
+          <div className={`card-box ${errors.images ? "input-error-box" : ""}`}>
+            <label>Hình ảnh <span className="required">*</span></label>
 
             <input
               type="file"
               accept="image/*"
               multiple
-              onChange={
-                handleImage
-              }
+              onChange={handleImage}
             />
 
             <div className="preview-list">
-              {preview.map(
-                (
-                  img,
-                  index
-                ) => (
-                  <div
-                    key={index}
-                    className="preview-item"
-                  >
-                    <img
-                      src={img}
-                      alt="preview"
-                      className="preview-image"
-                    />
+              {preview.map((img, index) => (
+                <div key={index} className="preview-item">
+                  <img src={img} alt="preview" className="preview-image" />
 
-                    <button
-                      type="button"
-                      className="remove-image-btn"
-                      onClick={() =>
-                        handleRemoveImage(
-                          index
-                        )
-                      }
-                    >
-                      ×
-                    </button>
-                  </div>
-                )
-              )}
+                  <button
+                    type="button"
+                    className="remove-image-btn"
+                    onClick={() => handleRemoveImage(index)}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
 
           {/* CATEGORY */}
           <div className="card-box">
-            <label>
-              Danh mục
-            </label>
+            <label>Danh mục <span className="required">*</span></label>
 
             <select
               name="category"
-              value={
-                formData.category
-              }
-              onChange={
-                handleChange
-              }
+              value={formData.category}
+              onChange={handleChange}
+              className={errors.category ? "input-error" : ""}
             >
-              <option value="">
-                -- Chọn danh mục --
-              </option>
+              <option value="">-- Chọn danh mục --</option>
 
-              {categories?.map(
-                (item) => (
-                  <option
-                    key={
-                      item._id
-                    }
-                    value={
-                      item.slug
-                    }
-                  >
-                    {item.name}
-                  </option>
-                )
-              )}
+              {categories?.map((item) => (
+                <option key={item._id} value={item.slug}>
+                  {item.name}
+                </option>
+              ))}
             </select>
           </div>
 
           {/* STATUS */}
           <div className="card-box">
-            <label>
-              Trạng thái
-            </label>
+            <label>Trạng thái</label>
 
             <select
               name="status"
-              value={
-                formData.status
-              }
-              onChange={
-                handleChange
-              }
+              value={formData.status}
+              onChange={handleChange}
             >
-              <option value="available">
-                Còn bán
-              </option>
+              <option value="available">Còn bán</option>
 
-              <option value="out_of_stock">
-                Hết hàng
-              </option>
+              <option value="out_of_stock">Hết hàng</option>
             </select>
           </div>
 
           {/* OPTIONS */}
           <div className="card-box">
-            <label>
-              Tuỳ chọn sản phẩm
-            </label>
+            <label>Tuỳ chọn sản phẩm</label>
 
             <button
               type="button"
               className="option-btn"
-              onClick={
-                handleAddOption
-              }
+              onClick={handleAddOption}
             >
               + Thêm option
             </button>
 
-            {formData.options.map(
-              (
-                option,
-                index
-              ) => (
-                <div
-                  key={index}
-                  className="option-item"
+            {formData.options.map((option, index) => (
+              <div key={index} className="option-item">
+                <input
+                  placeholder="Label"
+                  value={option.label}
+                  onChange={(e) =>
+                    handleOptionChange(index, "label", e.target.value)
+                  }
+                />
+
+                <input
+                  type="number"
+                  placeholder="Giá bán"
+                  value={option.price}
+                  onChange={(e) =>
+                    handleOptionChange(index, "price", e.target.value)
+                  }
+                />
+
+                <input
+                  type="number"
+                  placeholder="Giá nhập"
+                  value={option.importPrice}
+                  onChange={(e) =>
+                    handleOptionChange(index, "importPrice", e.target.value)
+                  }
+                />
+
+                <input
+                  type="number"
+                  placeholder="Kho"
+                  value={option.stock}
+                  onChange={(e) =>
+                    handleOptionChange(index, "stock", e.target.value)
+                  }
+                />
+
+                <button
+                  type="button"
+                  className="remove-option-btn"
+                  onClick={() => handleRemoveOption(index)}
                 >
-                  <input
-                    placeholder="Label"
-                    value={
-                      option.label
-                    }
-                    onChange={(
-                      e
-                    ) =>
-                      handleOptionChange(
-                        index,
-                        "label",
-                        e.target
-                          .value
-                      )
-                    }
-                  />
+                  Xoá
+                </button>
+              </div>
+            ))}
 
-                  <input
-                    type="number"
-                    placeholder="Giá bán"
-                    value={
-                      option.price
-                    }
-                    onChange={(
-                      e
-                    ) =>
-                      handleOptionChange(
-                        index,
-                        "price",
-                        e.target
-                          .value
-                      )
-                    }
-                  />
-
-                  <input
-                    type="number"
-                    placeholder="Giá nhập"
-                    value={
-                      option.importPrice
-                    }
-                    onChange={(
-                      e
-                    ) =>
-                      handleOptionChange(
-                        index,
-                        "importPrice",
-                        e.target
-                          .value
-                      )
-                    }
-                  />
-
-                  <input
-                    type="number"
-                    placeholder="Kho"
-                    value={
-                      option.stock
-                    }
-                    onChange={(
-                      e
-                    ) =>
-                      handleOptionChange(
-                        index,
-                        "stock",
-                        e.target
-                          .value
-                      )
-                    }
-                  />
-
-                  <button
-                    type="button"
-                    className="remove-option-btn"
-                    onClick={() =>
-                      handleRemoveOption(
-                        index
-                      )
-                    }
-                  >
-                    Xoá
-                  </button>
-                </div>
-              )
-            )}
-
-            <button
-              type="submit"
-              className="submit-btn"
-              disabled={
-                loading
-              }
-            >
-              {loading
-                ? "Đang xử lý..."
-                : isEdit
-                ? "Cập nhật"
-                : "Thêm mới"}
+            <button type="submit" className="submit-btn" disabled={loading}>
+              {loading ? "Đang xử lý..." : isEdit ? "Cập nhật" : "Thêm mới"}
             </button>
           </div>
         </div>

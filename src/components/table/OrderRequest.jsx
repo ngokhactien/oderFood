@@ -1,4 +1,4 @@
-import "../styles/table/OrderRequest.css";
+import "./styles/OrderRequest.css";
 
 import { useMemo, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";

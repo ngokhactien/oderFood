@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import "../styles/table/OrderPanel.css";
+import "./styles/OrderPanel.css";
 import {
   updateQty,
   removeItem,

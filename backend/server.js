@@ -55,6 +55,7 @@ app.use(
   "/api/admin/products",
   adminProductRoutes,
 );
+
 // admin mục lục
 app.use("/api/categories", adminCategoryRoutes);
 

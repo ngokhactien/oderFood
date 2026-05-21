@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import "../styles/profile/address.css";
+import "./styles/address.css";
 import { useDispatch } from "react-redux";
 import { updateAddresses } from "../../redux/authSlice";
 import { toast } from "react-toastify";

@@ -161,8 +161,6 @@ export default function AdminCategories() {
           <div className="admin-categories__top-left">
             {/* SHOW */}
             <div className="admin-categories__show">
-              <span>Show</span>
-
               <select
                 value={limit}
                 onChange={(e) => {
@@ -176,8 +174,6 @@ export default function AdminCategories() {
 
                 <option value={20}>20</option>
               </select>
-
-              <span>entries</span>
             </div>
 
             {/* FILTER STATUS */}

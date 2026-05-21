@@ -9,7 +9,7 @@ import {
 } from "recharts";
 
 
-import "../../styles/Dashboard/Home/RevenueChart.css";
+import "./styles/RevenueChart.css";
 
 export default function RevenueChart({
   data,

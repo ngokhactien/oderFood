@@ -8,7 +8,7 @@ import {
   CartesianGrid,
 } from "recharts";
 
-import "../../styles/Dashboard/Home/ProductChart.css";
+import "./styles/ProductChart.css";
 
 export default function ProductChart({
   data,

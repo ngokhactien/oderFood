@@ -4,8 +4,8 @@ import { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Pagination from "../Pagination";
 
-import "../styles/table/TableManager.css";
-import "../styles/table/Modal.css";
+import "./styles/TableManager.css";
+import "./styles/Modal.css";
 import TableActionMenu from "./MenuTable/TableActionMenu";
 import ReserveTableModal from "./MenuTable/ReserveTableModal";
 import MergeTableModal from "./MenuTable/MergeTableModal";

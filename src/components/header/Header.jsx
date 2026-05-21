@@ -3,7 +3,7 @@ import {
   UserIcon,
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
-import "../styles/header/Header.css";
+import "./styles/Header.css";
 
 import menuItems from "../../data/menuHeader";
 import { NavLink } from "react-router-dom";

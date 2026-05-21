@@ -7,7 +7,7 @@ import {
 
 import { getShowCategories } from "../../redux/categorySlice";
 
-import "../styles/home/CategoryMenu.css";
+import "./styles/CategoryMenu.css";
 
 const CategoryMenu = () => {
   const dispatch = useDispatch();

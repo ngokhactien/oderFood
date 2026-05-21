@@ -1,19 +1,20 @@
 // AdminTransferTable.jsx
 
 import { useEffect, useState } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
-
 import Pagination from "../../Pagination";
-
 import "./styles/AdminTransferTable.css";
-
 import {
   fetchReservations,
   updateReservationStatus,
 } from "../../../redux/admin/reservation/reservationSlice";
-
 import CreateReservationModal from "./CreateReservationModal";
+import {
+  MagnifyingGlassIcon,
+  PlusIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
 
 const AdminTransferTable = () => {
   const dispatch = useDispatch();
@@ -193,27 +194,28 @@ const AdminTransferTable = () => {
                         {item.status}
                       </span>
                     </td>
-
                     <td>
                       <div className="action-buttons">
                         {item.status === "reserved" && (
                           <>
+                            {/* COMPLETE */}
                             <button
-                              className="btn btn-complete"
+                              className="action-btn success"
                               onClick={() =>
                                 handleStatus(item._id, "completed")
                               }
                             >
-                              Xác nhận
+                              <CheckCircleIcon className="action-icon" />
                             </button>
 
+                            {/* CANCEL */}
                             <button
-                              className="btn btn-cancel"
+                              className="action-btn danger"
                               onClick={() =>
                                 handleStatus(item._id, "cancelled")
                               }
                             >
-                              Hủy
+                              <XCircleIcon className="action-icon" />
                             </button>
                           </>
                         )}

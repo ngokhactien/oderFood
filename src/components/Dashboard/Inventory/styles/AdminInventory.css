@@ -1,0 +1,513 @@
+/* src/pages/AdminInventory.css */
+
+.inventory-management-page {
+  padding: 20px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.inventory-management-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.inventory-management-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  border: 1px solid #e5e7eb;
+
+  transition: 0.2s ease;
+}
+
+.inventory-management-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.inventory-management-icon {
+  width: 58px;
+  height: 58px;
+
+  border-radius: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inventory-management-icon svg {
+  width: 30px;
+  height: 30px;
+}
+
+.inventory-management-icon.blue {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.inventory-management-icon.green {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.inventory-management-icon.orange {
+  background: #ffedd5;
+  color: #ea580c;
+}
+
+.inventory-management-icon.red {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.inventory-management-card p {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.inventory-management-card h3 {
+  font-size: 34px;
+  color: #111827;
+  margin: 0;
+}
+
+/* =========================
+   WRAPPER
+========================= */
+
+.inventory-management-wrapper {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.inventory-management-header {
+  padding: 20px;
+
+  border-bottom: 1px solid #eee;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inventory-management-header h2 {
+  font-size: 28px;
+  color: #111827;
+  margin: 0;
+}
+
+.inventory-management-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.inventory-import-btn,
+.inventory-add-btn {
+  height: 46px;
+
+  padding: 0 18px;
+
+  border-radius: 12px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: 0.2s ease;
+}
+
+.inventory-import-btn svg,
+.inventory-add-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.inventory-import-btn {
+  background: #10b981;
+  color: white;
+}
+
+.inventory-import-btn:hover {
+  background: #059669;
+}
+
+.inventory-add-btn {
+  background: #2563eb;
+  color: white;
+}
+
+.inventory-add-btn:hover {
+  background: #1d4ed8;
+}
+
+/* =========================
+   FILTER
+========================= */
+
+.inventory-management-filter {
+  padding: 18px 20px;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+
+  border-bottom: 1px solid #eee;
+}
+
+.inventory-management-filter select,
+.inventory-management-filter input,
+.inventory-management-filter button {
+  height: 48px;
+}
+
+.inventory-management-filter input,
+.inventory-management-filter select {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+
+  padding: 0 14px;
+
+  outline: none;
+
+  font-size: 14px;
+
+  background: #fff;
+}
+
+.inventory-management-filter input {
+  flex: 1;
+  min-width: 260px;
+}
+
+.inventory-management-filter select {
+  min-width: 170px;
+  cursor: pointer;
+}
+
+.inventory-management-filter button {
+  min-width: 160px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #2563eb;
+  color: white;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.inventory-management-filter button:hover {
+  background: #1d4ed8;
+}
+
+.inventory-management-filter button svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.inventory-management-table {
+  overflow-x: auto;
+}
+
+.inventory-management-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.inventory-management-table thead {
+  background: #f9fafb;
+}
+
+.inventory-management-table th {
+  padding: 16px;
+
+  text-align: left;
+
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 700;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.inventory-management-table td {
+  padding: 18px 16px;
+
+  border-bottom: 1px solid #f1f1f1;
+
+  color: #374151;
+  font-size: 14px;
+
+  vertical-align: middle;
+}
+
+.inventory-management-table tbody tr {
+  transition: 0.2s ease;
+}
+
+.inventory-management-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* =========================
+   IMAGE
+========================= */
+
+.inventory-management-table img {
+  width: 58px;
+  height: 58px;
+
+  object-fit: cover;
+
+  border-radius: 10px;
+
+  border: 1px solid #eee;
+}
+
+/* =========================
+   PRODUCT INFO
+========================= */
+
+.inventory-product-name {
+  font-weight: 600;
+  color: #111827;
+}
+
+.inventory-product-stock {
+  font-weight: 700;
+  color: #dc2626;
+}
+
+.inventory-product-price {
+  font-weight: 700;
+  color: #111827;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.inventory-product-status {
+  padding: 7px 14px;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inventory-product-status.in-stock {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.inventory-product-status.low-stock {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.inventory-product-status.out-stock {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.inventory-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* EDIT */
+
+.inventory-edit-btn {
+  width: 42px;
+  height: 42px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #e8f1ff;
+  color: #2563eb;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.inventory-edit-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.inventory-edit-btn:hover {
+  background: #2563eb;
+  color: white;
+
+  transform: translateY(-2px);
+}
+
+/* DELETE */
+
+.inventory-delete-btn {
+  width: 42px;
+  height: 42px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #fee2e2;
+  color: #dc2626;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.inventory-delete-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.inventory-delete-btn:hover {
+  background: #dc2626;
+  color: white;
+
+  transform: translateY(-2px);
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.products-footer {
+  padding: 18px 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  border-top: 1px solid #eee;
+}
+
+.products-footer span {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px) {
+  .inventory-management-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .inventory-management-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .inventory-management-filter {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .inventory-management-filter input,
+  .inventory-management-filter select,
+  .inventory-management-filter button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .inventory-management-page {
+    padding: 14px;
+  }
+
+  .inventory-management-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .inventory-management-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .inventory-import-btn,
+  .inventory-add-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .products-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .inventory-management-header h2 {
+    font-size: 22px;
+  }
+}

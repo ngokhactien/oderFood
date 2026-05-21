@@ -12,6 +12,7 @@ import "../styles/POSLayout.css";
 
 import { openTab, addDraftItem } from "../redux/orderUiSlice";
 import { getActiveOrders } from "../redux/orderSlice";
+import { toast } from "react-toastify";
 
 export default function POSLayout() {
   const dispatch = useDispatch();
@@ -109,7 +110,7 @@ export default function POSLayout() {
           <MenuPOS
             onAdd={(item) => {
               if (!activeTable) {
-                alert("Chọn bàn trước!");
+                toast.warning("Chọn bàn trước!");
                 return;
               }
 

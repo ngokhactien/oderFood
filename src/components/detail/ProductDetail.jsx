@@ -10,7 +10,7 @@ import { addToCart } from "../../redux/cartSlice";
 import { useLocation, useParams } from "react-router-dom";
 import products from "../../data/products"; // Dữ liệu fallback
 import DEFAULT_IMAGE from "../../assets/x.jpg";
-import "../styles/detail/ProductDetail.css";
+import "./styles/ProductDetail.css";
 import { calculatePrice } from "../../common/calculatePrice";
 import { toast } from "react-toastify";
 

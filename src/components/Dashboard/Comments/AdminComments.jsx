@@ -2,7 +2,7 @@
 import { useMemo, useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
-import "../../styles/Dashboard/Comments/AdminComments.css";
+import "./styles/AdminComments.css";
 import Pagination from "../../Pagination";
 import { NavLink } from "react-router-dom";
 
@@ -73,8 +73,6 @@ export default function AdminComments() {
         {/* top */}
         <div className="admin-comment__top">
           <div className="admin-comment__show">
-            <span>Show</span>
-
             <select
               value={limit}
               onChange={(e) => {
@@ -86,8 +84,6 @@ export default function AdminComments() {
               <option value={10}>10</option>
               <option value={20}>20</option>
             </select>
-
-            <span>entries</span>
           </div>
 
           <div className="admin-comment__search">

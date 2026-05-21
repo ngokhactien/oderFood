@@ -6,12 +6,15 @@ import { NavLink } from "react-router-dom";
 
 import Pagination from "../../Pagination";
 
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+
 import {
   fetchProducts,
   removeProduct,
 } from "../../../redux/admin/products/adminProductSlice";
 
-import "../../styles/Dashboard/Products/Products.css";
+import "./styles/Products.css";
+
 import DeleteModal from "../../../common/DeleteModal";
 
 export default function Products() {
@@ -45,7 +48,45 @@ export default function Products() {
   }, [dispatch]);
 
   //
-  // FILTER
+  // FORMAT PRICE
+  //
+  const formatPrice = (price) => {
+    return Number(price).toLocaleString("vi-VN") + "₫";
+  };
+
+  //
+  // STOCK STATUS
+  //
+  const getStockStatus = (item) => {
+    if (item.status === "out_of_stock") {
+      return {
+        text: "Hết hàng",
+        type: "out-stock",
+      };
+    }
+
+    if (Number(item.stock) <= 0) {
+      return {
+        text: "Hết hàng",
+        type: "out-stock",
+      };
+    }
+
+    if (Number(item.stock) <= 10) {
+      return {
+        text: "Sắp hết",
+        type: "low-stock",
+      };
+    }
+
+    return {
+      text: "Còn hàng",
+      type: "in-stock",
+    };
+  };
+
+  //
+  // FILTER + SORT
   //
   const filteredProducts = useMemo(() => {
     let data = [...products];
@@ -55,7 +96,7 @@ export default function Products() {
     //
     if (search) {
       data = data.filter((item) =>
-        item.name.toLowerCase().includes(search.toLowerCase()),
+        item.name?.toLowerCase().includes(search.toLowerCase()),
       );
     }
 
@@ -70,20 +111,88 @@ export default function Products() {
     // SORT
     //
     switch (sort) {
+      //
+      // NEWEST
+      //
+      case "newest":
+        data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        break;
+
+      //
+      // OLDEST
+      //
+      case "oldest":
+        data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        break;
+
+      //
+      // PRICE ASC
+      //
       case "price_asc":
-        data.sort((a, b) => a.price - b.price);
+        data.sort((a, b) => Number(a.price) - Number(b.price));
         break;
 
+      //
+      // PRICE DESC
+      //
       case "price_desc":
-        data.sort((a, b) => b.price - a.price);
+        data.sort((a, b) => Number(b.price) - Number(a.price));
         break;
 
+      //
+      // NAME A-Z
+      //
       case "name_asc":
         data.sort((a, b) => a.name.localeCompare(b.name));
         break;
 
+      //
+      // CÒN HÀNG TRƯỚC
+      //
+      case "stock_in":
+        data.sort((a, b) => {
+          const order = {
+            "in-stock": 0,
+            "low-stock": 1,
+            "out-stock": 2,
+          };
+
+          return order[getStockStatus(a).type] - order[getStockStatus(b).type];
+        });
+        break;
+
+      //
+      // SẮP HẾT TRƯỚC
+      //
+      case "low_stock":
+        data.sort((a, b) => {
+          const order = {
+            "low-stock": 0,
+            "in-stock": 1,
+            "out-stock": 2,
+          };
+
+          return order[getStockStatus(a).type] - order[getStockStatus(b).type];
+        });
+        break;
+
+      //
+      // HẾT HÀNG TRƯỚC
+      //
+      case "stock_out":
+        data.sort((a, b) => {
+          const order = {
+            "out-stock": 0,
+            "low-stock": 1,
+            "in-stock": 2,
+          };
+
+          return order[getStockStatus(a).type] - order[getStockStatus(b).type];
+        });
+        break;
+
       default:
-        data.reverse();
+        break;
     }
 
     return data;
@@ -99,6 +208,13 @@ export default function Products() {
   const currentData = filteredProducts.slice(start, start + entries);
 
   //
+  // RESET PAGE
+  //
+  useEffect(() => {
+    setPage(1);
+  }, [search, category, sort, entries]);
+
+  //
   // DELETE
   //
   const handleDelete = async () => {
@@ -112,13 +228,6 @@ export default function Products() {
     });
   };
 
-  //
-  // FORMAT PRICE
-  //
-  const formatPrice = (price) => {
-    return Number(price).toLocaleString("vi-VN") + "₫";
-  };
-
   return (
     <div className="products-page">
       {/* TOP */}
@@ -129,8 +238,6 @@ export default function Products() {
             value={entries}
             onChange={(e) => {
               setEntries(Number(e.target.value));
-
-              setPage(1);
             }}
           >
             <option value={5}>5</option>
@@ -147,8 +254,6 @@ export default function Products() {
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
-
-              setPage(1);
             }}
           />
 
@@ -157,8 +262,6 @@ export default function Products() {
             value={category}
             onChange={(e) => {
               setCategory(e.target.value);
-
-              setPage(1);
             }}
           >
             <option value="all">Tất cả</option>
@@ -175,14 +278,27 @@ export default function Products() {
           </select>
 
           {/* SORT */}
-          <select value={sort} onChange={(e) => setSort(e.target.value)}>
+          <select
+            value={sort}
+            onChange={(e) => {
+              setSort(e.target.value);
+            }}
+          >
             <option value="newest">Mới nhất</option>
+
+            <option value="oldest">Cũ nhất</option>
 
             <option value="price_asc">Giá tăng dần</option>
 
             <option value="price_desc">Giá giảm dần</option>
 
             <option value="name_asc">A-Z</option>
+
+            <option value="stock_in">Còn hàng</option>
+
+            <option value="low_stock">Sắp hết</option>
+
+            <option value="stock_out">Hết hàng</option>
           </select>
         </div>
 
@@ -203,6 +319,8 @@ export default function Products() {
 
               <th>SẢN PHẨM</th>
 
+              <th>THƯƠNG HIỆU</th>
+
               <th>HÌNH ẢNH</th>
 
               <th>DANH MỤC</th>
@@ -211,6 +329,8 @@ export default function Products() {
 
               <th>STOCK</th>
 
+              <th>TRẠNG THÁI</th>
+
               <th>THAO TÁC</th>
             </tr>
           </thead>
@@ -218,63 +338,75 @@ export default function Products() {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="7" align="center">
+                <td colSpan="9" align="center">
                   Đang tải...
                 </td>
               </tr>
             ) : currentData.length === 0 ? (
               <tr>
-                <td colSpan="7" align="center">
+                <td colSpan="9" align="center">
                   Không có sản phẩm
                 </td>
               </tr>
             ) : (
-              currentData.map((item, index) => (
-                <tr key={item._id}>
-                  <td>{start + index + 1}</td>
+              currentData.map((item, index) => {
+                const status = getStockStatus(item);
 
-                  <td className="product-name">{item.name}</td>
+                return (
+                  <tr key={item._id}>
+                    <td>{start + index + 1}</td>
 
-                  <td>
-                    <img
-                      src={item.images?.[0]}
-                      alt={item.name}
-                      className="product-image"
-                    />
-                  </td>
+                    <td className="product-name">{item.name}</td>
 
-                  <td>{item.category}</td>
+                    <td className="product-brand">{item.brand}</td>
 
-                  <td className="new-price">{formatPrice(item.price)}</td>
+                    <td>
+                      <img
+                        src={item.images?.[0] || "/placeholder.png"}
+                        alt={item.name}
+                        className="product-image"
+                      />
+                    </td>
 
-                  <td>{item.stock}</td>
+                    <td>{item.category}</td>
 
-                  <td>
-                    <div className="products-actions">
-                      {/* EDIT */}
-                      <NavLink
-                        to={`/admin/products/form/edit/${item._id}`}
-                        className="edit-btn"
-                      >
-                        Sửa
-                      </NavLink>
+                    <td className="new-price">{formatPrice(item.price)}</td>
 
-                      {/* DELETE */}
-                      <button
-                        className="delete-btn"
-                        onClick={() =>
-                          setDeleteModal({
-                            open: true,
-                            product: item,
-                          })
-                        }
-                      >
-                        Xóa
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
+                    <td>{item.stock}</td>
+
+                    <td>
+                      <span className={`product-badge ${status.type}`}>
+                        {status.text}
+                      </span>
+                    </td>
+
+                    <td>
+                      <div className="products-actions">
+                        {/* EDIT */}
+                        <NavLink
+                          to={`/admin/products/form/edit/${item._id}`}
+                          className="edit-btn"
+                        >
+                          <PencilSquareIcon className="action-icon" />
+                        </NavLink>
+
+                        {/* DELETE */}
+                        <button
+                          className="delete-btn"
+                          onClick={() =>
+                            setDeleteModal({
+                              open: true,
+                              product: item,
+                            })
+                          }
+                        >
+                          <TrashIcon className="action-icon" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>

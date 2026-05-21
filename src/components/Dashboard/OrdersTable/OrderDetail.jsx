@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../../styles/Dashboard/OrdersTable/OrderDetail.css";
+import "./styles/OrderDetail.css";
 import { NavLink, useParams } from "react-router-dom";
 
 export default function OrderDetail() {

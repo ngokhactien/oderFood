@@ -1,4 +1,4 @@
-import "../../styles/Dashboard/Home/StatCard.css";
+import "./styles/StatCard.css";
 
 export default function StatCard({
   title,

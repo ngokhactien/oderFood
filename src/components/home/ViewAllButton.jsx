@@ -1,5 +1,4 @@
 import React from 'react';
-import '../styles/home/ViewAllButton.css';
 
 const ViewAllButton = ({ onClick, label = "Xem tất cả" }) => {
   return (

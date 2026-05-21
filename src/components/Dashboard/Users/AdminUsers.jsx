@@ -216,8 +216,6 @@ export default function AdminUsers() {
         <div className="admin-users__top">
           {/* SHOW */}
           <div className="admin-users__show">
-            <span>Show</span>
-
             <select
               value={limit}
               onChange={(e) => {
@@ -232,8 +230,6 @@ export default function AdminUsers() {
 
               <option value={20}>20</option>
             </select>
-
-            <span>entries</span>
           </div>
 
           {/* SEARCH */}

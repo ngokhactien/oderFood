@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import "../styles/home/PromoHeader.css";
+import "./styles/PromoHeader.css";
 
 const PromoHeader = ({title, hour}) => {
   // Thiết lập thời gian ban đầu (Giờ:Phút:Giây)

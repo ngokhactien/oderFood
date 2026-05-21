@@ -11,6 +11,7 @@ import {
   PencilSquareIcon,
   PlusIcon,
   ArrowDownTrayIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -19,10 +20,16 @@ import { NavLink } from "react-router-dom";
 
 import Pagination from "../../Pagination";
 
-import { fetchProducts } from "../../../redux/admin/products/adminProductSlice";
+import {
+  fetchProducts,
+  removeProduct,
+} from "../../../redux/admin/products/adminProductSlice";
 
-import "../../styles/Dashboard/Inventory/AdminInventory.css";
+import "./styles/AdminInventory.css";
+
 import { getShowCategories } from "../../../redux/categorySlice";
+
+import DeleteModal from "../../../common/DeleteModal";
 
 const AdminInventory = () => {
   const dispatch = useDispatch();
@@ -39,6 +46,16 @@ const AdminInventory = () => {
 
   const [entries, setEntries] = useState(5);
 
+  const [sort, setSort] = useState("newest");
+
+  //
+  // DELETE MODAL
+  //
+  const [deleteModal, setDeleteModal] = useState({
+    open: false,
+    product: null,
+  });
+
   //
   // FETCH PRODUCTS
   //
@@ -49,7 +66,46 @@ const AdminInventory = () => {
   }, [dispatch]);
 
   //
-  // FILTER PRODUCTS
+  // FORMAT PRICE
+  //
+  const formatPrice = (price) => {
+    return Number(price).toLocaleString("vi-VN") + "₫";
+  };
+
+  //
+  // STATUS
+  //
+  const getStockStatus = (item) => {
+    // ưu tiên status backend như Products
+    if (item.status === "out_of_stock") {
+      return {
+        text: "Hết hàng",
+        type: "out-stock",
+      };
+    }
+
+    if (Number(item.stock) <= 0) {
+      return {
+        text: "Hết hàng",
+        type: "out-stock",
+      };
+    }
+
+    if (Number(item.stock) <= 10) {
+      return {
+        text: "Sắp hết",
+        type: "low-stock",
+      };
+    }
+
+    return {
+      text: "Còn hàng",
+      type: "in-stock",
+    };
+  };
+
+  //
+  // FILTER + SORT
   //
   const filteredProducts = useMemo(() => {
     let data = [...products];
@@ -59,7 +115,7 @@ const AdminInventory = () => {
     //
     if (search) {
       data = data.filter((item) =>
-        item.name.toLowerCase().includes(search.toLowerCase()),
+        item.name?.toLowerCase().includes(search.toLowerCase()),
       );
     }
 
@@ -70,8 +126,96 @@ const AdminInventory = () => {
       data = data.filter((item) => item.category === category);
     }
 
+    //
+    // SORT
+    //
+    switch (sort) {
+      //
+      // NEWEST
+      //
+      case "newest":
+        data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        break;
+
+      //
+      // OLDEST
+      //
+      case "oldest":
+        data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        break;
+
+      //
+      // PRICE ASC
+      //
+      case "price_asc":
+        data.sort((a, b) => Number(a.price) - Number(b.price));
+        break;
+
+      //
+      // PRICE DESC
+      //
+      case "price_desc":
+        data.sort((a, b) => Number(b.price) - Number(a.price));
+        break;
+
+      //
+      // NAME
+      //
+      case "name_asc":
+        data.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+
+      //
+      // STOCK IN
+      //
+      case "stock_in":
+        data.sort((a, b) => {
+          const order = {
+            "in-stock": 0,
+            "low-stock": 1,
+            "out-stock": 2,
+          };
+
+          return order[getStockStatus(a).type] - order[getStockStatus(b).type];
+        });
+        break;
+
+      //
+      // LOW STOCK
+      //
+      case "low_stock":
+        data.sort((a, b) => {
+          const order = {
+            "low-stock": 0,
+            "in-stock": 1,
+            "out-stock": 2,
+          };
+
+          return order[getStockStatus(a).type] - order[getStockStatus(b).type];
+        });
+        break;
+
+      //
+      // OUT STOCK
+      //
+      case "stock_out":
+        data.sort((a, b) => {
+          const order = {
+            "out-stock": 0,
+            "low-stock": 1,
+            "in-stock": 2,
+          };
+
+          return order[getStockStatus(a).type] - order[getStockStatus(b).type];
+        });
+        break;
+
+      default:
+        break;
+    }
+
     return data;
-  }, [products, search, category]);
+  }, [products, search, category, sort]);
 
   //
   // PAGINATION
@@ -81,6 +225,13 @@ const AdminInventory = () => {
   const start = (page - 1) * entries;
 
   const currentData = filteredProducts.slice(start, start + entries);
+
+  //
+  // RESET PAGE
+  //
+  useEffect(() => {
+    setPage(1);
+  }, [search, category, sort, entries]);
 
   //
   // STATS
@@ -93,16 +244,23 @@ const AdminInventory = () => {
   );
 
   const lowStock = products.filter(
-    (item) => item.stock > 0 && item.stock <= 10,
+    (item) => Number(item.stock) > 0 && Number(item.stock) <= 10,
   ).length;
 
-  const outOfStock = products.filter((item) => item.stock === 0).length;
+  const outOfStock = products.filter((item) => Number(item.stock) <= 0).length;
 
   //
-  // FORMAT PRICE
+  // DELETE
   //
-  const formatPrice = (price) => {
-    return Number(price).toLocaleString("vi-VN") + "₫";
+  const handleDelete = async () => {
+    if (!deleteModal.product) return;
+
+    await dispatch(removeProduct(deleteModal.product._id));
+
+    setDeleteModal({
+      open: false,
+      product: null,
+    });
   };
 
   return (
@@ -116,6 +274,7 @@ const AdminInventory = () => {
 
           <div>
             <p>TỔNG SẢN PHẨM</p>
+
             <h3>{totalProducts}</h3>
           </div>
         </div>
@@ -127,6 +286,7 @@ const AdminInventory = () => {
 
           <div>
             <p>TỔNG TỒN KHO</p>
+
             <h3>{totalStock.toLocaleString("vi-VN")}</h3>
           </div>
         </div>
@@ -138,6 +298,7 @@ const AdminInventory = () => {
 
           <div>
             <p>SẮP HẾT HÀNG</p>
+
             <h3>{lowStock}</h3>
           </div>
         </div>
@@ -149,6 +310,7 @@ const AdminInventory = () => {
 
           <div>
             <p>HẾT HÀNG</p>
+
             <h3>{outOfStock}</h3>
           </div>
         </div>
@@ -183,8 +345,6 @@ const AdminInventory = () => {
             value={entries}
             onChange={(e) => {
               setEntries(Number(e.target.value));
-
-              setPage(1);
             }}
           >
             <option value={5}>5</option>
@@ -201,8 +361,6 @@ const AdminInventory = () => {
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
-
-              setPage(1);
             }}
           />
 
@@ -211,8 +369,6 @@ const AdminInventory = () => {
             value={category}
             onChange={(e) => {
               setCategory(e.target.value);
-
-              setPage(1);
             }}
           >
             <option value="all">Tất cả danh mục</option>
@@ -222,6 +378,30 @@ const AdminInventory = () => {
                 {item.name}
               </option>
             ))}
+          </select>
+
+          {/* SORT */}
+          <select
+            value={sort}
+            onChange={(e) => {
+              setSort(e.target.value);
+            }}
+          >
+            <option value="newest">Mới nhất</option>
+
+            <option value="oldest">Cũ nhất</option>
+
+            <option value="price_asc">Giá tăng dần</option>
+
+            <option value="price_desc">Giá giảm dần</option>
+
+            <option value="name_asc">A-Z</option>
+
+            <option value="stock_in">Còn hàng</option>
+
+            <option value="low_stock">Sắp hết</option>
+
+            <option value="stock_out">Hết hàng</option>
           </select>
 
           <button>
@@ -237,9 +417,9 @@ const AdminInventory = () => {
               <tr>
                 <th>#</th>
 
-                <th>HÌNH ẢNH</th>
-
                 <th>TÊN SẢN PHẨM</th>
+
+                <th>HÌNH ẢNH</th>
 
                 <th>TỒN KHO</th>
 
@@ -270,26 +450,24 @@ const AdminInventory = () => {
                 </tr>
               ) : (
                 currentData.map((item, index) => {
-                  const status =
-                    item.stock === 0
-                      ? "Hết hàng"
-                      : item.stock <= 10
-                        ? "Sắp hết"
-                        : "Còn hàng";
+                  const status = getStockStatus(item);
 
                   return (
                     <tr key={item._id}>
                       <td>{start + index + 1}</td>
 
-                      <td>
-                        <img src={item.images?.[0]} alt={item.name} />
-                      </td>
-
                       <td className="inventory-product-name">{item.name}</td>
+
+                      <td>
+                        <img
+                          src={item.images?.[0] || "/placeholder.png"}
+                          alt={item.name}
+                        />
+                      </td>
 
                       <td className="inventory-product-stock">{item.stock}</td>
 
-                      <td>{item.importPrice}</td>
+                      <td>{formatPrice(item.importPrice)}</td>
 
                       <td className="inventory-product-price">
                         {formatPrice(item.price)}
@@ -299,25 +477,35 @@ const AdminInventory = () => {
 
                       <td>
                         <span
-                          className={`inventory-product-status ${
-                            status === "Hết hàng"
-                              ? "out-stock"
-                              : status === "Sắp hết"
-                                ? "low-stock"
-                                : ""
-                          }`}
+                          className={`inventory-product-status ${status.type}`}
                         >
-                          {status}
+                          {status.text}
                         </span>
                       </td>
 
                       <td>
-                        <NavLink
-                          to={`/admin/products/form/edit/${item._id}`}
-                          className="inventory-edit-btn"
-                        >
-                          <PencilSquareIcon />
-                        </NavLink>
+                        <div className="inventory-actions">
+                          {/* EDIT */}
+                          <NavLink
+                            to={`/admin/products/form/edit/${item._id}`}
+                            className="inventory-edit-btn"
+                          >
+                            <PencilSquareIcon />
+                          </NavLink>
+
+                          {/* DELETE */}
+                          <button
+                            className="inventory-delete-btn"
+                            onClick={() =>
+                              setDeleteModal({
+                                open: true,
+                                product: item,
+                              })
+                            }
+                          >
+                            <TrashIcon />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -346,6 +534,19 @@ const AdminInventory = () => {
           </div>
         )}
       </div>
+
+      {/* DELETE MODAL */}
+      <DeleteModal
+        open={deleteModal.open}
+        onClose={() =>
+          setDeleteModal({
+            open: false,
+            product: null,
+          })
+        }
+        onConfirm={handleDelete}
+        productName={deleteModal.product?.name}
+      />
     </div>
   );
 };

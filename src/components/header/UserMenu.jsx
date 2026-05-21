@@ -10,7 +10,7 @@ import { logout } from "../../redux/authSlice";
 
 import { NavLink, useNavigate } from "react-router-dom";
 
-import "../styles/header/UserMenu.css";
+import "./styles/UserMenu.css";
 
 export default function UserMenu({ user }) {
   const dispatch = useDispatch();

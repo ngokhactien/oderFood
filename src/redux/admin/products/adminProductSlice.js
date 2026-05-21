@@ -1,91 +1,76 @@
-import {
-  createAsyncThunk,
-  createSlice,
-} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import axios from "axios";
 
-const API =
-  "http://localhost:5000/api/products";
+const API = "http://localhost:5000/api/admin/products";
 
 //
 // FETCH PRODUCTS
 //
-export const fetchProducts =
-  createAsyncThunk(
-    "products/fetchProducts",
-    async () => {
-      const { data } =
-        await axios.get(API);
+export const fetchProducts = createAsyncThunk(
+  "products/fetchProducts",
+  async () => {
+    const { data } = await axios.get(API);
 
-      return data;
-    },
-  );
+    return data;
+  },
+);
 
 //
 // FETCH PRODUCT
 //
-export const fetchProduct =
-  createAsyncThunk(
-    "products/fetchProduct",
-    async (id) => {
-      const { data } =
-        await axios.get(
-          `${API}/${id}`,
-        );
+export const fetchProduct = createAsyncThunk(
+  "products/fetchProduct",
+  async (id) => {
+    const { data } = await axios.get(`${API}/${id}`);
 
-      return data;
-    },
-  );
+    return data;
+  },
+);
 
 //
 // ADD PRODUCT
 //
-export const addProduct =
-  createAsyncThunk(
-    "products/addProduct",
-    async (product) => {
-      const { data } =
-        await axios.post(
-          API,
-          product,
-        );
+export const addProduct = createAsyncThunk(
+  "products/addProduct",
+  async (product) => {
+    const { data } = await axios.post(API, product, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
-      return data;
-    },
-  );
+    return data;
+  },
+);
 
 //
 // EDIT PRODUCT
 //
-export const editProduct =
-  createAsyncThunk(
-    "products/editProduct",
-    async ({ id, product }) => {
-      const { data } =
-        await axios.put(
-          `${API}/${id}`,
-          product,
-        );
+export const editProduct = createAsyncThunk(
+  "products/editProduct",
+  async ({ id, product }) => {
+    const { data } = await axios.put(`${API}/${id}`, product, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
-      return data;
-    },
-  );
+    return data;
+  },
+);
 
 //
 // DELETE PRODUCT
 //
-export const removeProduct =
-  createAsyncThunk(
-    "products/removeProduct",
-    async (id) => {
-      await axios.delete(
-        `${API}/${id}`,
-      );
+export const removeProduct = createAsyncThunk(
+  "products/removeProduct",
+  async (id) => {
+    await axios.delete(`${API}/${id}`);
 
-      return id;
-    },
-  );
+    return id;
+  },
+);
 
 const adminProductSlice = createSlice({
   name: "products",
@@ -104,77 +89,47 @@ const adminProductSlice = createSlice({
       //
       // FETCH
       //
-      .addCase(
-        fetchProducts.pending,
-        (state) => {
-          state.loading = true;
-        },
-      )
+      .addCase(fetchProducts.pending, (state) => {
+        state.loading = true;
+      })
 
-      .addCase(
-        fetchProducts.fulfilled,
-        (state, action) => {
-          state.loading = false;
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        state.loading = false;
 
-          state.products =
-            action.payload;
-        },
-      )
+        state.products = action.payload;
+      })
 
       //
       // SINGLE
       //
-      .addCase(
-        fetchProduct.fulfilled,
-        (state, action) => {
-          state.product =
-            action.payload;
-        },
-      )
+      .addCase(fetchProduct.fulfilled, (state, action) => {
+        state.product = action.payload;
+      })
 
       //
       // ADD
       //
-      .addCase(
-        addProduct.fulfilled,
-        (state, action) => {
-          state.products.unshift(
-            action.payload,
-          );
-        },
-      )
+      .addCase(addProduct.fulfilled, (state, action) => {
+        state.products.unshift(action.payload);
+      })
 
       //
       // EDIT
       //
-      .addCase(
-        editProduct.fulfilled,
-        (state, action) => {
-          state.products =
-            state.products.map(
-              (item) =>
-                item._id ===
-                action.payload._id
-                  ? action.payload
-                  : item,
-            );
-        },
-      )
+      .addCase(editProduct.fulfilled, (state, action) => {
+        state.products = state.products.map((item) =>
+          item._id === action.payload._id ? action.payload : item,
+        );
+      })
 
       //
       // DELETE
       //
-      .addCase(
-        removeProduct.fulfilled,
-        (state, action) => {
-          state.products =
-            state.products.filter(
-              (item) =>
-                item._id !==
-                action.payload,
-            );
-        },
-      );
+      .addCase(removeProduct.fulfilled, (state, action) => {
+        state.products = state.products.filter(
+          (item) => item._id !== action.payload,
+        );
+      });
   },
 });
 

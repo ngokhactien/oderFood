@@ -3,7 +3,7 @@ import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import ChangePasswordModal from "./ChangePasswordModal";
-import "../styles/profile/ProfileInfo.css";
+import "./styles/ProfileInfo.css";
 import EditProfileModal from "./EditProfileModal";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../../redux/authSlice";
