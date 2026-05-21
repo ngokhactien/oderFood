@@ -7,12 +7,12 @@ import productRoutes from "./routes/product.js";
 import momoRoutes from "./routes/momo.js";
 import floorRoutes from "./routes/floor.js";
 import orderRoutes from "./routes/order.js";
+import commentRoutes from "./routes/comment.js";
 import categoryRoutes from "./routes/category.js";
 import tableReservationRoutes from "./routes/Admin/tableReservation.js";
 import adminUserRoutes from "./routes/admin/adminUserRoutes.js";
 import adminProductRoutes from "./routes/admin/adminProductRoutes.js";
 import adminCategoryRoutes from "./routes/admin/adminCategoryRoutes.js";
-
 dotenv.config(); // 🔥 phải để lên trên
 
 const app = express();
@@ -43,6 +43,8 @@ app.use("/api/categories", categoryRoutes);
 
 // dùng để xem user đặt bàn
 app.use("/api/reservations", tableReservationRoutes);
+
+app.use("/api/comments", commentRoutes);
 
 //admin user
 app.use(

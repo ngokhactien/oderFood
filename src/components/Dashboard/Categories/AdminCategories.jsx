@@ -3,9 +3,6 @@ import { useEffect, useMemo, useState } from "react";
 import {
   MagnifyingGlassIcon,
   PlusIcon,
-} from "@heroicons/react/24/outline";
-
-import {
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
@@ -22,16 +19,18 @@ import {
 } from "../../../redux/admin/category/categorySlice";
 
 import CategoryFormModal from "./CategoryFormModal";
+
 import DeleteModal from "../../../common/DeleteModal";
 
 export default function AdminCategories() {
   const dispatch = useDispatch();
 
   const { categories, loading } = useSelector(
-    (state) => state.categories
+    (state) => state.categories,
   );
 
   const [page, setPage] = useState(1);
+
   const [limit, setLimit] = useState(5);
 
   const [search, setSearch] = useState("");
@@ -69,6 +68,7 @@ export default function AdminCategories() {
    */
   const handleCreate = () => {
     setEditItem(null);
+
     setOpenModal(true);
   };
 
@@ -77,6 +77,7 @@ export default function AdminCategories() {
    */
   const handleEdit = (item) => {
     setEditItem(item);
+
     setOpenModal(true);
   };
 
@@ -85,6 +86,7 @@ export default function AdminCategories() {
    */
   const handleOpenDelete = (item) => {
     setDeleteItem(item);
+
     setOpenDelete(true);
   };
 
@@ -94,9 +96,12 @@ export default function AdminCategories() {
   const handleConfirmDelete = async () => {
     if (!deleteItem) return;
 
-    await dispatch(deleteCategory(deleteItem._id));
+    await dispatch(
+      deleteCategory(deleteItem._id),
+    );
 
     setOpenDelete(false);
+
     setDeleteItem(null);
   };
 
@@ -110,7 +115,7 @@ export default function AdminCategories() {
       .filter((item) =>
         item.name
           .toLowerCase()
-          .includes(search.toLowerCase())
+          .includes(search.toLowerCase()),
       )
 
       // FILTER STATUS
@@ -120,24 +125,23 @@ export default function AdminCategories() {
         }
 
         return item.status === statusFilter;
-      })
-
-      .map((item) => ({
-        ...item,
-        products: item.products || 0,
-      }));
-  }, [categories, search, statusFilter]);
+      });
+  }, [
+    categories,
+    search,
+    statusFilter,
+  ]);
 
   /**
    * PAGINATION
    */
   const totalPages = Math.ceil(
-    filteredData.length / limit
+    filteredData.length / limit,
   );
 
   const currentData = filteredData.slice(
     (page - 1) * limit,
-    page * limit
+    page * limit,
   );
 
   return (
@@ -164,15 +168,22 @@ export default function AdminCategories() {
               <select
                 value={limit}
                 onChange={(e) => {
-                  setLimit(Number(e.target.value));
+                  setLimit(
+                    Number(e.target.value),
+                  );
+
                   setPage(1);
                 }}
               >
                 <option value={5}>5</option>
 
-                <option value={10}>10</option>
+                <option value={10}>
+                  10
+                </option>
 
-                <option value={20}>20</option>
+                <option value={20}>
+                  20
+                </option>
               </select>
             </div>
 
@@ -182,7 +193,7 @@ export default function AdminCategories() {
                 value={statusFilter}
                 onChange={(e) => {
                   setStatusFilter(
-                    e.target.value
+                    e.target.value,
                   );
 
                   setPage(1);
@@ -213,6 +224,7 @@ export default function AdminCategories() {
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
+
                 setPage(1);
               }}
             />
@@ -248,7 +260,8 @@ export default function AdminCategories() {
                     Đang tải...
                   </td>
                 </tr>
-              ) : currentData.length === 0 ? (
+              ) : currentData.length ===
+                0 ? (
                 <tr>
                   <td
                     colSpan="6"
@@ -263,7 +276,8 @@ export default function AdminCategories() {
                     <tr key={item._id}>
                       {/* STT */}
                       <td>
-                        {(page - 1) * limit +
+                        {(page - 1) *
+                          limit +
                           index +
                           1}
                       </td>
@@ -288,7 +302,8 @@ export default function AdminCategories() {
 
                       {/* PRODUCTS */}
                       <td>
-                        {item.products}
+                        {item.productCount ||
+                          0}
                       </td>
 
                       {/* STATUS */}
@@ -316,7 +331,7 @@ export default function AdminCategories() {
                             className="action-btn edit"
                             onClick={() =>
                               handleEdit(
-                                item
+                                item,
                               )
                             }
                           >
@@ -328,7 +343,7 @@ export default function AdminCategories() {
                             className="action-btn delete"
                             onClick={() =>
                               handleOpenDelete(
-                                item
+                                item,
                               )
                             }
                           >
@@ -337,7 +352,7 @@ export default function AdminCategories() {
                         </div>
                       </td>
                     </tr>
-                  )
+                  ),
                 )
               )}
             </tbody>
@@ -351,12 +366,13 @@ export default function AdminCategories() {
             {(page - 1) * limit + 1} to{" "}
             {Math.min(
               page * limit,
-              filteredData.length
+              filteredData.length,
             )}{" "}
             of {filteredData.length} entries
           </p>
 
-          {filteredData.length > limit && (
+          {filteredData.length >
+            limit && (
             <Pagination
               page={page}
               totalPages={totalPages}
@@ -381,7 +397,9 @@ export default function AdminCategories() {
         onClose={() =>
           setOpenDelete(false)
         }
-        onConfirm={handleConfirmDelete}
+        onConfirm={
+          handleConfirmDelete
+        }
         productName={deleteItem?.name}
       />
     </div>

@@ -1,6 +1,10 @@
 import Category from "../../models/Category.js";
 import { slugify } from "../../utils/slugify.js";
+import Product from "../../models/Product.js";
 
+//
+// GET ALL
+//
 //
 // GET ALL
 //
@@ -10,7 +14,21 @@ export const getCategories = async (req, res) => {
       createdAt: -1,
     });
 
-    res.json(categories);
+    // đếm số lượng product theo category
+    const categoriesWithCount = await Promise.all(
+      categories.map(async (category) => {
+        const productCount = await Product.countDocuments({
+          category: category.slug,
+        });
+
+        return {
+          ...category._doc,
+          productCount,
+        };
+      }),
+    );
+
+    res.json(categoriesWithCount);
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -70,6 +88,8 @@ export const updateCategory = async (req, res) => {
 
     // đổi name -> check slug
     if (name && name !== category.name) {
+      const oldSlug = category.slug;
+
       const newSlug = slugify(name);
 
       const exist = await Category.findOne({
@@ -77,17 +97,27 @@ export const updateCategory = async (req, res) => {
         _id: { $ne: category._id },
       });
 
-      // ❌ đã có
       if (exist) {
         return res.status(400).json({
           message: "Tên Danh Mục đã tồn tại !!!",
         });
       }
 
+      // update product category
+      await Product.updateMany(
+        {
+          category: oldSlug,
+        },
+        {
+          category: newSlug,
+        },
+      );
+
       category.slug = newSlug;
     }
 
     category.name = name || category.name;
+
     category.image = image || category.image;
 
     category.status =
@@ -97,7 +127,16 @@ export const updateCategory = async (req, res) => {
 
     await category.save();
 
-    res.json(category);
+    // count lại product
+    const productCount =
+      await Product.countDocuments({
+        category: category.slug,
+      });
+
+    res.json({
+      ...category._doc,
+      productCount,
+    });
   } catch (error) {
     res.status(500).json({
       message: error.message,

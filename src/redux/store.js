@@ -5,9 +5,9 @@ import productReducer from "./productSlice";
 import tableProductReducer from "./tableFoodSlice";
 import orderReducer from "./orderSlice";
 import orderUiReducer from "./orderUiSlice";
-
 // category client
 import menuCategoryReducer from "./categorySlice";
+import commentReducer from "./commentSlice";
 
 //admin
 import reservationReducer from "./admin/reservation/reservationSlice";
@@ -26,6 +26,7 @@ export const store = configureStore({
     order: orderReducer,
     orderUI: orderUiReducer,
     menuCategories: menuCategoryReducer,
+    comments: commentReducer,
 
     // admin
     reservations: reservationReducer, //đặt bàn admin

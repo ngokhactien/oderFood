@@ -1,0 +1,135 @@
+/* =========================
+   COMMENT BOX
+========================= */
+
+.comment-box {
+  background: #fff;
+  border-radius: 20px;
+  padding: 28px;
+  border: 1px solid #eee;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+}
+
+.comment-box h4 {
+  font-size: 1.1rem;
+  margin-bottom: 24px;
+  color: #111;
+}
+
+.comment-box label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+/* =========================
+   STAR RATING
+========================= */
+
+.rating-select {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.rating-star {
+  width: 30px;
+  height: 30px;
+  color: #ffb400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rating-star:hover {
+  transform: scale(1.15);
+}
+
+/* =========================
+   TEXTAREA
+========================= */
+
+.comment-box textarea {
+  width: 100%;
+  min-height: 140px;
+  border: 1px solid #e5e5e5;
+  border-radius: 14px;
+  padding: 16px;
+  resize: none;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  margin-bottom: 18px;
+}
+
+.comment-box textarea:focus {
+  outline: none;
+  border-color: #ff6a00;
+  box-shadow: 0 0 0 4px rgba(255, 106, 0, 0.1);
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.btn-submit {
+  width: 100%;
+  height: 52px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ff6a00, #ff8f3d);
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  opacity: 0.95;
+}
+
+/* =========================
+   LOGIN BOX
+========================= */
+
+.login-box {
+  text-align: center;
+  padding: 20px 10px;
+}
+
+.login-box .icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #fff3eb;
+  color: #ff6a00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  font-size: 34px;
+}
+
+.login-box p {
+  color: #666;
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+
+.login-box button {
+  border: none;
+  background: #ff6a00;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.login-box button:hover {
+  opacity: 0.9;
+}

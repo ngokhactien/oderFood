@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import Home from "../pages/Home";
-import Detail from "../pages/Detail";
 import Cart from "../pages/Cart";
 import ProductCard from "../pages/ProductCard";
 import AuthPage from "../pages/AuthPage";
@@ -15,6 +14,7 @@ import Address from "../components/profile/Address";
 import ProfileInfo from "../components/profile/ProfileInfo";
 import CheckoutPage from "../pages/CheckoutPage";
 import POSLayout from "../pages/POSLayout";
+import ProductDetail from "../pages/ProductDetail";
 
 // admin
 import AdminLayout from "../AdminLayout";
@@ -42,7 +42,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: "table-order", element: <POSLayout /> },
-      { path: "product/:id", element: <Detail /> },
+      { path: "product/:id", element: <ProductDetail /> },
       { path: "cart", element: <Cart /> },
       { path: "product-card", element: <ProductCard /> }, //mang về
       { path: "checkout", element: <CheckoutPage /> }, //thanh toán momo
