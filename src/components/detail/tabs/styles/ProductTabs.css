@@ -125,6 +125,7 @@
 
 .comment__body .name {
   font-weight: 600;
+  height: auto;
 }
 
 .comment__body .time {

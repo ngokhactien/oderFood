@@ -133,3 +133,25 @@
 .login-box button:hover {
   opacity: 0.9;
 }
+
+.rating-select {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.rating-star {
+  width: 30px;
+  height: 30px;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rating-star:hover {
+  transform: scale(1.15);
+}
+
+.rating-star.active {
+  color: #ffb400;
+}

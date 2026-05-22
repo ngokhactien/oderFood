@@ -1,7 +1,9 @@
 import React from "react";
 
 import { StarIcon } from "@heroicons/react/24/solid";
-import './styles/CommentForm.css'
+
+import "./styles/CommentForm.css";
+
 const CommentForm = ({
   user,
   content,
@@ -38,10 +40,9 @@ const CommentForm = ({
           <StarIcon
             key={star}
             onClick={() => setRating(star)}
-            className="rating-star"
-            style={{
-              opacity: star <= rating ? 1 : 0.25,
-            }}
+            className={`rating-star ${
+              star <= rating ? "active" : ""
+            }`}
           />
         ))}
       </div>

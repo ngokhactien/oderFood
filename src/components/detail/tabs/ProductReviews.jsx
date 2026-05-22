@@ -7,7 +7,12 @@ import { toast } from "react-toastify";
 import CommentList from "./CommentList";
 
 import CommentForm from "./CommentForm";
-import { createComment, deleteComment, getCommentsByProduct } from "../../../redux/commentSlice";
+
+import {
+  createComment,
+  deleteComment,
+  getCommentsByProduct,
+} from "../../../redux/commentSlice";
 
 const ProductReviews = ({ productId }) => {
   const dispatch = useDispatch();
@@ -20,6 +25,9 @@ const ProductReviews = ({ productId }) => {
 
   const [content, setContent] = useState("");
 
+  // ⭐ rating state
+  const [rating, setRating] = useState(5);
+
   /**
    * FETCH COMMENTS
    */
@@ -30,11 +38,15 @@ const ProductReviews = ({ productId }) => {
   }, [dispatch, productId]);
 
   /**
-   * SUBMIT
+   * SUBMIT COMMENT
    */
   const handleSubmit = async () => {
     if (!content.trim()) {
       return toast.warning("Nhập nội dung!");
+    }
+
+    if (!rating) {
+      return toast.warning("Vui lòng chọn số sao!");
     }
 
     try {
@@ -43,26 +55,33 @@ const ProductReviews = ({ productId }) => {
           user: user._id,
           product: productId,
           content,
-          rating: 5,
+          rating, // ⭐ gửi rating lên API
         }),
       ).unwrap();
 
       toast.success("Gửi bình luận thành công!");
 
+      // reset form
       setContent("");
+      setRating(5);
+
+      // reload comments
+      dispatch(getCommentsByProduct(productId));
     } catch (error) {
       toast.error(error.message || "Có lỗi xảy ra");
     }
   };
 
   /**
-   * DELETE
+   * DELETE COMMENT
    */
   const handleDelete = async (commentId) => {
     try {
       await dispatch(deleteComment(commentId)).unwrap();
 
       toast.success("Xóa bình luận thành công!");
+
+      dispatch(getCommentsByProduct(productId));
     } catch (error) {
       toast.error(error.message || "Có lỗi xảy ra");
     }
@@ -70,8 +89,8 @@ const ProductReviews = ({ productId }) => {
 
   return (
     <div className="review">
-      <h3>Bình luận</h3>
-
+      <h3>Bình luận sản phẩm</h3>
+    
       <div className="review__wrapper">
         {/* LEFT */}
         <CommentList
@@ -87,6 +106,8 @@ const ProductReviews = ({ productId }) => {
           content={content}
           setContent={setContent}
           handleSubmit={handleSubmit}
+          rating={rating}
+          setRating={setRating}
         />
       </div>
     </div>

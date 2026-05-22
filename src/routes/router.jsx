@@ -128,7 +128,7 @@ const router = createBrowserRouter([
       { path: "inventory", element: <AdminInventory /> },
       { path: "inventory/import", element: <AdminImportInventory /> },
       { path: "comments", element: <AdminComments /> },
-      { path: "comments/detail", element: <AdminCommentDetail /> },
+      { path: "comments/detail/:id", element: <AdminCommentDetail /> },
       { path: "members", element: <AdminUsers /> },
       { path: "categories", element: <AdminCategories /> },
       { path: "reports", element: <AdminProductsReport /> },

@@ -24,10 +24,15 @@ const commentSchema = new mongoose.Schema(
       type: Number,
       default: 5,
     },
+
+    isHidden: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 export default mongoose.model("Comment", commentSchema);

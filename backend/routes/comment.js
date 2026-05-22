@@ -4,6 +4,9 @@ import {
   createComment,
   getCommentsByProduct,
   deleteComment,
+  getAllComments,
+  getCommentById,
+  updateCommentStatus,
 } from "../controllers/commentController.js";
 
 const router = express.Router();
@@ -11,7 +14,9 @@ const router = express.Router();
 /**
  * GET COMMENTS BY PRODUCT
  */
-router.get("/:productId", getCommentsByProduct);
+router.get("/product/:productId", getCommentsByProduct);
+
+router.get("/", getAllComments);
 
 /**
  * CREATE COMMENT
@@ -19,8 +24,15 @@ router.get("/:productId", getCommentsByProduct);
 router.post("/", createComment);
 
 /**
+ * get comment by id
+ */
+router.get("/:id", getCommentById);
+
+router.put("/:id/status", updateCommentStatus);
+
+/**
  * DELETE COMMENT
  */
-router.delete("/:commentId", deleteComment);
+router.delete("/:id", deleteComment);
 
 export default router;

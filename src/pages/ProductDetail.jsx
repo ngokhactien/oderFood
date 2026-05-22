@@ -122,9 +122,6 @@ const ProductDetail = () => {
     handleAddToCart();
   };
 
-  console.log(product);
-  
-
   return (
     <>
       <div className="product-detail">
