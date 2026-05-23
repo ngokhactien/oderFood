@@ -86,12 +86,32 @@ export const getCommentDetail = createAsyncThunk(
 export const updateCommentStatus = createAsyncThunk(
   "comments/updateCommentStatus",
 
-  async ({ id, isHidden }, thunkAPI) => {
+  async ({ id, isHidden, isPinned }, thunkAPI) => {
     try {
       const res = await axios.put(
         `http://localhost:5000/api/comments/${id}/status`,
-        { isHidden },
+        {
+          isHidden,
+          isPinned,
+        },
       );
+
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  },
+);
+
+/**
+ * GET PINNED COMMENTS
+ */
+export const getPinnedComments = createAsyncThunk(
+  "comments/getPinnedComments",
+
+  async (_, thunkAPI) => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/comments/pinned");
 
       return res.data;
     } catch (error) {
@@ -105,6 +125,7 @@ const commentSlice = createSlice({
 
   initialState: {
     comments: [],
+    pinnedComments: [],
     loading: false,
     error: null,
     commentDetail: null,
@@ -187,6 +208,26 @@ const commentSlice = createSlice({
         state.comments = state.comments.filter(
           (item) => item._id !== action.payload,
         );
+      })
+      // extraReducers
+
+      /**
+       * PINNED COMMENTS
+       */
+      .addCase(getPinnedComments.pending, (state) => {
+        state.loading = true;
+      })
+
+      .addCase(getPinnedComments.fulfilled, (state, action) => {
+        state.loading = false;
+
+        state.pinnedComments = action.payload;
+      })
+
+      .addCase(getPinnedComments.rejected, (state, action) => {
+        state.loading = false;
+
+        state.error = action.payload;
       });
   },
 });

@@ -1,37 +1,79 @@
 import { useDispatch, useSelector } from "react-redux";
-import CartDetail from "../components/cardDetail/CartDetail";
-import {
-  increaseQty,
-  decreaseQty,
-  removeItem,
-  updateQuantity,
-} from "../redux/cartSlice";
 import { toast } from "react-toastify";
 
+import CartDetail from "../components/cardDetail/CartDetail";
+
+import { updateQuantityAsync, removeItemAsync } from "../redux/cartSlice";
+
 const Cart = () => {
-  const carts = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
 
-  const onChangeQty = (id, option, quantity) => {
-    dispatch(updateQuantity({ id, option, quantity }));
+  // redux state
+  const carts = useSelector((state) => state.cart.items);
+
+  const totalAmount = useSelector((state) => state.cart.totalAmount);
+
+  // =========================
+  // UPDATE INPUT
+  // =========================
+  const onChangeQty = (productId, optionId, quantity) => {
+    dispatch(
+      updateQuantityAsync({
+        productId,
+        optionId,
+        quantity,
+      }),
+    );
   };
 
-  const onRemoveItem = (id, option) => {
-    dispatch(removeItem({ id, option }));
-    toast.success("Xóa khỏi giỏ hàng thành công!");
+  // =========================
+  // REMOVE
+  // =========================
+  const onRemoveItem = (productId, optionId) => {
+    dispatch(
+      removeItemAsync({
+        productId,
+        optionId,
+      }),
+    );
+
+    toast.success("Xóa thành công");
   };
 
-  const onIncrease = (id, option) => {
-    dispatch(increaseQty({ id, option }));
+  // =========================
+  // INCREASE
+  // =========================
+  const onIncrease = (productId, optionId, currentQty, stock) => {
+    if (currentQty >= stock) return;
+
+    dispatch(
+      updateQuantityAsync({
+        productId,
+        optionId,
+        quantity: currentQty + 1,
+      }),
+    );
   };
 
-  const onDecrease = (id, option) => {
-    dispatch(decreaseQty({ id, option }));
+  // =========================
+  // DECREASE
+  // =========================
+  const onDecrease = (productId, optionId, currentQty) => {
+    if (currentQty <= 1) return;
+
+    dispatch(
+      updateQuantityAsync({
+        productId,
+        optionId,
+        quantity: currentQty - 1,
+      }),
+    );
   };
 
   return (
     <CartDetail
       carts={carts}
+      totalAmount={totalAmount}
       onIncrease={onIncrease}
       onDecrease={onDecrease}
       onRemove={onRemoveItem}

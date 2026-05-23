@@ -1,23 +1,33 @@
 import { useState } from "react";
-import { ArchiveBoxXMarkIcon } from "@heroicons/react/24/outline";
-import { formatPrice, calculatePrice } from "../../common/calculatePrice";
-import { CalculatorIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
-import "./styles/CardDetail.css";
+import {
+  ArchiveBoxXMarkIcon,
+  CalculatorIcon,
+  ShoppingCartIcon,
+} from "@heroicons/react/24/outline";
+
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 
-// ✅ luôn lấy giá cuối cùng (có option nếu có)
+import { formatPrice, calculatePrice } from "../../common/calculatePrice";
+
+import "./styles/CardDetail.css";
+
+// =========================
+// GET FINAL PRICE
+// =========================
 const getFinalPrice = (item) => {
-  const basePrice = item.optionPrice || item.price;
+  const basePrice = item.price || 0;
 
   if (item.discount) {
     return calculatePrice(basePrice, item.discount);
   }
-  return basePrice || 0;
+
+  return basePrice;
 };
 
 const CartDetail = ({
   carts,
+  totalAmount,
   onIncrease,
   onDecrease,
   onRemove,
@@ -25,45 +35,52 @@ const CartDetail = ({
 }) => {
   const [shippingInput, setShippingInput] = useState("0");
 
-  // ✅ subtotal
-  const subtotal = carts.reduce((total, item) => {
-    const finalPrice = getFinalPrice(item);
-    return total + finalPrice * item.quantity;
-  }, 0);
-
-  // ✅ tính phí ship
+  // =========================
+  // SHIPPING
+  // =========================
   const calculateShipping = () => {
     if (!shippingInput) return 0;
 
+    // ship %
     if (shippingInput.includes("%")) {
       const percent = parseInt(shippingInput.replace("%", ""));
+
       if (isNaN(percent)) return 0;
-      return Math.round((subtotal * percent) / 100);
+
+      return Math.round((totalAmount * percent) / 100);
     }
 
+    // ship fixed
     const value = Number(shippingInput);
+
     return isNaN(value) ? 0 : value;
   };
 
   const shippingFee = calculateShipping();
-  const finalTotal = subtotal + shippingFee;
 
-  // 🔥 CHECKOUT (thêm mới)
+  const finalTotal = totalAmount + shippingFee;
+  // =========================
+  // CHECKOUT
+  // =========================
   const handleCheckout = async () => {
     try {
       const token = localStorage.getItem("token");
 
       if (!token) {
         toast.warning("Bạn cần đăng nhập");
+
         return;
       }
 
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders`, {
         method: "POST",
+
         headers: {
           "Content-Type": "application/json",
+
           Authorization: `Bearer ${token}`,
         },
+
         body: JSON.stringify({
           items: carts,
         }),
@@ -72,16 +89,16 @@ const CartDetail = ({
       const data = await res.json();
 
       if (!res.ok) {
-        toast.error(data);
+        toast.error(data.message || "Checkout failed");
+
         return;
       }
 
       toast.success("Đặt hàng thành công 🎉");
 
-      // 👉 tạm reload (sau có thể dispatch clearCart)
       window.location.reload();
     } catch (err) {
-      toast.error("Lỗi server" + err);
+      toast.error("Lỗi server: " + err.message);
     }
   };
 
@@ -90,30 +107,33 @@ const CartDetail = ({
       {/* LEFT */}
       <div className="cart__left">
         <div className="cart__header">
-          <ShoppingCartIcon className="cart-icon" /> GIỎ HÀNG
+          <ShoppingCartIcon className="cart-icon" />
+          GIỎ HÀNG
           <span>{carts.length} sản phẩm</span>
         </div>
 
+        {/* EMPTY */}
+        {carts.length === 0 && <div className="empty-cart">Giỏ hàng trống</div>}
+
+        {/* ITEMS */}
         {carts.map((item) => {
           const finalPrice = getFinalPrice(item);
 
           return (
-            <div
-              className="cart__item"
-              key={item.id + (item.option || "default")}
-            >
+            <div className="cart__item" key={item.productId + item.optionId}>
               {/* IMAGE */}
-              <NavLink to={`/product/${item.id}`} className="cart__item-link">
-                <img
-                  src={item.image || item.images?.[0]}
-                  alt={item.name}
-                  className="thumb"
-                />
+              <NavLink
+                to={`/product/${item.productId}`}
+                className="cart__item-link"
+              >
+                <img src={item.image} alt={item.name} className="thumb" />
 
                 <div className="info">
                   <h4>{item.name}</h4>
+
                   <div className="size">
-                    Size: <span>{item.option || "Mặc định"}</span>
+                    Size:
+                    <span>{item.option}</span>
                   </div>
                 </div>
               </NavLink>
@@ -122,33 +142,57 @@ const CartDetail = ({
               <div className="price">
                 <p>ĐƠN GIÁ:</p>
 
-                <span className="old-price">{formatPrice(item.price)}</span>
-
                 <span className="new-price">{formatPrice(finalPrice)}</span>
 
-                {item.discount && (
-                  <span className="discount">{item.discount}%</span>
+                {item.discount > 0 && (
+                  <>
+                    <span className="old-price">{formatPrice(item.price)}</span>
+
+                    <span className="discount">-{item.discount}%</span>
+                  </>
                 )}
               </div>
 
               {/* QUANTITY */}
               <div className="qty">
-                <button onClick={() => onDecrease(item.id, item.option)}>
+                <button
+                  onClick={() =>
+                    onDecrease(item.productId, item.optionId, item.quantity)
+                  }
+                >
                   -
                 </button>
 
                 <input
                   type="number"
+                  min={1}
+                  max={item.stock}
                   value={item.quantity}
                   onChange={(e) => {
                     let val = Number(e.target.value);
-                    if (!val || val < 1) val = 1;
 
-                    onChangeQty(item.id, item.option, val);
+                    if (isNaN(val) || val < 1) {
+                      val = 1;
+                    }
+
+                    if (val > item.stock) {
+                      val = item.stock;
+                    }
+
+                    onChangeQty(item.productId, item.optionId, val);
                   }}
                 />
 
-                <button onClick={() => onIncrease(item.id, item.option)}>
+                <button
+                  onClick={() =>
+                    onIncrease(
+                      item.productId,
+                      item.optionId,
+                      item.quantity,
+                      item.stock,
+                    )
+                  }
+                >
                   +
                 </button>
               </div>
@@ -156,13 +200,14 @@ const CartDetail = ({
               {/* TOTAL */}
               <div className="total">
                 <p>TỔNG:</p>
+
                 <span>{formatPrice(finalPrice * item.quantity)}</span>
               </div>
 
               {/* DELETE */}
               <button
                 className="delete"
-                onClick={() => onRemove(item.id, item.option)}
+                onClick={() => onRemove(item.productId, item.optionId)}
               >
                 <ArchiveBoxXMarkIcon className="icon-delete" />
               </button>
@@ -170,8 +215,9 @@ const CartDetail = ({
           );
         })}
 
+        {/* ACTIONS */}
         <div className="cart__actions">
-          <NavLink to={"/product-card"} className="back">
+          <NavLink to="/product-card" className="back">
             Tiếp tục mua sắm
           </NavLink>
         </div>
@@ -181,22 +227,31 @@ const CartDetail = ({
       <div className="cart__right">
         <div className="summary">
           <h3>
-            <CalculatorIcon style={{ width: "24px", height: "24px" }} />
+            <CalculatorIcon
+              style={{
+                width: "24px",
+                height: "24px",
+              }}
+            />
+
             <span>TỔNG ĐƠN HÀNG</span>
           </h3>
 
           <div className="row">
             <span>Số lượng sản phẩm:</span>
+
             <span>{carts.length}</span>
           </div>
 
           <div className="row">
             <span>Tạm tính:</span>
-            <span>{formatPrice(subtotal)}</span>
+
+            <span>{formatPrice(totalAmount)}</span>
           </div>
 
           <div className="row">
             <span>Phí vận chuyển:</span>
+
             <input
               className="shipping-input"
               value={shippingInput}
@@ -207,22 +262,23 @@ const CartDetail = ({
 
           <div className="row">
             <span>Phí ship:</span>
+
             <span>{formatPrice(shippingFee)}</span>
           </div>
-
           <hr />
-
           <div className="total-price">
             <span>Tổng cộng:</span>
+
             <span>{formatPrice(finalTotal)}</span>
           </div>
 
-          {/* 🔥 GẮN CHECKOUT */}
+          {/* COD */}
           <button className="btn-cod" onClick={handleCheckout}>
             Thanh Toán COD
           </button>
 
-          <NavLink to={"/checkout"} className="btn-momo">
+          {/* MOMO */}
+          <NavLink to="/checkout" className="btn-momo">
             Thanh toán Momo
           </NavLink>
 

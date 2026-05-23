@@ -294,6 +294,23 @@
   gap: 20px;
 }
 
+.admin-comment__pin {
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.admin-comment__pin.pinned {
+  background: #fff3cd;
+  color: #d97706;
+}
+
+.admin-comment__pin.unpinned {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
 /* RESPONSIVE */
 
 @media (max-width: 768px) {

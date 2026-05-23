@@ -7,6 +7,8 @@ import productRoutes from "./routes/product.js";
 import momoRoutes from "./routes/momo.js";
 import floorRoutes from "./routes/floor.js";
 import orderRoutes from "./routes/order.js";
+import cartRoutes from "./routes/carts.js";
+
 import commentRoutes from "./routes/comment.js";
 import categoryRoutes from "./routes/category.js";
 import tableReservationRoutes from "./routes/Admin/tableReservation.js";
@@ -37,6 +39,9 @@ app.use("/api/floors", floorRoutes);
 app.use("/api/orders", orderRoutes);
 
 app.use("/api/momo", momoRoutes);
+
+// giỏ hàng
+app.use("/api/cart", cartRoutes);
 
 // CATEGORY HIỂN THỊ CHO CLIENT
 app.use("/api/categories", categoryRoutes);

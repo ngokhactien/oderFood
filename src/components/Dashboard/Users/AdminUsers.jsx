@@ -1,6 +1,6 @@
 // pages/admin/AdminUsers.jsx
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -50,6 +50,9 @@ export default function AdminUsers() {
 
   const [selectedUser, setSelectedUser] = useState(null);
 
+  // SORT ROLE
+  const [sortRole, setSortRole] = useState("all");
+
   // DELETE MODAL
   const [openDelete, setOpenDelete] = useState(false);
 
@@ -80,6 +83,17 @@ export default function AdminUsers() {
       }),
     );
   }, [dispatch, page, limit, search]);
+
+  // ======================
+  // FILTER ROLE
+  // ======================
+  const filteredUsers = useMemo(() => {
+    if (sortRole === "all") return users;
+
+    return users.filter(
+      (user) => user.role?.toLowerCase() === sortRole.toLowerCase(),
+    );
+  }, [users, sortRole]);
 
   // ======================
   // ADD USER
@@ -206,6 +220,7 @@ export default function AdminUsers() {
 
         <button className="admin-users__add-btn" onClick={handleAdd}>
           <PlusIcon className="admin-users__add-icon" />
+
           Thêm tài khoản
         </button>
       </div>
@@ -214,22 +229,45 @@ export default function AdminUsers() {
       <div className="admin-users__card">
         {/* TOP */}
         <div className="admin-users__top">
-          {/* SHOW */}
-          <div className="admin-users__show">
-            <select
-              value={limit}
-              onChange={(e) => {
-                setLimit(Number(e.target.value));
+          {/* LEFT */}
+          <div className="admin-users__top-left">
+            {/* SHOW */}
+            <div className="admin-users__show">
+              <select
+                value={limit}
+                onChange={(e) => {
+                  setLimit(Number(e.target.value));
 
-                setPage(1);
-              }}
-            >
-              <option value={5}>5</option>
+                  setPage(1);
+                }}
+              >
+                <option value={5}>5</option>
 
-              <option value={10}>10</option>
+                <option value={10}>10</option>
 
-              <option value={20}>20</option>
-            </select>
+                <option value={20}>20</option>
+              </select>
+            </div>
+
+            {/* SORT ROLE */}
+            <div className="admin-users__sort">
+              <select
+                value={sortRole}
+                onChange={(e) => {
+                  setSortRole(e.target.value);
+
+                  setPage(1);
+                }}
+              >
+                <option value="all">Tất cả vai trò</option>
+
+                <option value="admin">Admin</option>
+
+                <option value="staff">Staff</option>
+
+                <option value="user">User</option>
+              </select>
+            </div>
           </div>
 
           {/* SEARCH */}
@@ -280,8 +318,8 @@ export default function AdminUsers() {
                     Loading...
                   </td>
                 </tr>
-              ) : users?.length > 0 ? (
-                users.map((user, index) => (
+              ) : filteredUsers?.length > 0 ? (
+                filteredUsers.map((user, index) => (
                   <tr key={user._id}>
                     {/* STT */}
                     <td>{(page - 1) * limit + index + 1}</td>

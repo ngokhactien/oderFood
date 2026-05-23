@@ -80,21 +80,73 @@ TOP
   margin-bottom: 20px;
 }
 
+.admin-users__top-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* =========================
+SHOW
+========================= */
 .admin-users__show {
   display: flex;
   align-items: center;
-  gap: 10px;
 }
 
 .admin-users__show select {
   width: 70px;
-  height: 38px;
+  height: 40px;
 
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 10px;
 
   padding: 0 10px;
+
   outline: none;
+  background: white;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+/* =========================
+SORT
+========================= */
+.admin-users__sort {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  border: 1px solid #ddd;
+  border-radius: 10px;
+
+  padding: 0 12px;
+
+  height: 40px;
+
+  background: white;
+}
+
+.admin-users__sort-icon {
+  width: 18px;
+  height: 18px;
+
+  color: #6b7280;
+}
+
+.admin-users__sort select {
+  border: none;
+  outline: none;
+  background: transparent;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+  color: #374151;
 }
 
 /* =========================
@@ -178,8 +230,10 @@ AVATAR
 .admin-users__avatar {
   width: 52px;
   height: 52px;
+
   border-radius: 50%;
   object-fit: cover;
+
   border: 2px solid #eee;
 }
 
@@ -203,6 +257,7 @@ INFO
 .admin-users__info-icon {
   width: 16px;
   height: 16px;
+
   color: #9ca3af;
 }
 
@@ -254,7 +309,9 @@ ACTIONS
 .btn-edit,
 .btn-delete {
   border: none;
+
   padding: 8px 14px;
+
   border-radius: 8px;
 
   font-size: 13px;
@@ -283,15 +340,6 @@ ACTIONS
 }
 
 /* =========================
-EMPTY
-========================= */
-.admin-users__empty {
-  text-align: center;
-  padding: 30px;
-  color: #999;
-}
-
-/* =========================
 BOTTOM
 ========================= */
 .admin-users__bottom {
@@ -300,6 +348,7 @@ BOTTOM
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   gap: 20px;
 }
 
@@ -314,62 +363,17 @@ LOADING
 .admin-users__loading {
   text-align: center;
   padding: 30px;
+
   color: #555;
   font-weight: 600;
 }
 
 /* =========================
-RESPONSIVE
-========================= */
-@media (max-width: 768px) {
-  .admin-users {
-    padding: 14px;
-  }
-
-  .admin-users__header,
-  .admin-users__top,
-  .admin-users__bottom {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .admin-users__search {
-    width: 100%;
-  }
-
-  .admin-users__search input {
-    width: 100%;
-  }
-
-  .admin-users__table th,
-  .admin-users__table td {
-    padding: 12px;
-    font-size: 13px;
-  }
-
-  .admin-users__avatar {
-    width: 44px;
-    height: 44px;
-  }
-
-  .admin-users__actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .btn-edit,
-  .btn-delete {
-    width: 100%;
-  }
-}
-
-/* =========================
-   ADDRESS TOOLTIP
+ADDRESS TOOLTIP
 ========================= */
 
 .admin-users__tooltip {
   position: relative;
-
   width: fit-content;
 }
 
@@ -415,8 +419,7 @@ RESPONSIVE
   font-size: 13px;
   line-height: 1.5;
 
-  box-shadow: 0 10px 25px
-    rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 
   opacity: 0;
   visibility: hidden;
@@ -441,15 +444,79 @@ RESPONSIVE
   border-width: 7px;
   border-style: solid;
 
-  border-color:
-    #111827 transparent
-      transparent transparent;
+  border-color: #111827 transparent transparent transparent;
 }
 
-.admin-users__tooltip:hover
-  .admin-users__tooltip-content {
+.admin-users__tooltip:hover .admin-users__tooltip-content {
   opacity: 1;
   visibility: visible;
 
   transform: translateY(0);
+}
+
+/* =========================
+RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+  .admin-users {
+    padding: 14px;
+  }
+
+  .admin-users__header,
+  .admin-users__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-users__top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-users__top-left {
+    width: 100%;
+
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-users__show,
+  .admin-users__sort {
+    width: 100%;
+  }
+
+  .admin-users__show select,
+  .admin-users__sort select {
+    width: 100%;
+  }
+
+  .admin-users__search {
+    width: 100%;
+  }
+
+  .admin-users__search input {
+    width: 100%;
+  }
+
+  .admin-users__table th,
+  .admin-users__table td {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .admin-users__avatar {
+    width: 44px;
+    height: 44px;
+  }
+
+  .admin-users__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-edit,
+  .btn-delete {
+    width: 100%;
+  }
 }

@@ -303,6 +303,26 @@
   background: #ffe9d6;
 }
 
+/* CommentList.css */
+
+.comment-active {
+  border: 2px solid #ff5722;
+  background: #fff4ef;
+  animation: glowComment 1s ease;
+}
+
+@keyframes glowComment {
+  0% {
+    transform: scale(0.97);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 /* =========================
    RESPONSIVE
 ========================= */

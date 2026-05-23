@@ -14,12 +14,10 @@ import {
   getCommentsByProduct,
 } from "../../../redux/commentSlice";
 
-const ProductReviews = ({ productId }) => {
+const ProductReviews = ({ productId, onReloadProduct }) => {
   const dispatch = useDispatch();
 
-  const { comments, loading } = useSelector(
-    (state) => state.comments,
-  );
+  const { comments, loading } = useSelector((state) => state.comments);
 
   const user = useSelector((state) => state.auth.user);
 
@@ -45,28 +43,25 @@ const ProductReviews = ({ productId }) => {
       return toast.warning("Nhập nội dung!");
     }
 
-    if (!rating) {
-      return toast.warning("Vui lòng chọn số sao!");
-    }
-
     try {
       await dispatch(
         createComment({
           user: user._id,
           product: productId,
           content,
-          rating, // ⭐ gửi rating lên API
+          rating,
         }),
       ).unwrap();
 
       toast.success("Gửi bình luận thành công!");
 
-      // reset form
       setContent("");
       setRating(5);
 
-      // reload comments
-      dispatch(getCommentsByProduct(productId));
+      await dispatch(getCommentsByProduct(productId));
+
+      // 🔥 reload product detail
+      onReloadProduct();
     } catch (error) {
       toast.error(error.message || "Có lỗi xảy ra");
     }
@@ -75,22 +70,25 @@ const ProductReviews = ({ productId }) => {
   /**
    * DELETE COMMENT
    */
-  const handleDelete = async (commentId) => {
-    try {
-      await dispatch(deleteComment(commentId)).unwrap();
+const handleDelete = async (commentId) => {
+  try {
+    await dispatch(deleteComment(commentId)).unwrap();
 
-      toast.success("Xóa bình luận thành công!");
+    toast.success("Xóa bình luận thành công!");
 
-      dispatch(getCommentsByProduct(productId));
-    } catch (error) {
-      toast.error(error.message || "Có lỗi xảy ra");
-    }
-  };
+    await dispatch(getCommentsByProduct(productId));
+
+    // 🔥 reload product detail
+    onReloadProduct();
+  } catch (error) {
+    toast.error(error.message || "Có lỗi xảy ra");
+  }
+};
 
   return (
     <div className="review">
       <h3>Bình luận sản phẩm</h3>
-    
+
       <div className="review__wrapper">
         {/* LEFT */}
         <CommentList

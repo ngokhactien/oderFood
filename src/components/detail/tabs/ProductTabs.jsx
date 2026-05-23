@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import "./styles/ProductTabs.css";
 
@@ -10,12 +10,24 @@ const ProductTabs = ({
   ingredients = [],
   productId,
   reviews,
+  onReloadProduct,
 }) => {
-  const [activeTab, setActiveTab] = useState("desc");
+  /**
+   * LOAD TAB FROM LOCALSTORAGE
+   */
+  const [activeTab, setActiveTab] = useState(() => {
+    return localStorage.getItem("product_tab") || "desc";
+  });
+
+  /**
+   * SAVE TAB
+   */
+  useEffect(() => {
+    localStorage.setItem("product_tab", activeTab);
+  }, [activeTab]);
 
   return (
     <div className="product-tabs">
-      {/* HEADER */}
       <div className="tabs__header">
         <button
           className={activeTab === "desc" ? "active" : ""}
@@ -32,7 +44,6 @@ const ProductTabs = ({
         </button>
       </div>
 
-      {/* CONTENT */}
       <div className="tabs__content">
         {activeTab === "desc" && (
           <ProductDescription
@@ -44,7 +55,7 @@ const ProductTabs = ({
         {activeTab === "review" && (
           <ProductReviews
             productId={productId}
-            reviews={reviews}
+            onReloadProduct={onReloadProduct}
           />
         )}
       </div>

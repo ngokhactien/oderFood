@@ -1,4 +1,14 @@
-import React, { useMemo, useState } from "react";
+// components/detail/tabs/CommentList.jsx
+
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+
+import {
+  useLocation,
+} from "react-router-dom";
 
 import { StarIcon } from "@heroicons/react/24/solid";
 
@@ -13,35 +23,78 @@ const CommentList = ({
   /**
    * STATE
    */
-  const [showAll, setShowAll] = useState(false);
+  const [showAll, setShowAll] =
+    useState(false);
+
+  const location =
+    useLocation();
+
+  const activeCommentId =
+    location.state?.commentId;
+
+  /**
+   * SCROLL TO COMMENT
+   */
+  useEffect(() => {
+    if (activeCommentId) {
+      setShowAll(true);
+
+      setTimeout(() => {
+        const el =
+          document.getElementById(
+            `comment-${activeCommentId}`,
+          );
+
+        if (el) {
+          el.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+      }, 500);
+    }
+  }, [
+    activeCommentId,
+    comments,
+  ]);
 
   /**
    * AVG RATING
    */
-  const averageRating = useMemo(() => {
-    if (!comments.length) return 0;
+  const averageRating =
+    useMemo(() => {
+      if (!comments.length)
+        return 0;
 
-    const total = comments.reduce(
-      (sum, item) => sum + (item.rating || 0),
-      0,
-    );
+      const total =
+        comments.reduce(
+          (sum, item) =>
+            sum +
+            (item.rating || 0),
+          0,
+        );
 
-    return (total / comments.length).toFixed(1);
-  }, [comments]);
+      return (
+        total / comments.length
+      ).toFixed(1);
+    }, [comments]);
 
   /**
    * CONDITIONS
    */
-  const shouldShowButton = comments.length > 5;
+  const shouldShowButton =
+    comments.length > 5;
 
-  const shouldScroll = comments.length >= 10;
+  const shouldScroll =
+    comments.length >= 10;
 
   /**
    * COMMENTS DISPLAY
    */
-  const displayedComments = showAll
-    ? comments
-    : comments.slice(0, 5);
+  const displayedComments =
+    showAll
+      ? comments
+      : comments.slice(0, 5);
 
   /**
    * LOADING
@@ -75,99 +128,135 @@ const CommentList = ({
           </span>
 
           <span className="total">
-            /5 ({comments.length} đánh giá)
+            /5 (
+            {comments.length} đánh
+            giá)
           </span>
         </div>
 
         <div className="summary-stars">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <StarIcon
-              key={star}
-              className={`summary-star ${
-                star <= Math.round(averageRating)
-                  ? "active"
-                  : ""
-              }`}
-            />
-          ))}
+          {[1, 2, 3, 4, 5].map(
+            (star) => (
+              <StarIcon
+                key={star}
+                className={`summary-star ${
+                  star <=
+                  Math.round(
+                    averageRating,
+                  )
+                    ? "active"
+                    : ""
+                }`}
+              />
+            ),
+          )}
         </div>
       </div>
 
       {/* LIST */}
       <div
         className={`comments ${
-          shouldScroll && showAll
+          shouldScroll &&
+          showAll
             ? "comments-scroll"
             : ""
         }`}
       >
-        {displayedComments.map((c) => (
-          <div className="comment" key={c._id}>
-            {/* AVATAR */}
-            <div className="avatar">
-              {c.user?.avatar ? (
-                <img
-                  src={c.user.avatar}
-                  alt={c.user?.name}
-                  className="avatar-img"
-                />
-              ) : (
-                c.user?.name?.charAt(0)
-              )}
-            </div>
+        {displayedComments.map(
+          (c) => (
+            <div
+              className={`comment ${
+                activeCommentId ===
+                c._id
+                  ? "comment-active"
+                  : ""
+              }`}
+              key={c._id}
+              id={`comment-${c._id}`}
+            >
+              {/* AVATAR */}
+              <div className="avatar">
+                {c.user?.avatar ? (
+                  <img
+                    src={
+                      c.user.avatar
+                    }
+                    alt={
+                      c.user?.name
+                    }
+                    className="avatar-img"
+                  />
+                ) : (
+                  c.user?.name?.charAt(
+                    0,
+                  )
+                )}
+              </div>
 
-            {/* BODY */}
-            <div className="comment__body">
-              <div className="comment__top">
-                <div>
-                  <div className="name">
-                    {c.user?.name}
-                  </div>
+              {/* BODY */}
+              <div className="comment__body">
+                <div className="comment__top">
+                  <div>
+                    <div className="name">
+                      {
+                        c.user?.name
+                      }
+                    </div>
 
-                  {/* STARS */}
-                  <div className="comment-stars">
-                    {[1, 2, 3, 4, 5].map(
-                      (star) => (
+                    {/* STARS */}
+                    <div className="comment-stars">
+                      {[
+                        1, 2, 3, 4,
+                        5,
+                      ].map((star) => (
                         <StarIcon
-                          key={star}
+                          key={
+                            star
+                          }
                           className={`comment-star ${
-                            star <= c.rating
+                            star <=
+                            c.rating
                               ? "active"
                               : ""
                           }`}
                         />
-                      ),
-                    )}
+                      ))}
+                    </div>
                   </div>
+
+                  {/* DELETE */}
+                  {user?._id ===
+                    c.user?._id && (
+                    <button
+                      className="delete-btn"
+                      onClick={() =>
+                        handleDelete(
+                          c._id,
+                        )
+                      }
+                    >
+                      Xóa
+                    </button>
+                  )}
                 </div>
 
-                {/* DELETE */}
-                {user?._id === c.user?._id && (
-                  <button
-                    className="delete-btn"
-                    onClick={() =>
-                      handleDelete(c._id)
-                    }
-                  >
-                    Xóa
-                  </button>
-                )}
-              </div>
+                {/* TIME */}
+                <div className="time">
+                  {new Date(
+                    c.createdAt,
+                  ).toLocaleString(
+                    "vi-VN",
+                  )}
+                </div>
 
-              {/* TIME */}
-              <div className="time">
-                {new Date(
-                  c.createdAt,
-                ).toLocaleString("vi-VN")}
-              </div>
-
-              {/* CONTENT */}
-              <div className="text">
-                {c.content}
+                {/* CONTENT */}
+                <div className="text">
+                  {c.content}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ),
+        )}
       </div>
 
       {/* ACTION */}
@@ -176,13 +265,16 @@ const CommentList = ({
           <button
             className="toggle-comments-btn"
             onClick={() =>
-              setShowAll(!showAll)
+              setShowAll(
+                !showAll,
+              )
             }
           >
             {showAll
               ? "Ẩn bớt bình luận"
               : `Xem thêm ${
-                  comments.length - 5
+                  comments.length -
+                  5
                 } bình luận`}
           </button>
         </div>

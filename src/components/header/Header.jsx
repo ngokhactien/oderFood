@@ -5,18 +5,19 @@ import {
 } from "@heroicons/react/24/outline";
 import "./styles/Header.css";
 
-import menuItems from "../../data/menuHeader";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import UserMenu from "./UserMenu";
 import SearchBar from "./SearchBar";
+import useMenuItems from "../../data/menuHeader";
 
 const Header = () => {
   const cartItems = useSelector((state) => state.cart.items);
   const user = useSelector((state) => state.auth.user);
 
   const [lang, setLang] = useState("EN");
+  const menuItems = useMenuItems();
 
   return (
     <header className="header">

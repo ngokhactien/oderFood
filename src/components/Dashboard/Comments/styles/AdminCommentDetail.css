@@ -119,6 +119,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
+  margin-top: 2rem;
 }
 
 .admin-comment-detail__update-btn,
@@ -162,6 +163,34 @@
   color: #222;
 }
 
+.admin-comment-detail__pin {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.admin-comment-detail__pin.pinned {
+  background: #fff3cd;
+  color: #d97706;
+}
+
+.admin-comment-detail__pin.unpinned {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.admin-comment-detail__pin-btn {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #f59e0b;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
 @media (max-width: 768px) {
   .admin-comment-detail__bottom {
     grid-template-columns: 1fr;
@@ -170,5 +199,6 @@
   .admin-comment-detail__actions {
     flex-direction: column;
     align-items: stretch;
+    margin-top: 2rem;
   }
 }

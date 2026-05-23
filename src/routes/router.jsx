@@ -6,6 +6,7 @@ import ProductCard from "../pages/ProductCard";
 import AuthPage from "../pages/AuthPage";
 import Profile from "../pages/Profile";
 import ResetPassword from "../components/account/ResetPassword";
+import ProtectedStaffRoute from "./ProtectedStaffRoute";
 
 // chặn quyền truy cập
 import ProtectedRoute from "./ProtectedRoute";
@@ -41,7 +42,14 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <Home /> },
-      { path: "table-order", element: <POSLayout /> },
+      {
+        path: "table-order",
+        element: (
+          <ProtectedStaffRoute>
+            <POSLayout />
+          </ProtectedStaffRoute>
+        ),
+      },
       { path: "product/:id", element: <ProductDetail /> },
       { path: "cart", element: <Cart /> },
       { path: "product-card", element: <ProductCard /> }, //mang về

@@ -12,13 +12,9 @@ const updateProductRating = async (productId) => {
 
   const reviews = comments.length;
 
-  const totalRating = comments.reduce(
-    (sum, item) => sum + item.rating,
-    0
-  );
+  const totalRating = comments.reduce((sum, item) => sum + item.rating, 0);
 
-  const rating =
-    reviews > 0 ? totalRating / reviews : 0;
+  const rating = reviews > 0 ? totalRating / reviews : 0;
 
   const updated = await Product.findByIdAndUpdate(
     productId,
@@ -28,7 +24,7 @@ const updateProductRating = async (productId) => {
     },
     {
       new: true,
-    }
+    },
   );
 };
 
@@ -96,17 +92,16 @@ export const getCommentById = async (req, res) => {
 /**
  * UPDATE COMMENT STATUS
  */
+/**
+ * UPDATE COMMENT STATUS + PIN
+ */
 export const updateCommentStatus = async (req, res) => {
   try {
-    const { isHidden } = req.body;
+    const { isHidden, isPinned } = req.body;
 
-    const comment = await Comment.findByIdAndUpdate(
+    const comment = await Comment.findById(
       req.params.id,
-      { isHidden },
-      { new: true }
-    )
-      .populate("user", "name")
-      .populate("product", "name");
+    );
 
     if (!comment) {
       return res.status(404).json({
@@ -114,9 +109,67 @@ export const updateCommentStatus = async (req, res) => {
       });
     }
 
-    await updateProductRating(comment.product._id);
+    /**
+     * UPDATE HIDDEN
+     */
+    if (
+      typeof isHidden !== "undefined"
+    ) {
+      comment.isHidden = isHidden;
+    }
 
-    res.json(comment);
+    /**
+     * UPDATE PIN
+     */
+    if (
+      typeof isPinned !== "undefined"
+    ) {
+      // nếu muốn ghim
+      if (isPinned === true) {
+        const totalPinned =
+          await Comment.countDocuments({
+            isPinned: true,
+            isHidden: false,
+          });
+
+        // tối đa 6 comment
+        if (
+          totalPinned >= 6 &&
+          !comment.isPinned
+        ) {
+          return res.status(400).json({
+            message:
+              "Chỉ được ghim tối đa 6 bình luận",
+          });
+        }
+      }
+
+      comment.isPinned = isPinned;
+    }
+
+    /**
+     * nếu ẩn comment
+     * => tự bỏ ghim
+     */
+    if (comment.isHidden) {
+      comment.isPinned = false;
+    }
+
+    await comment.save();
+
+    /**
+     * UPDATE PRODUCT RATING
+     */
+    await updateProductRating(
+      comment.product,
+    );
+
+    const updated =
+      await Comment.findById(comment._id)
+        .populate("user")
+        .populate("product");
+
+    res.json(updated);
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -138,10 +191,7 @@ export const createComment = async (req, res) => {
       rating,
     });
 
-    const populatedComment = await comment.populate(
-      "user",
-      "name avatar"
-    );
+    const populatedComment = await comment.populate("user", "name avatar");
 
     await updateProductRating(product);
 
@@ -175,6 +225,33 @@ export const deleteComment = async (req, res) => {
     res.json({
       message: "Xóa bình luận thành công",
     });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+
+/**
+ * GET PINNED COMMENTS
+ * chỉ lấy comment:
+ * - isPinned = true
+ * - isHidden = false
+ * - tối đa 6 comment
+ */
+export const getPinnedComments = async (req, res) => {
+  try {
+    const comments = await Comment.find({
+      isPinned: true,
+      isHidden: false,
+    })
+      .populate("user", "name avatar")
+      .populate("product", "name")
+      .sort({ createdAt: -1 })
+      .limit(6);
+
+    res.json(comments);
   } catch (error) {
     res.status(500).json({
       message: error.message,

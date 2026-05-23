@@ -19,6 +19,8 @@ export default function AdminComments() {
   const [search, setSearch] = useState("");
   const [sortStatus, setSortStatus] = useState("");
 
+  const [sortPinned, setSortPinned] = useState("");
+
   // SORT STAR
   const [sortStar, setSortStar] = useState("");
 
@@ -57,12 +59,21 @@ export default function AdminComments() {
       data = data.filter((item) => item.isHidden);
     }
 
+    // FILTER PINNED
+if (sortPinned === "pinned") {
+  data = data.filter((item) => item.isPinned);
+}
+
+if (sortPinned === "unpinned") {
+  data = data.filter((item) => !item.isPinned);
+}
+
     return data;
-  }, [comments, search, sortStar, sortStatus]);
+}, [comments, search, sortStar, sortStatus, sortPinned]);
 
   useEffect(() => {
     setPage(1);
-  }, [search, limit, sortStar, sortStatus]);
+}, [search, limit, sortStar, sortStatus, sortPinned]);
 
   const totalPages = Math.ceil(filteredData.length / limit);
 
@@ -119,6 +130,18 @@ export default function AdminComments() {
             </select>
           </div>
 
+          {/* SORT PIN */}
+<div className="admin-comment__sort">
+  <select
+    value={sortPinned}
+    onChange={(e) => setSortPinned(e.target.value)}
+  >
+    <option value="">Tất cả ghim</option>
+    <option value="pinned">Đã ghim</option>
+    <option value="unpinned">Chưa ghim</option>
+  </select>
+</div>
+
           <div className="admin-comment__search">
             <MagnifyingGlassIcon className="admin-comment__search-icon" />
 
@@ -142,6 +165,7 @@ export default function AdminComments() {
                 <th>ĐÁNH GIÁ</th>
                 <th>BÌNH LUẬN</th>
                 <th>TRẠNG THÁI</th>
+                <th>GHIM</th> 
                 <th>THỜI GIAN</th>
                 <th>CHỈNH SỬA</th>
               </tr>
@@ -187,6 +211,16 @@ export default function AdminComments() {
                       </span>
                     </td>
 
+                    <td>
+  <span
+    className={`admin-comment__pin ${
+      item.isPinned ? "pinned" : "unpinned"
+    }`}
+  >
+    {item.isPinned ? "Đã ghim" : "Chưa ghim"}
+  </span>
+</td>
+
                     <td>{new Date(item.createdAt).toLocaleString("vi-VN")}</td>
 
                     <td>
@@ -201,7 +235,7 @@ export default function AdminComments() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="8">Không có bình luận</td>
+                  <td colSpan="9">Không có bình luận</td>
                 </tr>
               )}
             </tbody>
