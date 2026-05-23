@@ -26,7 +26,7 @@ const CartItem = ({ product, onAdd, size = "small" }) => {
     <NavLink
       to={`/product/${_id}`}
       state={{ product }}
-      className={`card ${size}`}
+      className={`card card_item ${size}`}
     >
       <div className="card-img">
         <img
@@ -56,7 +56,6 @@ const CartItem = ({ product, onAdd, size = "small" }) => {
               e.preventDefault();
               e.stopPropagation();
               if (onAdd) onAdd(product);
-              toast.success("Thêm vào giỏ hàng thành công!");
             }}
           >
             <ShoppingCartIcon className="cart-icon" />

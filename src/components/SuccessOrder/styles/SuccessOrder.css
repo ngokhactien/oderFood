@@ -1,0 +1,149 @@
+/* style.css */
+
+.success-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Card */
+.success-page .success-card {
+  width: 100%;
+  max-width: 360px;
+
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Header */
+.success-page .success-header {
+  background: #ff6a33;
+  color: white;
+  text-align: center;
+
+  padding: 28px 16px;
+}
+
+.success-page .icon-wrapper {
+  width: 52px;
+  height: 52px;
+
+  background: #12c98a;
+  border-radius: 50%;
+
+  margin: 0 auto 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-page .check-icon {
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
+.success-page .success-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.success-page .success-header p {
+  font-size: 13px;
+  opacity: 0.95;
+}
+
+/* Body */
+.success-page .success-body {
+  padding: 18px;
+}
+
+/* Info */
+.success-page .info-box {
+  border: 1px solid #eee;
+  border-radius: 6px;
+  overflow: hidden;
+
+  margin-bottom: 16px;
+}
+
+.success-page .info-row {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 12px 14px;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.success-page .info-row:last-child {
+  border-bottom: none;
+}
+
+.success-page .info-row span {
+  color: #777;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.success-page .info-row strong {
+  color: #ff6a33;
+  font-size: 12px;
+}
+
+/* Buttons */
+.success-page .button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.success-page .btn {
+  flex: 1;
+
+  height: 38px;
+  border-radius: 6px;
+  border: none;
+
+  cursor: pointer;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  transition: 0.2s;
+}
+
+.success-page .btn-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.success-page .btn.primary {
+  background: #ff6a33;
+  color: white;
+  text-decoration: none;
+}
+
+.success-page .btn.primary:hover {
+  opacity: 0.9;
+}
+
+.success-page .btn.secondary {
+  background: white;
+  border: 1px solid #ddd;
+  color: #444;
+  text-decoration: none;
+}
+
+.success-page .btn.secondary:hover {
+  background: #f7f7f7;
+}

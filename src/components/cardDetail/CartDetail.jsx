@@ -273,9 +273,9 @@ const CartDetail = ({
           </div>
 
           {/* COD */}
-          <button className="btn-cod" onClick={handleCheckout}>
+         <NavLink to="/checkout" className="btn-cod" onClick={handleCheckout}>
             Thanh Toán COD
-          </button>
+          </NavLink>
 
           {/* MOMO */}
           <NavLink to="/checkout" className="btn-momo">

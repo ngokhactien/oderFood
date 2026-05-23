@@ -33,6 +33,9 @@ import AdminCategories from "../components/Dashboard/Categories/AdminCategories"
 import Dashboard from "../components/Dashboard/Home/AdminReport";
 import AdminProductsReport from "../components/Dashboard/Reports/AdminProductsReport";
 import AdminTransferTable from "../components/Dashboard/TransferTable/AdminTransferTable";
+import SuccessOrder from "../components/successOrder/SuccessOrder";
+import MyOrders from "../components/MyOrders/MyOrders";
+import MyOrderDetail from "../components/myOrderDetail/MyOrderDetail";
 // import AdminInfo from "../components/Dashboard/AdminInfo";
 
 const router = createBrowserRouter([
@@ -54,6 +57,9 @@ const router = createBrowserRouter([
       { path: "cart", element: <Cart /> },
       { path: "product-card", element: <ProductCard /> }, //mang về
       { path: "checkout", element: <CheckoutPage /> }, //thanh toán momo
+      { path: "checkout/success", element: <SuccessOrder /> }, //thanh toán thành công
+      { path: "my-orders", element: <MyOrders /> }, //đơn hàng của mình
+      { path: "my-orders/:id", element: <MyOrderDetail /> }, //chi tiet đơn hàng của mình
 
       // ❌ nếu đã login thì không vào được
       {

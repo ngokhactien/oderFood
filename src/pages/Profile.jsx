@@ -50,7 +50,7 @@ export default function Profile() {
 
           <li
             className={isActive("/orders") ? "active" : ""}
-            onClick={() => navigate("/orders")}
+            onClick={() => navigate("/my-orders")}
           >
             <ClipboardDocumentListIcon className="icon" /> Đơn mua
           </li>

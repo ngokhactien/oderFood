@@ -39,7 +39,7 @@ const Home = () => {
         quantity: 1,
       }),
     );
-    toast.success("Đã thêm vào giỏ hàng");
+    toast.success("Thêm vào giỏ hàng thành công!");
   };
 
   // =========================
