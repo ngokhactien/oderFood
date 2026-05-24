@@ -37,7 +37,7 @@ export default function SuccessOrder() {
 
           {/* Buttons */}
           <div className="button-group">
-            <NavLink to={'my-orders'} className="btn primary">
+            <NavLink to='/my-orders' className="btn primary">
               <ClipboardDocumentListIcon className="btn-icon" />
               Xem đơn hàng
             </NavLink>

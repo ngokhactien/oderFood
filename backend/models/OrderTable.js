@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const orderSchema = new mongoose.Schema(
+const orderTableSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -68,7 +68,7 @@ const orderSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-export default mongoose.model("Order", orderSchema);
+export default mongoose.model("OrderTable", orderTableSchema);
 
 // {
 //   "_id": "66f1a2b3c4d5e6f789000001",

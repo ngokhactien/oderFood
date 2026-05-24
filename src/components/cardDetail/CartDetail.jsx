@@ -249,7 +249,7 @@ const CartDetail = ({
             <span>{formatPrice(totalAmount)}</span>
           </div>
 
-          <div className="row">
+          {/* <div className="row">
             <span>Phí vận chuyển:</span>
 
             <input
@@ -258,12 +258,13 @@ const CartDetail = ({
               onChange={(e) => setShippingInput(e.target.value)}
               placeholder="VD: 20000 hoặc 10%"
             />
-          </div>
+          </div> */}
 
           <div className="row">
             <span>Phí ship:</span>
 
-            <span>{formatPrice(shippingFee)}</span>
+            {/* <span>{formatPrice(shippingFee)}</span> */}
+            <span className="free">Miễn phí</span>
           </div>
           <hr />
           <div className="total-price">
@@ -273,12 +274,20 @@ const CartDetail = ({
           </div>
 
           {/* COD */}
-         <NavLink to="/checkout" className="btn-cod" onClick={handleCheckout}>
+          <NavLink
+            to="/checkout"
+            state={{ paymentMethod: "COD" }}
+            className="btn-cod"
+          >
             Thanh Toán COD
           </NavLink>
 
           {/* MOMO */}
-          <NavLink to="/checkout" className="btn-momo">
+          <NavLink
+            to="/checkout"
+            state={{ paymentMethod: "MOMO" }}
+            className="btn-momo"
+          >
             Thanh toán Momo
           </NavLink>
 

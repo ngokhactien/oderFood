@@ -1,4 +1,4 @@
-import Order from "../models/Order.js";
+import Order from "../models/OrderTable.js";
 
 // 🔥 helper tính total
 const calcTotal = (items) => items.reduce((sum, i) => sum + i.price * i.qty, 0);

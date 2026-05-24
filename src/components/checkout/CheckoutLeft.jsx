@@ -5,13 +5,14 @@ export default function CheckoutLeft({
   selectedAddress,
   setSelectedAddress,
   user,
+  note,
+  setNote,
 }) {
   const [form, setForm] = useState({
     fullName: "",
     email: "",
     phone: "",
     address: "",
-    note: "",
   });
 
   // 👉 khi chọn address → fill vào form
@@ -62,8 +63,8 @@ export default function CheckoutLeft({
         <textarea
           className="note-input"
           placeholder="Ghi chú về đơn hàng (tùy chọn)"
-          value={form.note}
-          onChange={(e) => setForm({ ...form, note: e.target.value })}
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
         />
       </div>
 

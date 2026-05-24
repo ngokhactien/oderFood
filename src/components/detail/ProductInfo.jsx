@@ -1,4 +1,10 @@
-import { StarIcon } from "@heroicons/react/24/outline";
+import {
+  StarIcon as StarSolidIcon,
+} from "@heroicons/react/24/solid";
+
+import {
+  StarIcon,
+} from "@heroicons/react/24/outline";
 
 const ProductInfo = ({
   product,
@@ -16,17 +22,38 @@ const ProductInfo = ({
     description = "",
   } = product;
 
+  // =========================
+  // RENDER STARS
+  // =========================
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating);
 
-    const emptyStars = 5 - fullStars;
+    const hasHalf = rating % 1 >= 0.5;
+
+    const emptyStars =
+      5 - fullStars - (hasHalf ? 1 : 0);
 
     return (
       <>
+        {/* FULL STAR */}
         {[...Array(fullStars)].map((_, i) => (
-          <StarIcon key={`full-${i}`} className="product-detail__star" />
+          <StarSolidIcon
+            key={`full-${i}`}
+            className="product-detail__star product-detail__star--active"
+          />
         ))}
 
+        {/* HALF STAR */}
+        {hasHalf && (
+          <StarSolidIcon
+            className="product-detail__star product-detail__star--active"
+            style={{
+              opacity: 0.5,
+            }}
+          />
+        )}
+
+        {/* EMPTY STAR */}
         {[...Array(emptyStars)].map((_, i) => (
           <StarIcon
             key={`empty-${i}`}
@@ -40,17 +67,24 @@ const ProductInfo = ({
   return (
     <>
       {/* TITLE */}
-      <h2 className="product-detail__title">{name}</h2>
+      <h2 className="product-detail__title">
+        {name}
+      </h2>
 
       {/* CATEGORY */}
       <p className="category">
-        Danh mục: <span>{category.replaceAll("-", " ")}</span>
+        Danh mục:{" "}
+        <span>
+          {category.replaceAll("-", " ")}
+        </span>
       </p>
 
       {/* RATING */}
       <div className="product-detail__rating">
         <div className="product-detail__rating-item product-detail__rating-score">
-          <span className="product-detail__score">{rating}</span>
+          <span className="product-detail__score">
+            {rating}
+          </span>
 
           <div className="product-detail__stars">
             {renderStars(rating)}
@@ -58,15 +92,23 @@ const ProductInfo = ({
         </div>
 
         <div className="product-detail__rating-item">
-          <span className="product-detail__reviews">{reviews}</span>
+          <span className="product-detail__reviews">
+            {reviews}
+          </span>
 
-          <span className="product-detail__label">Đánh Giá</span>
+          <span className="product-detail__label">
+            Đánh Giá
+          </span>
         </div>
 
         <div className="product-detail__rating-item">
-          <span className="product-detail__sold">{sold}</span>
+          <span className="product-detail__sold">
+            {sold}
+          </span>
 
-          <span className="product-detail__label">Đã bán</span>
+          <span className="product-detail__label">
+            Đã bán
+          </span>
         </div>
       </div>
 

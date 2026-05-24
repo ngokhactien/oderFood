@@ -14,6 +14,7 @@ import reservationReducer from "./admin/reservation/reservationSlice";
 import usersReducer from "./admin/users/userSlice";
 import adminProductReducer from "./admin/products/adminProductSlice";
 import categoryReducer from "./admin/category/categorySlice";
+import checkoutReducer from "./admin/checkout/checkoutSlice";
 
 const saved = localStorage.getItem("orderUI");
 
@@ -33,6 +34,7 @@ export const store = configureStore({
     users: usersReducer,
     adminProducts: adminProductReducer,
     categories: categoryReducer, // mục lục
+    checkout: checkoutReducer, // doanh thu + cart oder
   },
   preloadedState: {
     orderUI: saved ? JSON.parse(saved) : undefined,

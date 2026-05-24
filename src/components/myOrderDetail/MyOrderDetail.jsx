@@ -1,4 +1,4 @@
-// OrderDetail.jsx
+// MyOrderDetail.jsx
 
 import {
   ClipboardDocumentListIcon,
@@ -14,57 +14,151 @@ import {
   CubeIcon,
 } from "@heroicons/react/24/outline";
 
-import './styles/MyOrderDetail.css'
+import "./styles/MyOrderDetail.css";
+
+import {
+  useDispatch,
+  useSelector,
+} from "react-redux";
+
+import {
+  useEffect,
+} from "react";
+
+import {
+  useParams,
+} from "react-router-dom";
+
+import {
+  getOrderDetail,
+} from "../../redux/admin/checkout/checkoutSlice";
 
 export default function MyOrderDetail() {
-  const products = [
-    {
-      id: 1,
-      name: "Mì Ý Rau Củ Đút Lò",
-      price: "70,000đ",
-      total: "70,000đ",
-      quantity: 1,
-      image:
-        "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?q=80&w=300",
-    },
-    {
-      id: 2,
-      name: "Burger Tôm",
-      price: "40,000đ",
-      total: "40,000đ",
-      quantity: 1,
-      image:
-        "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=300",
-    },
-  ];
+  const dispatch =
+    useDispatch();
+
+  const { id } =
+    useParams();
+
+  const {
+    order,
+    loading,
+  } = useSelector(
+    (state) =>
+      state.checkout,
+  );
+
+  // =========================
+  // FETCH DETAIL
+  // =========================
+  useEffect(() => {
+    dispatch(
+      getOrderDetail(id),
+    );
+  }, [dispatch, id]);
+
+  // =========================
+  // FORMAT DATE
+  // =========================
+  const formatDate = (
+    date,
+  ) => {
+    return new Date(
+      date,
+    ).toLocaleString("vi-VN");
+  };
+
+  // =========================
+  // STATUS TEXT
+  // =========================
+  const getStatusText = (
+    status,
+  ) => {
+    switch (status) {
+      case "pending":
+        return "Chờ xác nhận";
+
+      case "confirmed":
+        return "Đã xác nhận";
+
+      case "shipping":
+        return "Đang giao";
+
+      case "completed":
+        return "Hoàn thành";
+
+      case "cancelled":
+        return "Đã hủy";
+
+      default:
+        return status;
+    }
+  };
+
+  // =========================
+  // LOADING
+  // =========================
+  if (loading) {
+    return (
+      <div className="order-detail-page">
+        Đang tải...
+      </div>
+    );
+  }
+
+  // =========================
+  // NO ORDER
+  // =========================
+  if (!order) {
+    return (
+      <div className="order-detail-page">
+        Không tìm thấy đơn hàng
+      </div>
+    );
+  }
 
   return (
     <div className="order-detail-page">
-      {/* Header */}
+      {/* HEADER */}
       <div className="detail-header">
         <div>
           <h1>
             <ClipboardDocumentListIcon className="title-icon" />
-            Chi Tiết Đơn Hàng #102
+            Chi Tiết Đơn Hàng{" "}
+            {order.orderCode}
           </h1>
 
-          <p>Theo dõi trạng thái và thông tin đơn hàng của bạn</p>
+          <p>
+            Theo dõi trạng thái
+            và thông tin đơn hàng
+            của bạn
+          </p>
         </div>
 
         <div className="status-badge">
           <ExclamationCircleIcon className="status-icon" />
-          Chờ xác nhận
+
+          {getStatusText(
+            order.orderStatus,
+          )}
         </div>
       </div>
 
-      {/* Info */}
+      {/* INFO */}
       <div className="info-grid">
         <div className="info-card">
           <CalendarDaysIcon className="info-icon" />
 
           <div>
-            <span>Ngày đặt hàng</span>
-            <strong>13:46 10-02-2026</strong>
+            <span>
+              Ngày đặt hàng
+            </span>
+
+            <strong>
+              {formatDate(
+                order.createdAt,
+              )}
+            </strong>
           </div>
         </div>
 
@@ -72,8 +166,13 @@ export default function MyOrderDetail() {
           <ClockIcon className="info-icon" />
 
           <div>
-            <span>Giao hàng dự kiến</span>
-            <strong>13:46 15-02-2026</strong>
+            <span>
+              Thanh toán
+            </span>
+
+            <strong>
+              {order.paymentMethod}
+            </strong>
           </div>
         </div>
 
@@ -81,92 +180,199 @@ export default function MyOrderDetail() {
           <ShoppingBagIcon className="info-icon" />
 
           <div>
-            <span>Trạng thái đơn hàng</span>
-            <strong className="orange">Chờ xác nhận</strong>
+            <span>
+              Trạng thái
+            </span>
+
+            <strong className="orange">
+              {getStatusText(
+                order.orderStatus,
+              )}
+            </strong>
           </div>
         </div>
       </div>
 
-      {/* Tracking */}
+      {/* TRACKING */}
       <div className="section">
-        <h2>Theo Dõi Đơn Hàng</h2>
+        <h2>
+          Theo Dõi Đơn Hàng
+        </h2>
 
         <div className="tracking">
           <div className="line"></div>
 
-          <div className="step active">
+          {/* STEP 1 */}
+          <div
+            className={`step ${
+              [
+                "pending",
+                "confirmed",
+                "shipping",
+                "completed",
+              ].includes(
+                order.orderStatus,
+              )
+                ? "active"
+                : ""
+            }`}
+          >
             <div className="circle">
               <CheckIcon />
             </div>
 
-            <h4>Đơn hàng đã đặt</h4>
-            <p>Chờ xác nhận</p>
+            <h4>
+              Đơn hàng đã đặt
+            </h4>
+
+            <p>
+              Chờ xác nhận
+            </p>
           </div>
 
-          <div className="step">
+          {/* STEP 2 */}
+          <div
+            className={`step ${
+              [
+                "confirmed",
+                "shipping",
+                "completed",
+              ].includes(
+                order.orderStatus,
+              )
+                ? "active"
+                : ""
+            }`}
+          >
             <div className="circle">
               <UserIcon />
             </div>
 
-            <h4>Đã xác nhận</h4>
-            <p>Shop đã xác nhận đơn</p>
+            <h4>
+              Đã xác nhận
+            </h4>
+
+            <p>
+              Shop đã xác nhận
+            </p>
           </div>
 
-          <div className="step">
+          {/* STEP 3 */}
+          <div
+            className={`step ${
+              [
+                "shipping",
+                "completed",
+              ].includes(
+                order.orderStatus,
+              )
+                ? "active"
+                : ""
+            }`}
+          >
             <div className="circle">
               <TruckIcon />
             </div>
 
-            <h4>Đang giao hàng</h4>
-            <p>Đơn hàng đang trên đường</p>
+            <h4>
+              Đang giao
+            </h4>
+
+            <p>
+              Đơn hàng đang giao
+            </p>
           </div>
 
-          <div className="step">
+          {/* STEP 4 */}
+          <div
+            className={`step ${
+              order.orderStatus ===
+              "completed"
+                ? "active"
+                : ""
+            }`}
+          >
             <div className="circle">
               <CheckIcon />
             </div>
 
-            <h4>Giao thành công</h4>
-            <p>Đơn hàng đã được giao</p>
+            <h4>
+              Hoàn thành
+            </h4>
+
+            <p>
+              Giao thành công
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Product */}
+      {/* PRODUCTS */}
       <div className="section">
         <h2>
           <CubeIcon className="section-icon" />
-          Sản Phẩm Đã Đặt (2 sản phẩm)
+
+          Sản Phẩm Đã Đặt (
+          {order.totalQuantity} sản phẩm)
         </h2>
 
         <div className="product-grid">
-          {products.map((item) => (
-            <div className="product-card" key={item.id}>
-              <div className="left">
-                <img src={item.image} alt="" />
+          {order.items?.map(
+            (
+              item,
+              index,
+            ) => (
+              <div
+                className="product-card"
+                key={index}
+              >
+                <div className="left">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                  />
 
-                <div>
-                  <h3>{item.name}</h3>
+                  <div>
+                    <h3>
+                      {item.name}
+                    </h3>
 
-                  <div className="meta">
-                    <span className="price">{item.price}</span>
-                    <span className="qty">× {item.quantity}</span>
+                    <div className="meta">
+                      <span className="price">
+                        {item.price.toLocaleString()}
+                        đ
+                      </span>
+
+                      <span className="qty">
+                        × {item.quantity}
+                      </span>
+                    </div>
+
+                    <p className="option">
+                      {item.optionLabel}
+                    </p>
                   </div>
                 </div>
-              </div>
 
-              <div className="right">
-                <span>Thành tiền:</span>
-                <strong>{item.total}</strong>
+                <div className="right">
+                  <span>
+                    Thành tiền:
+                  </span>
+
+                  <strong>
+                    {item.totalPrice.toLocaleString()}
+                    đ
+                  </strong>
+                </div>
               </div>
-            </div>
-          ))}
+            ),
+          )}
         </div>
       </div>
 
-      {/* Bottom */}
+      {/* BOTTOM */}
       <div className="bottom-grid">
-        {/* Shipping */}
+        {/* SHIPPING */}
         <div className="box">
           <h2>
             <UserIcon className="section-icon" />
@@ -179,7 +385,13 @@ export default function MyOrderDetail() {
               Họ và tên:
             </span>
 
-            <strong>Nguyễn Anh Lộc</strong>
+            <strong>
+              {
+                order
+                  .shippingAddress
+                  ?.fullName
+              }
+            </strong>
           </div>
 
           <div className="info-row">
@@ -188,20 +400,45 @@ export default function MyOrderDetail() {
               Địa chỉ:
             </span>
 
-            <strong>Quận 1, HCM</strong>
+            <strong>
+              {
+                order
+                  .shippingAddress
+                  ?.address
+              }
+            </strong>
           </div>
 
           <div className="info-row">
             <span>
               <DocumentTextIcon className="mini-icon" />
-              Ghi chú:
+              SĐT:
             </span>
 
-            <strong>Giao nhanh nha shop</strong>
+            <strong>
+              {
+                order
+                  .shippingAddress
+                  ?.phone
+              }
+            </strong>
           </div>
+
+          {order.note && (
+            <div className="info-row">
+              <span>
+                <DocumentTextIcon className="mini-icon" />
+                Ghi chú:
+              </span>
+
+              <strong>
+                {order.note}
+              </strong>
+            </div>
+          )}
         </div>
 
-        {/* Total */}
+        {/* TOTAL */}
         <div className="box">
           <h2>
             <ClipboardDocumentListIcon className="section-icon" />
@@ -209,18 +446,51 @@ export default function MyOrderDetail() {
           </h2>
 
           <div className="summary-row">
-            <span>Tổng tiền hàng:</span>
-            <strong>110,000đ</strong>
+            <span>
+              Tổng tiền hàng:
+            </span>
+
+            <strong>
+              {order.totalPrice.toLocaleString()}
+              đ
+            </strong>
           </div>
 
           <div className="summary-row">
-            <span>Phí vận chuyển:</span>
-            <strong className="green">Miễn phí</strong>
+            <span>
+              Phí vận chuyển:
+            </span>
+
+            <strong className="green">
+              {order.shippingFee ===
+              0
+                ? "Miễn phí"
+                : `${order.shippingFee.toLocaleString()}đ`}
+            </strong>
+          </div>
+
+          <div className="summary-row">
+            <span>
+              Thanh toán:
+            </span>
+
+            <strong>
+              {order.paymentMethod}
+            </strong>
           </div>
 
           <div className="total-box">
-            <span>Tổng thanh toán:</span>
-            <strong>110,000đ</strong>
+            <span>
+              Tổng thanh toán:
+            </span>
+
+            <strong>
+              {(
+                order.totalPrice +
+                order.shippingFee
+              ).toLocaleString()}
+              đ
+            </strong>
           </div>
         </div>
       </div>

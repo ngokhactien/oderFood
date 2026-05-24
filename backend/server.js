@@ -12,9 +12,10 @@ import cartRoutes from "./routes/carts.js";
 import commentRoutes from "./routes/comment.js";
 import categoryRoutes from "./routes/category.js";
 import tableReservationRoutes from "./routes/Admin/tableReservation.js";
-import adminUserRoutes from "./routes/admin/adminUserRoutes.js";
-import adminProductRoutes from "./routes/admin/adminProductRoutes.js";
-import adminCategoryRoutes from "./routes/admin/adminCategoryRoutes.js";
+import adminUser from "./routes/admin/adminUser.js";
+import adminProduct from "./routes/admin/adminProduct.js";
+import adminCategory from "./routes/admin/adminCategory.js";
+import admincheckout from "./routes/admin/admincheckout.js";
 dotenv.config(); // 🔥 phải để lên trên
 
 const app = express();
@@ -52,19 +53,16 @@ app.use("/api/reservations", tableReservationRoutes);
 app.use("/api/comments", commentRoutes);
 
 //admin user
-app.use(
-  "/api/admin/users",
-  adminUserRoutes,
-);
+app.use("/api/admin/users", adminUser);
 
 // admin products
-app.use(
-  "/api/admin/products",
-  adminProductRoutes,
-);
+app.use("/api/admin/products", adminProduct);
 
 // admin mục lục
-app.use("/api/categories", adminCategoryRoutes);
+app.use("/api/categories", adminCategory);
+
+// admin danh thu
+app.use("/api/admin/checkout", admincheckout);
 
 // 🔥 MongoDB từ env
 mongoose
