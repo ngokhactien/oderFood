@@ -31,7 +31,7 @@ import {
 
 import {
   getOrderDetail,
-} from "../../redux/admin/checkout/checkoutSlice";
+} from "../../redux/checkoutSlice";
 
 export default function MyOrderDetail() {
   const dispatch =
@@ -355,10 +355,6 @@ export default function MyOrderDetail() {
                 </div>
 
                 <div className="right">
-                  <span>
-                    Thành tiền:
-                  </span>
-
                   <strong>
                     {item.totalPrice.toLocaleString()}
                     đ

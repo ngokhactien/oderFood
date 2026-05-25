@@ -19,10 +19,8 @@ import ProductDetail from "../pages/ProductDetail";
 
 // admin
 import AdminLayout from "../AdminLayout";
-import OrdersTable from "../components/Dashboard/OrdersTable/OrdersTable";
 import RevenueOverview from "../components/Dashboard/RevenueOverview/RevenueOverview";
 import Products from "../components/Dashboard/Products/Products";
-import OrderDetail from "../components/Dashboard/OrdersTable/OrderDetail";
 import ProductForm from "../components/Dashboard/Products/ProductForm";
 import AdminInventory from "../components/Dashboard/Inventory/AdminInventory";
 import AdminImportInventory from "../components/Dashboard/Inventory/AdminImportInventory";
@@ -36,6 +34,8 @@ import AdminTransferTable from "../components/Dashboard/TransferTable/AdminTrans
 import SuccessOrder from "../components/successOrder/SuccessOrder";
 import MyOrders from "../components/MyOrders/MyOrders";
 import MyOrderDetail from "../components/myOrderDetail/MyOrderDetail";
+import OrdersCheckout from "../components/Dashboard/OrdersCheckout/OrdersCheckout";
+import OrderDetail from "../components/Dashboard/OrdersCheckout/OrderDetail";
 // import AdminInfo from "../components/Dashboard/AdminInfo";
 
 const router = createBrowserRouter([
@@ -132,8 +132,8 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Dashboard /> },
-      { path: "orders", element: <OrdersTable /> },
-      { path: "orders/detail/:mode", element: <OrderDetail /> },
+      { path: "orders", element: <OrdersCheckout /> },
+      { path: "orders/detail/:id", element: <OrderDetail /> },
       { path: "products", element: <Products /> },
       { path: "products/form/:mode/:id", element: <ProductForm /> },
       { path: "products/form/add", element: <ProductForm /> },

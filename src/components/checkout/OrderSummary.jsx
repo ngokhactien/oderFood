@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 
 import { clearCartAsync } from "../../redux/cartSlice";
-import { createCheckout } from "../../redux/admin/checkout/checkoutSlice";
+import { createCheckout } from "../../redux/checkoutSlice";
 
 export default function OrderSummary({
   cartItems,

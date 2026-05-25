@@ -27,6 +27,7 @@
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
   margin-bottom: 24px;
+  max-width: 25rem;
 }
 
 /* ===== PRODUCT CARD ===== */
@@ -123,6 +124,10 @@
   outline: none;
 }
 
+.order-product-option {
+  margin-top: 0.4rem;
+}
+
 /* ===== BUTTON ===== */
 
 .order-detail .order-update-btn {
@@ -158,6 +163,29 @@
 
 .order-detail .order-info-row strong {
   color: #222;
+}
+
+/* .total  */
+.order-detail .total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.order-detail .total span,
+.order-detail .total strong {
+  display: block;
+  width: fit-content;
+}
+
+.order-detail .total strong {
+  font-size: 1.6rem;
+  color: var(--primary-color);
+}
+
+.order-detail .order-code {
+  color: #4f46e5 !important;
 }
 
 /* ===== RESPONSIVE ===== */

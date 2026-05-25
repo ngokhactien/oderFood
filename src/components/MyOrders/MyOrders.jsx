@@ -12,7 +12,7 @@ import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useEffect } from "react";
-import { getMyOrders } from "../../redux/admin/checkout/checkoutSlice";
+import { getMyOrders } from "../../redux/checkoutSlice";
 
 export default function MyOrders() {
   const dispatch = useDispatch();

@@ -8,13 +8,15 @@ import orderUiReducer from "./orderUiSlice";
 // category client
 import menuCategoryReducer from "./categorySlice";
 import commentReducer from "./commentSlice";
+//check order client
+import checkoutReducer from "./checkoutSlice";
 
 //admin
 import reservationReducer from "./admin/reservation/reservationSlice";
 import usersReducer from "./admin/users/userSlice";
 import adminProductReducer from "./admin/products/adminProductSlice";
 import categoryReducer from "./admin/category/categorySlice";
-import checkoutReducer from "./admin/checkout/checkoutSlice";
+import orderManagementReducer from "./admin/order/orderManagementSlice";
 
 const saved = localStorage.getItem("orderUI");
 
@@ -28,13 +30,14 @@ export const store = configureStore({
     orderUI: orderUiReducer,
     menuCategories: menuCategoryReducer,
     comments: commentReducer,
+    checkout: checkoutReducer, // create order checkout
 
     // admin
     reservations: reservationReducer, //đặt bàn admin
     users: usersReducer,
     adminProducts: adminProductReducer,
     categories: categoryReducer, // mục lục
-    checkout: checkoutReducer, // doanh thu + cart oder
+    adminOrders: orderManagementReducer, // quản lý order
   },
   preloadedState: {
     orderUI: saved ? JSON.parse(saved) : undefined,

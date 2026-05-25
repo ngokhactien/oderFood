@@ -2,50 +2,33 @@
 
 import express from "express";
 
+import { verifyToken } from "../middleware/auth.js";
 import {
   createOrder,
   getMyOrders,
   getOrderDetail,
   cancelOrder,
-} from "../../controllers/admin/checkoutController.js";
-
-import{ verifyToken } from "../../middleware/auth.js";
+} from "../controllers/checkoutController.js";
 const router = express.Router();
 
 // =========================
 // CREATE ORDER
 // =========================
-router.post(
-  "/",
-  verifyToken,
-  createOrder
-);
+router.post("/", verifyToken, createOrder);
 
 // =========================
 // MY ORDERS
 // =========================
-router.get(
-  "/my-orders",
-  verifyToken,
-  getMyOrders
-);
+router.get("/my-orders", verifyToken, getMyOrders);
 
 // =========================
 // ORDER DETAIL
 // =========================
-router.get(
-  "/my-orders/:id",
-  verifyToken,
-  getOrderDetail
-);
+router.get("/my-orders/:id", verifyToken, getOrderDetail);
 
 // =========================
 // CANCEL ORDER
 // =========================
-router.put(
-  "/cancel/:id",
-  verifyToken,
-  cancelOrder
-);
+router.put("/cancel/:id", verifyToken, cancelOrder);
 
 export default router;

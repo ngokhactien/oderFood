@@ -179,13 +179,13 @@
 
 .products-page .edit-btn,
 .products-page .delete-btn {
-  min-width: 70px;
+  min-width: auto;
   height: 36px;
 
   border: none;
   border-radius: 8px;
 
-  padding: 0 14px;
+  padding: 0 1rem;
 
   display: inline-flex;
   align-items: center;

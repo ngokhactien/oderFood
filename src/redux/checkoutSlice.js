@@ -15,7 +15,7 @@ export const createCheckout = createAsyncThunk(
       const token = localStorage.getItem("token");
 
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin/checkout`,
+        `${import.meta.env.VITE_API_URL}/api/checkout`,
         {
           method: "POST",
 
@@ -53,7 +53,7 @@ export const getMyOrders = createAsyncThunk(
       const token = localStorage.getItem("token");
 
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin/checkout/my-orders`,
+        `${import.meta.env.VITE_API_URL}/api/checkout/my-orders`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -85,7 +85,7 @@ export const getOrderDetail = createAsyncThunk(
       const token = localStorage.getItem("token");
 
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin/checkout/my-orders/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/checkout/my-orders/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

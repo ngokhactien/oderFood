@@ -8,6 +8,7 @@ import momoRoutes from "./routes/momo.js";
 import floorRoutes from "./routes/floor.js";
 import orderRoutes from "./routes/order.js";
 import cartRoutes from "./routes/carts.js";
+import checkoutRoutes from "./routes/checkout.js";
 
 import commentRoutes from "./routes/comment.js";
 import categoryRoutes from "./routes/category.js";
@@ -15,7 +16,8 @@ import tableReservationRoutes from "./routes/Admin/tableReservation.js";
 import adminUser from "./routes/admin/adminUser.js";
 import adminProduct from "./routes/admin/adminProduct.js";
 import adminCategory from "./routes/admin/adminCategory.js";
-import admincheckout from "./routes/admin/admincheckout.js";
+import adminCheckoutRoutes from "./routes/admin/order/adminCheckout.js";
+
 dotenv.config(); // 🔥 phải để lên trên
 
 const app = express();
@@ -47,6 +49,9 @@ app.use("/api/cart", cartRoutes);
 // CATEGORY HIỂN THỊ CHO CLIENT
 app.use("/api/categories", categoryRoutes);
 
+// odercheckout fonend
+app.use("/api/checkout", checkoutRoutes);
+
 // dùng để xem user đặt bàn
 app.use("/api/reservations", tableReservationRoutes);
 
@@ -62,7 +67,10 @@ app.use("/api/admin/products", adminProduct);
 app.use("/api/categories", adminCategory);
 
 // admin danh thu
-app.use("/api/admin/checkout", admincheckout);
+// app.use("/api/checkout", admincheckout);
+
+// admin danh thu
+app.use("/api/admin/checkout", adminCheckoutRoutes);
 
 // 🔥 MongoDB từ env
 mongoose

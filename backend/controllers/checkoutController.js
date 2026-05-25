@@ -1,6 +1,6 @@
-import Cart from "../../models/Cart.js";
-import Checkout from "../../models/Checkout.js";
-import Product from "../../models/Product.js";
+import Cart from "../models/Cart.js";
+import Checkout from "../models/Checkout.js";
+import Product from "../models/Product.js";
 
 // =========================
 // CREATE ORDER
@@ -270,7 +270,8 @@ export const getMyOrders = async (req, res) => {
     const orders = await Checkout.find({
       user: userId,
     })
-      .select(`
+      .select(
+        `
         orderCode
         totalPrice
         totalQuantity
@@ -279,7 +280,8 @@ export const getMyOrders = async (req, res) => {
         orderStatus
         createdAt
         items
-      `)
+      `,
+      )
       .sort({
         createdAt: -1,
       })
