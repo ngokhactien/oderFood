@@ -15,7 +15,12 @@ export const createOrder = async (req, res) => {
     // =========================
     // BODY
     // =========================
-    const { paymentMethod = "COD", shippingAddress, note } = req.body;
+    const {
+      paymentMethod = "COD",
+      shippingAddress,
+      note,
+      orderType = "online",
+    } = req.body;
 
     // =========================
     // VALIDATE ADDRESS
@@ -44,7 +49,7 @@ export const createOrder = async (req, res) => {
     })
       .populate({
         path: "items.productId",
-        select: "name images options discount importPrice",
+        select: "name images options discount importPrice price",
         options: {
           lean: true,
         },
@@ -130,7 +135,7 @@ export const createOrder = async (req, res) => {
           },
         },
         {
-          new: true,
+          returnDocument: "after",
         },
       );
 
@@ -202,6 +207,9 @@ export const createOrder = async (req, res) => {
       user: userId,
 
       items: orderItems,
+
+      // ORDER TYPE online
+      orderType,
 
       totalPrice,
 
@@ -389,7 +397,7 @@ export const cancelOrder = async (req, res) => {
           },
         },
         {
-          new: true,
+          returnDocument: "after",
         },
       );
 

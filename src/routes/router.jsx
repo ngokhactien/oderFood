@@ -133,7 +133,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Dashboard /> },
       { path: "orders", element: <OrdersCheckout /> },
-      { path: "orders/detail/:id", element: <OrderDetail /> },
+      { path: "orders/detail/:mode/:id", element: <OrderDetail /> },
       { path: "products", element: <Products /> },
       { path: "products/form/:mode/:id", element: <ProductForm /> },
       { path: "products/form/add", element: <ProductForm /> },

@@ -17,6 +17,7 @@ import adminUser from "./routes/admin/adminUser.js";
 import adminProduct from "./routes/admin/adminProduct.js";
 import adminCategory from "./routes/admin/adminCategory.js";
 import adminCheckoutRoutes from "./routes/admin/order/adminCheckout.js";
+import adminRevenueRoutes from "./routes/admin/revenue/adminRevenue.js";
 
 dotenv.config(); // 🔥 phải để lên trên
 
@@ -66,11 +67,11 @@ app.use("/api/admin/products", adminProduct);
 // admin mục lục
 app.use("/api/categories", adminCategory);
 
-// admin danh thu
-// app.use("/api/checkout", admincheckout);
-
-// admin danh thu
+// admin đơn hàng
 app.use("/api/admin/checkout", adminCheckoutRoutes);
+
+//admin doanh thu
+app.use("/api/admin/revenue", adminRevenueRoutes);
 
 // 🔥 MongoDB từ env
 mongoose

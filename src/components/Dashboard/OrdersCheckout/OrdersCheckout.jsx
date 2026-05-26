@@ -32,7 +32,9 @@ const OrdersCheckout = () => {
   const [search, setSearch] = useState("");
 
   // FILTER STATUS
-  const [statusFilter, setStatusFilter] = useState("pending");
+  const [statusFilter, setStatusFilter] = useState(() => {
+    return localStorage.getItem("orderStatusFilter") || "pending";
+  });
 
   // =========================
   // FETCH ORDERS
@@ -117,9 +119,7 @@ const OrdersCheckout = () => {
             }}
           >
             <option value={5}>5</option>
-
             <option value={10}>10</option>
-
             <option value={20}>20</option>
           </select>
 
@@ -127,8 +127,9 @@ const OrdersCheckout = () => {
           <select
             value={statusFilter}
             onChange={(e) => {
-              setStatusFilter(e.target.value);
-
+              const value = e.target.value;
+              setStatusFilter(value);
+              localStorage.setItem("orderStatusFilter", value);
               setPage(1);
             }}
           >
@@ -221,15 +222,21 @@ const OrdersCheckout = () => {
                 <td>
                   <div className="products-actions">
                     {/* VIEW DETAIL */}
-                    <NavLink to={`detail/${item._id}`} className="edit-btn">
+                    <NavLink
+                      to={`detail/view/${item._id}`}
+                      className="edit-btn"
+                    >
                       <EyeIcon className="action-icon" />
                     </NavLink>
 
-                    {/* ACTIONS */}
-                    {item.orderStatus !== "cancelled" && (
+                    {/* ONLY PENDING / CONFIRMED / SHIPPING */}
+                    {!["completed", "cancelled"].includes(item.orderStatus) && (
                       <>
                         {/* EDIT STATUS */}
-                        <NavLink to={`detail/${item._id}`} className="edit-btn">
+                        <NavLink
+                          to={`detail/edit/${item._id}`}
+                          className="edit-btn"
+                        >
                           <PencilSquareIcon className="action-icon" />
                         </NavLink>
 

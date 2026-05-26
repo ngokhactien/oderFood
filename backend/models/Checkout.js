@@ -57,6 +57,15 @@ const orderProductSchema = new mongoose.Schema(
       default: 0,
     },
 
+    // =========================
+    // ORDER TYPE
+    // =========================
+    orderType: {
+      type: String,
+      enum: ["online", "table", "takeaway"],
+      default: "online",
+    },
+
     // số lượng
     quantity: {
       type: Number,
@@ -92,6 +101,15 @@ const orderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+    },
+
+    // =========================
+    // ORDER TYPE
+    // =========================
+    orderType: {
+      type: String,
+      enum: ["online", "table", "takeaway"],
+      default: "online",
     },
 
     // danh sách sản phẩm
