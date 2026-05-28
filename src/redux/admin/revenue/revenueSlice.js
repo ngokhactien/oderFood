@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import axios from "axios";
+import { toast } from "react-toastify";
 
 // =========================
 // GET REVENUE
@@ -10,13 +10,29 @@ export const getRevenue = createAsyncThunk(
 
   async (_, thunkAPI) => {
     try {
-      const { data } = await axios.get("/api/admin/revenue");
+      // TOKEN
+      const token = localStorage.getItem("token");
+
+      // API
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/admin/revenue`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const data = await res.json();
+
+      // ERROR
+      if (!res.ok) {
+        throw new Error(data.message);
+      }
 
       return data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Lỗi server",
-      );
+      return thunkAPI.rejectWithValue(error.message);
     }
   },
 );
@@ -25,6 +41,8 @@ const revenueSlice = createSlice({
   name: "adminRevenue",
 
   initialState: {
+    loading: false,
+
     orders: [],
 
     totalRevenue: 0,
@@ -33,7 +51,7 @@ const revenueSlice = createSlice({
 
     totalProducts: 0,
 
-    loading: false,
+    error: null,
   },
 
   reducers: {},
@@ -41,7 +59,9 @@ const revenueSlice = createSlice({
   extraReducers: (builder) => {
     builder
 
-      // GET
+      // =========================
+      // GET REVENUE
+      // =========================
       .addCase(getRevenue.pending, (state) => {
         state.loading = true;
       })
@@ -49,17 +69,21 @@ const revenueSlice = createSlice({
       .addCase(getRevenue.fulfilled, (state, action) => {
         state.loading = false;
 
-        state.orders = action.payload.orders;
+        state.orders = action.payload.orders || [];
 
-        state.totalRevenue = action.payload.totalRevenue;
+        state.totalRevenue = action.payload.totalRevenue || 0;
 
-        state.totalOrders = action.payload.totalOrders;
+        state.totalOrders = action.payload.totalOrders || 0;
 
-        state.totalProducts = action.payload.totalProducts;
+        state.totalProducts = action.payload.totalProducts || 0;
       })
 
-      .addCase(getRevenue.rejected, (state) => {
+      .addCase(getRevenue.rejected, (state, action) => {
         state.loading = false;
+
+        state.error = action.payload;
+
+        toast.error(action.payload);
       });
   },
 });

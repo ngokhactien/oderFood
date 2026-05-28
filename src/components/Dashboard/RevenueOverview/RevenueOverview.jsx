@@ -15,6 +15,8 @@ import "./styles/RevenueOverview.css";
 import Pagination from "../../Pagination";
 
 import { getRevenue } from "../../../redux/admin/revenue/revenueSlice";
+import { NavLink } from "react-router-dom";
+import { formatDateTime } from "../../../common/dateFormat";
 
 export default function AdminRevenue() {
   const dispatch = useDispatch();
@@ -61,17 +63,13 @@ export default function AdminRevenue() {
     // SEARCH
     if (search) {
       data = data.filter((item) =>
-        item?.orderCode
-          ?.toLowerCase()
-          .includes(search.toLowerCase()),
+        item?.orderCode?.toLowerCase().includes(search.toLowerCase()),
       );
     }
 
     // ORDER TYPE
     if (orderType) {
-      data = data.filter(
-        (item) => item?.orderType === orderType,
-      );
+      data = data.filter((item) => item?.orderType === orderType);
     }
 
     return data;
@@ -82,10 +80,7 @@ export default function AdminRevenue() {
   // =========================
   const totalPages = Math.ceil(filteredData.length / limit);
 
-  const currentData = filteredData.slice(
-    (page - 1) * limit,
-    page * limit,
-  );
+  const currentData = filteredData.slice((page - 1) * limit, page * limit);
 
   useEffect(() => {
     setPage(1);
@@ -133,11 +128,7 @@ export default function AdminRevenue() {
   // LOADING
   // =========================
   if (loading) {
-    return (
-      <div className="admin-revenue-loading">
-        Loading...
-      </div>
-    );
+    return <div className="admin-revenue-loading">Loading...</div>;
   }
 
   return (
@@ -155,12 +146,7 @@ export default function AdminRevenue() {
           <div>
             <p>Tổng doanh thu</p>
 
-            <h3>
-              {Number(totalRevenue || 0).toLocaleString(
-                "vi-VN",
-              )}
-              ₫
-            </h3>
+            <h3>{Number(totalRevenue || 0).toLocaleString("vi-VN")}₫</h3>
           </div>
         </div>
 
@@ -200,9 +186,7 @@ export default function AdminRevenue() {
           {/* LIMIT */}
           <select
             value={limit}
-            onChange={(e) =>
-              setLimit(Number(e.target.value))
-            }
+            onChange={(e) => setLimit(Number(e.target.value))}
           >
             <option value={5}>5</option>
 
@@ -219,34 +203,22 @@ export default function AdminRevenue() {
               type="text"
               placeholder="Tìm mã đơn..."
               value={search}
-              onChange={(e) =>
-                setSearch(e.target.value)
-              }
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
 
           {/* FILTER */}
           <select
             value={orderType}
-            onChange={(e) =>
-              setOrderType(e.target.value)
-            }
+            onChange={(e) => setOrderType(e.target.value)}
           >
-            <option value="">
-              Tất cả loại
-            </option>
+            <option value="">Tất cả loại</option>
 
-            <option value="online">
-              Online
-            </option>
+            <option value="online">Online</option>
 
-            <option value="table">
-              Tại bàn
-            </option>
+            <option value="table">Tại bàn</option>
 
-            <option value="takeaway">
-              Mang đi
-            </option>
+            <option value="takeaway">Mang đi</option>
           </select>
         </div>
 
@@ -255,19 +227,19 @@ export default function AdminRevenue() {
           <table className="admin-revenue-table">
             <thead>
               <tr>
-                <th>#</th>
+                <th className="stt">#</th>
 
                 <th>MÃ ĐƠN</th>
 
                 <th>KHÁCH HÀNG</th>
 
-                <th>LOẠI</th>
+                <th>SĐT</th>
+
+                <th>THỜI GIAN</th>
+
+                <th>LOẠI ĐƠN</th>
 
                 <th>TỔNG TIỀN</th>
-
-                <th>THANH TOÁN</th>
-
-                <th>NGÀY</th>
 
                 <th>XEM</th>
               </tr>
@@ -278,79 +250,48 @@ export default function AdminRevenue() {
                 currentData.map((item, index) => (
                   <tr key={item._id}>
                     {/* STT */}
-                    <td>
-                      {(page - 1) * limit +
-                        index +
-                        1}
-                    </td>
+                    <td>{(page - 1) * limit + index + 1}</td>
 
                     {/* CODE */}
                     <td>
-                      <span className="order-code">
-                        {item.orderCode}
-                      </span>
+                      <span className="order-code">{item.orderCode}</span>
                     </td>
 
                     {/* CUSTOMER */}
-                    <td>
-                      {item.shippingAddress
-                        ?.fullName || "Khách"}
-                    </td>
+                    <td>{item.shippingAddress?.fullName || "Khách lẻ"}</td>
+
+                    {/* PHONE */}
+                    <td>{item.shippingAddress?.phone || "---"}</td>
+
+                    {/* DATE */}
+                    <td>{formatDateTime(item.createdAt)}</td>
 
                     {/* TYPE */}
                     <td>
-                      <span
-                        className={`order-type ${item.orderType}`}
-                      >
-                        {getOrderType(
-                          item.orderType,
-                        )}
+                      <span className={`order-type ${item.orderType}`}>
+                        {getOrderType(item.orderType)}
                       </span>
                     </td>
 
                     {/* PRICE */}
                     <td className="price">
-                      {Number(
-                        item.totalPrice || 0,
-                      ).toLocaleString("vi-VN")}
-                      ₫
-                    </td>
-
-                    {/* PAYMENT */}
-                    <td>
-                      <span
-                        className={`payment-status ${item.paymentStatus}`}
-                      >
-                        {getPaymentStatus(
-                          item.paymentStatus,
-                        )}
-                      </span>
-                    </td>
-
-                    {/* DATE */}
-                    <td>
-                      {item.createdAt
-                        ? new Date(
-                            item.createdAt,
-                          ).toLocaleString(
-                            "vi-VN",
-                          )
-                        : ""}
+                      {Number(item.totalPrice || 0).toLocaleString("vi-VN")}₫
                     </td>
 
                     {/* ACTION */}
                     <td>
-                      <button className="view-btn">
+                      <NavLink
+                        to={`/admin/orders/detail/view/${item._id}`}
+                        className="view-btn"
+                      >
                         <EyeIcon className="action-icon" />
-                      </button>
+                      </NavLink>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="8">
-                    Không có dữ liệu
-                  </td>
+                  <td colSpan="8">Không có dữ liệu</td>
                 </tr>
               )}
             </tbody>
@@ -361,13 +302,9 @@ export default function AdminRevenue() {
         {filteredData.length > 0 && (
           <div className="admin-revenue-bottom">
             <p>
-              Showing{" "}
-              {(page - 1) * limit + 1} to{" "}
-              {Math.min(
-                page * limit,
-                filteredData.length,
-              )}{" "}
-              of {filteredData.length} entries
+              Showing {(page - 1) * limit + 1} to{" "}
+              {Math.min(page * limit, filteredData.length)} of{" "}
+              {filteredData.length} entries
             </p>
 
             {totalPages > 1 && (

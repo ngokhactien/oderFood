@@ -185,7 +185,7 @@ export default function AdminProductsReport() {
         <table className="top-products__table">
           <thead>
             <tr>
-              <th>#</th>
+               <th className="stt">#</th>
               <th>SẢN PHẨM</th>
               <th>ĐÃ BÁN</th>
             </tr>

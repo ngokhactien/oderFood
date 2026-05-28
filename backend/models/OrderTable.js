@@ -70,6 +70,28 @@ const orderTableSchema = new mongoose.Schema(
 
 export default mongoose.model("OrderTable", orderTableSchema);
 
+// 1. OrderTable = Đơn order tại bàn
+
+// Model này dùng để quản lý:
+
+// khách đang ngồi bàn nào
+// gọi món gì
+// trạng thái món
+// thanh toán chưa
+// tổng tiền
+// nhân viên phục vụ
+
+// Ví dụ:
+
+// Bàn 10 gọi:
+// 2 cafe sữa
+// 1 trà đào
+// món nào đang làm
+// món nào đã lên
+// bill đã thanh toán chưa
+
+// => đây là order thực tế để bán hàng
+
 // {
 //   "_id": "66f1a2b3c4d5e6f789000001",
 //   "userId": "66f000abc123456789000001",

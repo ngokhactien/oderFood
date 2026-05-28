@@ -14,12 +14,15 @@ export const getRevenue = async (req, res) => {
     // =========================
     // TOTAL
     // =========================
-    const totalRevenue = orders.reduce((sum, item) => sum + item.totalPrice, 0);
+    const totalRevenue = orders.reduce(
+      (sum, item) => sum + (item.totalPrice || 0),
+      0,
+    );
 
     const totalOrders = orders.length;
 
     const totalProducts = orders.reduce(
-      (sum, item) => sum + item.totalQuantity,
+      (sum, item) => sum + (item.totalQuantity || 0),
       0,
     );
 

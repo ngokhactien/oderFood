@@ -7,14 +7,14 @@
 
 /* STATS */
 
-.admin-revenue-stats {
+.admin-revenue .admin-revenue-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   margin-bottom: 24px;
 }
 
-.admin-revenue-card {
+.admin-revenue .admin-revenue-card {
   background: #fff;
   border-radius: 16px;
   padding: 20px;
@@ -23,10 +23,10 @@
   align-items: center;
   gap: 16px;
 
-  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
 }
 
-.admin-revenue-icon {
+.admin-revenue .admin-revenue-icon {
   width: 60px;
   height: 60px;
 
@@ -37,33 +37,33 @@
   justify-content: center;
 }
 
-.admin-revenue-icon svg {
+.admin-revenue .admin-revenue-icon svg {
   width: 28px;
   height: 28px;
 }
 
-.admin-revenue-icon.revenue {
+.admin-revenue .admin-revenue-icon.revenue {
   background: #dcfce7;
   color: #16a34a;
 }
 
-.admin-revenue-icon.orders {
+.admin-revenue .admin-revenue-icon.orders {
   background: #dbeafe;
   color: #2563eb;
 }
 
-.admin-revenue-icon.products {
+.admin-revenue .admin-revenue-icon.products {
   background: #fef3c7;
   color: #d97706;
 }
 
-.admin-revenue-card p {
+.admin-revenue .admin-revenue-card p {
   font-size: 14px;
   color: #6b7280;
   margin-bottom: 6px;
 }
 
-.admin-revenue-card h3 {
+.admin-revenue .admin-revenue-card h3 {
   font-size: 28px;
   font-weight: 700;
   color: #111827;
@@ -71,7 +71,7 @@
 
 /* TABLE CARD */
 
-.admin-revenue-table-card {
+.admin-revenue .admin-revenue-table-card {
   background: #fff;
   border-radius: 16px;
   padding: 20px;
@@ -79,7 +79,7 @@
 
 /* TOP */
 
-.admin-revenue-top {
+.admin-revenue .admin-revenue-top {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -87,7 +87,7 @@
   margin-bottom: 20px;
 }
 
-.admin-revenue-top select {
+.admin-revenue .admin-revenue-top select {
   height: 42px;
   padding: 0 14px;
 
@@ -97,11 +97,11 @@
   outline: none;
 }
 
-.admin-revenue-search {
+.admin-revenue .admin-revenue-search {
   position: relative;
 }
 
-.admin-revenue-search input {
+.admin-revenue .admin-revenue-search input {
   width: 260px;
   height: 42px;
 
@@ -113,7 +113,7 @@
   outline: none;
 }
 
-.admin-revenue-search-icon {
+.admin-revenue .admin-revenue-search-icon {
   width: 18px;
   height: 18px;
 
@@ -127,50 +127,50 @@
 
 /* TABLE */
 
-.admin-revenue-table-wrap {
+.admin-revenue .admin-revenue-table-wrap {
   overflow-x: auto;
 }
 
-.admin-revenue-table {
+.admin-revenue .admin-revenue-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.admin-revenue-table thead {
+.admin-revenue .admin-revenue-table thead {
   background: #f9fafb;
 }
 
-.admin-revenue-table th,
-.admin-revenue-table td {
+.admin-revenue .admin-revenue-table th,
+.admin-revenue .admin-revenue-table td {
   padding: 16px;
   border-bottom: 1px solid #eee;
   text-align: left;
 }
 
-.admin-revenue-table th {
+.admin-revenue .admin-revenue-table th {
   font-size: 14px;
   font-weight: 700;
   color: #6b7280;
 }
 
-.admin-revenue-table td {
+.admin-revenue .admin-revenue-table td {
   font-size: 14px;
   color: #111827;
 }
 
-.order-code {
+.admin-revenue .order-code {
   color: #2563eb;
   font-weight: 700;
 }
 
-.price {
-  color: #dc2626;
+.admin-revenue .price {
+  color: #dc2626 !important;
   font-weight: 700;
 }
 
 /* ORDER TYPE */
 
-.order-type {
+.admin-revenue .order-type {
   padding: 6px 12px;
   border-radius: 999px;
 
@@ -178,24 +178,24 @@
   font-weight: 600;
 }
 
-.order-type.online {
+.admin-revenue .order-type.online {
   background: #dbeafe;
   color: #2563eb;
 }
 
-.order-type.table {
+.admin-revenue .order-type.table {
   background: #dcfce7;
   color: #15803d;
 }
 
-.order-type.takeaway {
+.admin-revenue .order-type.takeaway {
   background: #fef3c7;
   color: #d97706;
 }
 
 /* PAYMENT */
 
-.payment-status {
+.admin-revenue .payment-status {
   padding: 6px 12px;
   border-radius: 999px;
 
@@ -203,19 +203,19 @@
   font-weight: 600;
 }
 
-.payment-status.pending {
+.admin-revenue .payment-status.pending {
   background: #fee2e2;
   color: #dc2626;
 }
 
-.payment-status.paid {
+.admin-revenue .payment-status.paid {
   background: #dcfce7;
   color: #16a34a;
 }
 
 /* ACTION */
 
-.view-btn {
+.admin-revenue .view-btn {
   width: 40px;
   height: 40px;
 
@@ -232,14 +232,14 @@
   cursor: pointer;
 }
 
-.action-icon {
+.admin-revenue .action-icon {
   width: 22px;
   height: 22px;
 }
 
 /* FOOTER */
 
-.admin-revenue-bottom {
+.admin-revenue .admin-revenue-bottom {
   margin-top: 20px;
 
   display: flex;
@@ -252,7 +252,7 @@
 /* RESPONSIVE */
 
 @media (max-width: 992px) {
-  .admin-revenue-stats {
+  .admin-revenue .admin-revenue-stats {
     grid-template-columns: 1fr;
   }
 }
@@ -262,16 +262,16 @@
     padding: 16px;
   }
 
-  .admin-revenue-bottom {
+  .admin-revenue .admin-revenue-bottom {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .admin-revenue-search {
+  .admin-revenue .admin-revenue-search {
     width: 100%;
   }
 
-  .admin-revenue-search input {
+  .admin-revenue .admin-revenue-search input {
     width: 100%;
   }
 }

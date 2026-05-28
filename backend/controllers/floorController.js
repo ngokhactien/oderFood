@@ -1,84 +1,228 @@
-import User from "../models/User.js";
+// controllers/floorController.js
 
-// 🔥 helper
+import Floor from "../models/Floor.js";
+
+// =========================
+// Helper tạo danh sách bàn
+// =========================
+
 const createTables = (count, start = 1, prefix = "Bàn") => {
   return Array.from({ length: count }, (_, i) => ({
     name: `${prefix} ${i + start}`,
+
+    status: "empty",
+
+    capacity: 2,
   }));
 };
 
-// ✅ CREATE FLOOR
+// =========================
+// CREATE FLOOR
+// =========================
+
 export const createFloor = async (req, res) => {
   try {
-    const userId = req.user.id;
-    const { name, type = "normal", tableCount, startNumber } = req.body;
+    const {
+      name,
 
+      tableCount,
+
+      startNumber,
+    } = req.body;
+
+    // validate
     if (!name || !tableCount) {
       return res.status(400).json("Thiếu dữ liệu");
     }
 
+    // tạo danh sách bàn
     const tables = createTables(tableCount, startNumber || 1);
 
-    const newFloor = { name, type, tables };
+    // tạo floor mới
+    const floor = await Floor.create({
+      name,
 
-    await User.findByIdAndUpdate(userId, {
-      $push: { floors: newFloor },
+      tables,
     });
 
-    res.json("Tạo lầu thành công");
+    res.status(201).json(floor);
   } catch (err) {
     res.status(500).json(err.message);
   }
 };
 
-// ✅ GET FLOORS
+// =========================
+// GET FLOORS
+// =========================
+
 export const getFloors = async (req, res) => {
-  const user = await User.findById(req.user.id).select("floors");
-  res.json(user.floors);
+  try {
+    const floors = await Floor.find().sort({
+      createdAt: 1,
+    });
+
+    res.json(floors);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
 };
 
-// ✅ DELETE FLOOR
+// =========================
+// DELETE FLOOR
+// =========================
+
 export const deleteFloor = async (req, res) => {
-  const { floorId } = req.params;
+  try {
+    const { floorId } = req.params;
 
-  await User.findByIdAndUpdate(req.user.id, {
-    $pull: { floors: { _id: floorId } },
-  });
+    await Floor.findByIdAndDelete(floorId);
 
-  res.json("Xoá lầu thành công");
+    res.json("Xoá lầu thành công");
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
 };
 
-// ✅ UPDATE FLOOR NAME
+// =========================
+// UPDATE FLOOR NAME
+// =========================
+
 export const updateFloor = async (req, res) => {
-  const { floorId } = req.params;
-  const { name } = req.body;
+  try {
+    const { floorId } = req.params;
 
-  await User.updateOne(
-    { _id: req.user.id, "floors._id": floorId },
-    {
-      $set: { "floors.$.name": name },
-    }
-  );
+    const { name } = req.body;
 
-  res.json("Cập nhật thành công");
+    await Floor.findByIdAndUpdate(floorId, {
+      name,
+    });
+
+    res.json("Cập nhật thành công");
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
 };
 
-// 🔥 UPDATE TABLE STATUS
+// =========================
+// UPDATE TABLE STATUS
+// =========================
+
 export const updateTableStatus = async (req, res) => {
-  const { tableId } = req.params;
-  const { status } = req.body;
+  try {
+    const { tableId } = req.params;
 
-  await User.updateOne(
-    { _id: req.user.id },
-    {
-      $set: {
-        "floors.$[].tables.$[t].status": status,
+    const { status } = req.body;
+
+    await Floor.updateOne(
+      {
+        "tables._id": tableId,
       },
-    },
-    {
-      arrayFilters: [{ "t._id": tableId }],
-    }
-  );
 
-  res.json("Đã cập nhật trạng thái bàn");
+      {
+        $set: {
+          "tables.$.status": status,
+        },
+      },
+    );
+
+    res.json("Đã cập nhật trạng thái bàn");
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+};
+
+// =========================
+// ADD TABLE
+// =========================
+
+export const addTable = async (req, res) => {
+  try {
+    const { floorId } = req.params;
+
+    const {
+      name,
+
+      capacity = 2,
+    } = req.body;
+
+    await Floor.findByIdAndUpdate(
+      floorId,
+
+      {
+        $push: {
+          tables: {
+            name,
+
+            capacity,
+
+            status: "empty",
+          },
+        },
+      },
+    );
+
+    res.json("Thêm bàn thành công");
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+};
+
+// =========================
+// DELETE TABLE
+// =========================
+
+export const deleteTable = async (req, res) => {
+  try {
+    const { floorId, tableId } = req.params;
+
+    await Floor.findByIdAndUpdate(
+      floorId,
+
+      {
+        $pull: {
+          tables: {
+            _id: tableId,
+          },
+        },
+      },
+    );
+
+    res.json("Xoá bàn thành công");
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+};
+
+// =========================
+// UPDATE TABLE
+// =========================
+
+export const updateTable = async (req, res) => {
+  try {
+    const { tableId } = req.params;
+
+    const {
+      name,
+
+      capacity,
+    } = req.body;
+
+    await Floor.updateOne(
+      {
+        "tables._id": tableId,
+      },
+
+      {
+        $set: {
+          "tables.$.name": name,
+
+          "tables.$.capacity": capacity,
+        },
+      },
+    );
+
+    res.json("Cập nhật bàn thành công");
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
 };

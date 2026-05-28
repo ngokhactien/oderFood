@@ -9,6 +9,7 @@ import {
   getOrderDetail,
   updateOrderStatus,
 } from "../../../redux/admin/order/orderManagementSlice";
+import { formatDateTime } from "../../../common/dateFormat";
 
 const OrderDetail = () => {
   const dispatch = useDispatch();
@@ -19,9 +20,7 @@ const OrderDetail = () => {
 
   const isEdit = mode === "edit";
 
-  const { orderDetail, loading } = useSelector(
-    (state) => state.adminOrders,
-  );
+  const { orderDetail, loading } = useSelector((state) => state.adminOrders);
 
   const [status, setStatus] = useState("pending");
 
@@ -80,35 +79,40 @@ const OrderDetail = () => {
     }
   };
 
+  // =========================
+  // PAYMENT STATUS LABEL
+  // =========================
+  const getPaymentStatusLabel = (status) => {
+    switch (status) {
+      case "paid":
+        return "Đã thanh toán";
+
+      case "pending":
+        return "Chưa thanh toán";
+
+      case "failed":
+        return "Thanh toán thất bại";
+
+      default:
+        return status;
+    }
+  };
+
   if (loading || !orderDetail) {
-    return (
-      <div className="order-detail-loading">
-        Đang tải đơn hàng...
-      </div>
-    );
+    return <div className="order-detail-loading">Đang tải đơn hàng...</div>;
   }
 
   return (
     <div className="order-detail">
       {/* BREADCRUMB */}
       <div className="order-breadcrumb">
-        <NavLink to="/admin/orders">
-          Đơn hàng
-        </NavLink>
+        <NavLink to="/admin/orders">Đơn hàng</NavLink>
 
         <span>/</span>
 
-        <span>
-          {isEdit
-            ? "Cập nhật đơn hàng"
-            : "Chi tiết đơn hàng"}
-        </span>
+        <span>{isEdit ? "Cập nhật đơn hàng" : "Chi tiết đơn hàng"}</span>
 
-        <span
-          className={`order-mode ${
-            isEdit ? "edit" : "view"
-          }`}
-        >
+        <span className={`order-mode ${isEdit ? "edit" : "view"}`}>
           {isEdit ? "EDIT" : "VIEW"}
         </span>
       </div>
@@ -116,21 +120,13 @@ const OrderDetail = () => {
       {/* PRODUCTS */}
       <div className="order-product-grid">
         {orderDetail.items.map((item, index) => (
-          <div
-            className="order-product-card"
-            key={index}
-          >
-            <img
-              src={item.image}
-              alt={item.name}
-            />
+          <div className="order-product-card" key={index}>
+            <img src={item.image} alt={item.name} />
 
             <div className="order-product-info">
               <h3>{item.name}</h3>
 
-              <div className="order-product-option">
-                {item.optionLabel}
-              </div>
+              <div className="order-product-option">{item.optionLabel}</div>
 
               <div className="order-product-bottom">
                 <span className="order-price">
@@ -150,9 +146,7 @@ const OrderDetail = () => {
         <div className="order-card">
           <h2>
             Trạng thái đơn hàng:
-            <span
-              className={`order-status-text ${status}`}
-            >
+            <span className={`order-status-text ${status}`}>
               {" "}
               {getStatusLabel(status)}
             </span>
@@ -164,37 +158,22 @@ const OrderDetail = () => {
             <select
               value={status}
               disabled={!isEdit}
-              onChange={(e) =>
-                setStatus(e.target.value)
-              }
+              onChange={(e) => setStatus(e.target.value)}
             >
-              <option value="pending">
-                Chờ xác nhận
-              </option>
+              <option value="pending">Chờ xác nhận</option>
 
-              <option value="confirmed">
-                Đã xác nhận
-              </option>
+              <option value="confirmed">Đã xác nhận</option>
 
-              <option value="shipping">
-                Đang giao
-              </option>
+              <option value="shipping">Đang giao</option>
 
-              <option value="completed">
-                Hoàn thành
-              </option>
+              <option value="completed">Hoàn thành</option>
 
-              <option value="cancelled">
-                Đã hủy
-              </option>
+              <option value="cancelled">Đã hủy</option>
             </select>
           </div>
 
           {isEdit && (
-            <button
-              onClick={handleUpdateStatus}
-              className="order-update-btn"
-            >
+            <button onClick={handleUpdateStatus} className="order-update-btn">
               Cập nhật
             </button>
           )}
@@ -207,96 +186,64 @@ const OrderDetail = () => {
           <div className="order-info-row">
             <span>Mã hóa đơn</span>
 
-            <strong className="order-code">
-              {orderDetail.orderCode}
-            </strong>
+            <strong className="order-code">{orderDetail.orderCode}</strong>
           </div>
 
           <div className="order-info-row">
             <span>Tên khách hàng</span>
 
-            <strong>
-              {
-                orderDetail.shippingAddress
-                  ?.fullName
-              }
-            </strong>
+            <strong>{orderDetail.shippingAddress?.fullName}</strong>
           </div>
 
           <div className="order-info-row">
             <span>Số điện thoại</span>
 
-            <strong>
-              {
-                orderDetail.shippingAddress
-                  ?.phone
-              }
-            </strong>
+            <strong>{orderDetail.shippingAddress?.phone}</strong>
           </div>
 
           <div className="order-info-row">
             <span>Địa chỉ giao hàng</span>
 
-            <strong>
-              {
-                orderDetail.shippingAddress
-                  ?.address
-              }
-            </strong>
+            <strong>{orderDetail.shippingAddress?.address}</strong>
           </div>
 
           <div className="order-info-row">
             <span>Phương thức thanh toán</span>
 
-            <strong>
-              {orderDetail.paymentMethod}
-            </strong>
+            <strong>{orderDetail.paymentMethod}</strong>
           </div>
 
           <div className="order-info-row">
             <span>Thanh toán</span>
 
-            <strong>
-              {orderDetail.paymentStatus}
-            </strong>
+            <span className={`payment-status ${orderDetail.paymentStatus}`}>
+              {getPaymentStatusLabel(orderDetail.paymentStatus)}
+            </span>
           </div>
-
           <div className="order-info-row">
             <span>Thời gian</span>
 
-            <strong>
-              {new Date(
-                orderDetail.createdAt,
-              ).toLocaleString("vi-VN")}
-            </strong>
+            <strong>{formatDateTime(orderDetail.createdAt)}</strong>
           </div>
 
           <div className="order-info-row">
             <span>Tổng số lượng</span>
 
-            <strong>
-              {orderDetail.totalQuantity}
-            </strong>
+            <strong>{orderDetail.totalQuantity}</strong>
           </div>
 
           <div className="order-info-row">
             <span>Phí ship</span>
 
-            <strong>
-              {orderDetail.shippingFee.toLocaleString()}
-              ₫
-            </strong>
+            <strong>{orderDetail.shippingFee.toLocaleString()}₫</strong>
           </div>
 
           <div className="order-info-row">
-           <div className="total">
-             <span>Tổng tiền hàng</span>
+            <div className="total">
+              <span>Tổng tiền hàng</span>
 
-            <strong>
-              {orderDetail.totalPrice.toLocaleString()}
-              ₫
-            </strong>
-           </div>
+              <strong>{orderDetail.totalPrice.toLocaleString()}₫</strong>
+            </div>
           </div>
 
           {orderDetail.note && (

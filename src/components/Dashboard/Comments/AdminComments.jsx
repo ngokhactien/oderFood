@@ -8,6 +8,7 @@ import { NavLink } from "react-router-dom";
 import "./styles/AdminComments.css";
 import Pagination from "../../Pagination";
 import { getAllComments } from "../../../redux/commentSlice";
+import { formatDateTime } from "../../../common/dateFormat";
 
 export default function AdminComments() {
   const dispatch = useDispatch();
@@ -18,11 +19,16 @@ export default function AdminComments() {
   const [limit, setLimit] = useState(5);
   const [search, setSearch] = useState("");
   const [sortStatus, setSortStatus] = useState("");
-
   const [sortPinned, setSortPinned] = useState("");
-
-  // SORT STAR
   const [sortStar, setSortStar] = useState("");
+
+  // GLOBAL TOOLTIP
+  const [tooltip, setTooltip] = useState({
+    visible: false,
+    text: "",
+    x: 0,
+    y: 0,
+  });
 
   useEffect(() => {
     dispatch(getAllComments());
@@ -44,7 +50,6 @@ export default function AdminComments() {
       );
     });
 
-    // SORT STAR
     // FILTER STAR
     if (sortStar) {
       data = data.filter((item) => item.rating === Number(sortStar));
@@ -60,24 +65,27 @@ export default function AdminComments() {
     }
 
     // FILTER PINNED
-if (sortPinned === "pinned") {
-  data = data.filter((item) => item.isPinned);
-}
+    if (sortPinned === "pinned") {
+      data = data.filter((item) => item.isPinned);
+    }
 
-if (sortPinned === "unpinned") {
-  data = data.filter((item) => !item.isPinned);
-}
+    if (sortPinned === "unpinned") {
+      data = data.filter((item) => !item.isPinned);
+    }
 
     return data;
-}, [comments, search, sortStar, sortStatus, sortPinned]);
+  }, [comments, search, sortStar, sortStatus, sortPinned]);
 
   useEffect(() => {
     setPage(1);
-}, [search, limit, sortStar, sortStatus, sortPinned]);
+  }, [search, limit, sortStar, sortStatus, sortPinned]);
 
   const totalPages = Math.ceil(filteredData.length / limit);
 
-  const currentData = filteredData.slice((page - 1) * limit, page * limit);
+  const currentData = filteredData.slice(
+    (page - 1) * limit,
+    page * limit,
+  );
 
   if (loading) {
     return <p className="p-4">Loading comments...</p>;
@@ -86,7 +94,9 @@ if (sortPinned === "unpinned") {
   return (
     <div className="admin-comment">
       <div className="admin-comment__card">
-        <h2 className="admin-comment__title">Danh sách bình luận</h2>
+        <h2 className="admin-comment__title">
+          Danh sách bình luận
+        </h2>
 
         {/* TOP */}
         <div className="admin-comment__top">
@@ -118,7 +128,7 @@ if (sortPinned === "unpinned") {
             </select>
           </div>
 
-          {/* SORT status */}
+          {/* SORT STATUS */}
           <div className="admin-comment__sort">
             <select
               value={sortStatus}
@@ -131,17 +141,18 @@ if (sortPinned === "unpinned") {
           </div>
 
           {/* SORT PIN */}
-<div className="admin-comment__sort">
-  <select
-    value={sortPinned}
-    onChange={(e) => setSortPinned(e.target.value)}
-  >
-    <option value="">Tất cả ghim</option>
-    <option value="pinned">Đã ghim</option>
-    <option value="unpinned">Chưa ghim</option>
-  </select>
-</div>
+          <div className="admin-comment__sort">
+            <select
+              value={sortPinned}
+              onChange={(e) => setSortPinned(e.target.value)}
+            >
+              <option value="">Tất cả ghim</option>
+              <option value="pinned">Đã ghim</option>
+              <option value="unpinned">Chưa ghim</option>
+            </select>
+          </div>
 
+          {/* SEARCH */}
           <div className="admin-comment__search">
             <MagnifyingGlassIcon className="admin-comment__search-icon" />
 
@@ -159,13 +170,13 @@ if (sortPinned === "unpinned") {
           <table className="admin-comment__table">
             <thead>
               <tr>
-                <th>#</th>
+                <th className="stt">#</th>
                 <th>HỌ TÊN</th>
                 <th>SẢN PHẨM</th>
                 <th>ĐÁNH GIÁ</th>
                 <th>BÌNH LUẬN</th>
                 <th>TRẠNG THÁI</th>
-                <th>GHIM</th> 
+                <th>GHIM</th>
                 <th>THỜI GIAN</th>
                 <th>CHỈNH SỬA</th>
               </tr>
@@ -175,7 +186,9 @@ if (sortPinned === "unpinned") {
               {currentData.length > 0 ? (
                 currentData.map((item, index) => (
                   <tr key={item._id}>
-                    <td>{(page - 1) * limit + index + 1}</td>
+                    <td>
+                      {(page - 1) * limit + index + 1}
+                    </td>
 
                     <td>{item.user?.name}</td>
 
@@ -183,21 +196,33 @@ if (sortPinned === "unpinned") {
 
                     <td>
                       <div className="admin-comment__stars">
-                        {[...Array(item.rating)].map((_, index) => (
-                          <span key={index}>⭐</span>
-                        ))}
+                          <span key={index}>{item.rating}⭐</span>
                       </div>
                     </td>
 
+                    {/* COMMENT */}
                     <td>
-                      <div className="admin-comment__tooltip">
-                        <div className="admin-comment__content">
-                          {item.content}
-                        </div>
+                      <div
+                        className="admin-comment__content"
+                        onMouseEnter={(e) => {
+                          const rect =
+                            e.currentTarget.getBoundingClientRect();
 
-                        <div className="admin-comment__tooltip-text">
-                          {item.content}
-                        </div>
+                          setTooltip({
+                            visible: true,
+                            text: item.content,
+                            x: rect.left + rect.width / 2,
+                            y: rect.bottom + 14,
+                          });
+                        }}
+                        onMouseLeave={() => {
+                          setTooltip((prev) => ({
+                            ...prev,
+                            visible: false,
+                          }));
+                        }}
+                      >
+                        {item.content}
                       </div>
                     </td>
 
@@ -212,16 +237,22 @@ if (sortPinned === "unpinned") {
                     </td>
 
                     <td>
-  <span
-    className={`admin-comment__pin ${
-      item.isPinned ? "pinned" : "unpinned"
-    }`}
-  >
-    {item.isPinned ? "Đã ghim" : "Chưa ghim"}
-  </span>
-</td>
+                      <span
+                        className={`admin-comment__pin ${
+                          item.isPinned
+                            ? "pinned"
+                            : "unpinned"
+                        }`}
+                      >
+                        {item.isPinned
+                          ? "Đã ghim"
+                          : "Chưa ghim"}
+                      </span>
+                    </td>
 
-                    <td>{new Date(item.createdAt).toLocaleString("vi-VN")}</td>
+                    <td>
+                      {formatDateTime(item.createdAt)}
+                    </td>
 
                     <td>
                       <NavLink
@@ -235,20 +266,38 @@ if (sortPinned === "unpinned") {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="9">Không có bình luận</td>
+                  <td colSpan="9">
+                    Không có bình luận
+                  </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
 
+        {/* TOOLTIP */}
+        {tooltip.visible && (
+          <div
+            className="global-tooltip"
+            style={{
+              left: tooltip.x,
+              top: tooltip.y,
+            }}
+          >
+            {tooltip.text}
+          </div>
+        )}
+
         {/* BOTTOM */}
         {filteredData.length > 0 && (
           <div className="admin-comment__bottom">
             <p>
               Showing {(page - 1) * limit + 1} to{" "}
-              {Math.min(page * limit, filteredData.length)} of{" "}
-              {filteredData.length} entries
+              {Math.min(
+                page * limit,
+                filteredData.length,
+              )}{" "}
+              of {filteredData.length} entries
             </p>
 
             {totalPages > 1 && (

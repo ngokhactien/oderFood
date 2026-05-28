@@ -31,11 +31,14 @@ import AdminCategories from "../components/Dashboard/Categories/AdminCategories"
 import Dashboard from "../components/Dashboard/Home/AdminReport";
 import AdminProductsReport from "../components/Dashboard/Reports/AdminProductsReport";
 import AdminTransferTable from "../components/Dashboard/TransferTable/AdminTransferTable";
+import AdminReservationTabs from "../components/Dashboard/TransferTable/AdminReservationTabs";
+import AdminUsingTable from "../components/Dashboard/TransferTable/AdminUsingTable";
 import SuccessOrder from "../components/successOrder/SuccessOrder";
 import MyOrders from "../components/MyOrders/MyOrders";
 import MyOrderDetail from "../components/myOrderDetail/MyOrderDetail";
 import OrdersCheckout from "../components/Dashboard/OrdersCheckout/OrdersCheckout";
 import OrderDetail from "../components/Dashboard/OrdersCheckout/OrderDetail";
+import AdminFloorManager from "../components/Dashboard/TransferTable/AdminFloorManager";
 // import AdminInfo from "../components/Dashboard/AdminInfo";
 
 const router = createBrowserRouter([
@@ -137,7 +140,27 @@ const router = createBrowserRouter([
       { path: "products", element: <Products /> },
       { path: "products/form/:mode/:id", element: <ProductForm /> },
       { path: "products/form/add", element: <ProductForm /> },
-      { path: "bookings", element: <AdminTransferTable /> },
+      {
+        path: "bookings",
+        element: <AdminReservationTabs />,
+        children: [
+          // mặc định mở tab đặt bàn
+          {
+            index: true,
+            element: <AdminTransferTable />,
+          },
+          // tab bàn đang sử dụng
+          {
+            path: "using",
+            element: <AdminUsingTable />,
+          },
+           // quản lý tầng + bàn
+          {
+            path: "table-management",
+            element: <AdminFloorManager />,
+          },
+        ],
+      },
       { path: "revenue", element: <RevenueOverview /> },
       { path: "inventory", element: <AdminInventory /> },
       { path: "inventory/import", element: <AdminImportInventory /> },

@@ -153,3 +153,7 @@
 .admin-main.full {
   margin-left: 0;
 }
+
+.stt {
+  width: 2rem !important;
+}

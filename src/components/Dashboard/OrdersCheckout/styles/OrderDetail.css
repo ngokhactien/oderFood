@@ -29,6 +29,39 @@
   margin-bottom: 24px;
 }
 
+/* PAYMENT STATUS */
+
+.payment-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Đã thanh toán */
+.payment-status.paid {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+/* Chưa thanh toán */
+.payment-status.pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+/* Thất bại */
+.payment-status.failed {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
 /* ===== PRODUCT CARD ===== */
 
 .order-detail .order-product-card {

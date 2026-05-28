@@ -1,28 +1,26 @@
-// AdminTransferTable.jsx
+// AdminUsingTable.jsx
 
 import { useEffect, useState } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 
 import Pagination from "../../Pagination";
 
-import "./styles/AdminTransferTable.css";
+import "./styles/AdminUsingTable.css";
 
 import {
   fetchReservations,
   updateReservationStatus,
 } from "../../../redux/admin/reservation/reservationSlice";
-
-import CreateReservationModal from "./CreateReservationModal";
-
 import {
   CheckCircleIcon,
   XCircleIcon,
+  MagnifyingGlassIcon,
   ChatBubbleLeftEllipsisIcon,
 } from "@heroicons/react/24/outline";
-
 import { formatReservationDateTime } from "../../../common/dateFormat";
 
-const AdminTransferTable = () => {
+export default function AdminUsingTable() {
   const dispatch = useDispatch();
 
   const { reservations, totalPages, loading } = useSelector(
@@ -31,22 +29,19 @@ const AdminTransferTable = () => {
 
   const [page, setPage] = useState(1);
 
-  const [search, setSearch] = useState("");
-
   const [entries, setEntries] = useState(5);
 
-  const [openCreate, setOpenCreate] = useState(false);
+  const [search, setSearch] = useState("");
 
-  // mặc định reserved
-  const [status, setStatus] = useState("reserved");
-
-  // TOOLTIP
   const [tooltip, setTooltip] = useState({
     visible: false,
     text: "",
     x: 0,
     y: 0,
   });
+
+  // chỉ lấy completed hoặc using
+  const status = "completed";
 
   // FETCH
   useEffect(() => {
@@ -58,7 +53,7 @@ const AdminTransferTable = () => {
         status,
       }),
     );
-  }, [dispatch, page, entries, search, status]);
+  }, [dispatch, page, entries, search]);
 
   // UPDATE STATUS
   const handleStatus = async (id, newStatus) => {
@@ -84,33 +79,29 @@ const AdminTransferTable = () => {
   };
 
   return (
-    <div className="reservation-page">
+    <div className="using-table-page">
       {/* HEADER */}
-      <div className="reservation-header">
-        <h2>Đặt bàn</h2>
+      <div className="using-table-header">
+        <h2>Bàn đang sử dụng</h2>
 
-        <div className="reservation-filters">
-          {/* ADD */}
-          <button
-            className="add-reservation-btn"
-            onClick={() => setOpenCreate(true)}
-          >
-            + Đặt bàn
-          </button>
-
+        <div className="using-table-filters">
           {/* SEARCH */}
-          <input
-            type="text"
-            placeholder="Tìm khách..."
-            value={search}
-            onChange={(e) => {
-              setPage(1);
+          <div className="using-search-box">
+            <MagnifyingGlassIcon className="using-search-icon" />
 
-              setSearch(e.target.value);
-            }}
-          />
+            <input
+              type="text"
+              placeholder="Tìm khách..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
 
-          {/* ENTRIES */}
+                setPage(1);
+              }}
+            />
+          </div>
+
+          {/* LIMIT */}
           <select
             value={entries}
             onChange={(e) => {
@@ -125,35 +116,17 @@ const AdminTransferTable = () => {
 
             <option value={20}>20</option>
           </select>
-
-          {/* STATUS */}
-          <select
-            value={status}
-            onChange={(e) => {
-              setStatus(e.target.value);
-
-              setPage(1);
-            }}
-          >
-            <option value="reserved">Đang chờ</option>
-
-            <option value="completed">Hoàn thành</option>
-
-            <option value="cancelled">Đã hủy</option>
-
-            <option value="all">Tất cả</option>
-          </select>
         </div>
       </div>
 
       {/* LOADING */}
       {loading ? (
-        <div className="reservation-loading">Loading...</div>
+        <div className="using-loading">Loading...</div>
       ) : (
         <>
           {/* TABLE */}
-          <div className="reservation-table-wrap">
-            <table className="reservation-table">
+          <div className="using-table-wrap">
+            <table className="using-table">
               <thead>
                 <tr>
                   <th className="stt">#</th>
@@ -164,9 +137,9 @@ const AdminTransferTable = () => {
 
                   <th>Bàn</th>
 
-                  <th>Thời gian đặt</th>
+                  <th>Thời gian</th>
 
-                  <th>Khách</th>
+                  <th>Số khách</th>
 
                   <th>Ghi chú</th>
 
@@ -188,16 +161,10 @@ const AdminTransferTable = () => {
 
                       <td>{item.tableName}</td>
 
-                      <td>
-                        {formatReservationDateTime(
-                          item.date,
-                          item.time,
-                        )}
-                      </td>
+                      <td>{formatReservationDateTime(item.date, item.time)}</td>
 
                       <td>{item.guests}</td>
 
-                      {/* NOTE */}
                       <td className="using-note-cell">
                         {item.note ? (
                           <div
@@ -226,60 +193,35 @@ const AdminTransferTable = () => {
                           <span className="using-no-note">—</span>
                         )}
                       </td>
-
-                      {/* STATUS */}
                       <td>
-                        <span className={`status ${item.status}`}>
-                          {item.status}
-                        </span>
+                        <span className="using-status">Đang sử dụng</span>
                       </td>
 
-                      {/* ACTION */}
                       <td>
-                        <div className="action-buttons">
-                          {item.status === "reserved" && (
-                            <>
-                              {/* COMPLETE */}
-                              <button
-                                className="action-btn success"
-                                onClick={() =>
-                                  handleStatus(item._id, "completed")
-                                }
-                              >
-                                <CheckCircleIcon className="action-icon" />
-                              </button>
+                        <div className="using-actions">
+                          {/* COMPLETE */}
+                          <button
+                            className="using-btn success"
+                            onClick={() => handleStatus(item._id, "done")}
+                          >
+                            <CheckCircleIcon className="using-icon" />
+                          </button>
 
-                              {/* CANCEL */}
-                              <button
-                                className="action-btn danger"
-                                onClick={() =>
-                                  handleStatus(item._id, "cancelled")
-                                }
-                              >
-                                <XCircleIcon className="action-icon" />
-                              </button>
-                            </>
-                          )}
-
-                          {item.status === "completed" && (
-                            <span className="status-text completed-text">
-                              Đã hoàn thành
-                            </span>
-                          )}
-
-                          {item.status === "cancelled" && (
-                            <span className="status-text cancelled-text">
-                              Đã hủy
-                            </span>
-                          )}
+                          {/* CANCEL */}
+                          <button
+                            className="using-btn danger"
+                            onClick={() => handleStatus(item._id, "cancelled")}
+                          >
+                            <XCircleIcon className="using-icon" />
+                          </button>
                         </div>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="9" className="empty-data">
-                      Không có dữ liệu
+                    <td colSpan="9" className="using-empty">
+                      Không có bàn đang sử dụng
                     </td>
                   </tr>
                 )}
@@ -297,14 +239,6 @@ const AdminTransferTable = () => {
           )}
         </>
       )}
-
-      {/* MODAL */}
-      <CreateReservationModal
-        open={openCreate}
-        onClose={() => setOpenCreate(false)}
-      />
-
-      {/* GLOBAL TOOLTIP */}
       {tooltip.visible && (
         <div
           className="global-tooltip"
@@ -318,6 +252,4 @@ const AdminTransferTable = () => {
       )}
     </div>
   );
-};
-
-export default AdminTransferTable;
+}

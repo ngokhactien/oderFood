@@ -315,7 +315,7 @@ export default function Products() {
         <table className="products-table">
           <thead>
             <tr>
-              <th>#</th>
+               <th className="stt">#</th>
 
               <th>SẢN PHẨM</th>
 

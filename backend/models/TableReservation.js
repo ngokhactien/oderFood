@@ -60,3 +60,14 @@ export default mongoose.model(
 
 // cancelledAt → xóa sau 3 ngày
 // completedAt → xóa sau 2 tháng
+
+// 2. TableReservation = Đặt bàn trước
+
+// Model này KHÔNG phải order món.
+
+// Nó chỉ dùng để:
+
+// khách đặt bàn trước
+// lưu thông tin booking
+// ngày giờ tới
+// số lượng khách

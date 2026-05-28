@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import axios from "axios";
 
-const API = "http://localhost:5000/api/categories";
+const API = "http://localhost:5000/api/admin/categories";
 
 //
 // GET

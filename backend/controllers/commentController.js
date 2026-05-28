@@ -8,26 +8,25 @@ const updateProductRating = async (productId) => {
   const comments = await Comment.find({
     product: productId,
     isHidden: false,
-  });
+  }).select("rating");
 
   const reviews = comments.length;
 
   const totalRating = comments.reduce((sum, item) => sum + item.rating, 0);
 
-  const rating = reviews > 0 ? totalRating / reviews : 0;
+  const rating = reviews > 0 ? Number((totalRating / reviews).toFixed(1)) : 0;
 
-  const updated = await Product.findByIdAndUpdate(
+  await Product.findByIdAndUpdate(
     productId,
     {
       reviews,
-      rating: Number(rating.toFixed(1)),
+      rating,
     },
     {
-      new: true,
+      returnDocument: "after",
     },
   );
 };
-
 /**
  * GET COMMENTS BY PRODUCT
  */
@@ -99,9 +98,7 @@ export const updateCommentStatus = async (req, res) => {
   try {
     const { isHidden, isPinned } = req.body;
 
-    const comment = await Comment.findById(
-      req.params.id,
-    );
+    const comment = await Comment.findById(req.params.id);
 
     if (!comment) {
       return res.status(404).json({
@@ -112,34 +109,25 @@ export const updateCommentStatus = async (req, res) => {
     /**
      * UPDATE HIDDEN
      */
-    if (
-      typeof isHidden !== "undefined"
-    ) {
+    if (typeof isHidden !== "undefined") {
       comment.isHidden = isHidden;
     }
 
     /**
      * UPDATE PIN
      */
-    if (
-      typeof isPinned !== "undefined"
-    ) {
+    if (typeof isPinned !== "undefined") {
       // nếu muốn ghim
       if (isPinned === true) {
-        const totalPinned =
-          await Comment.countDocuments({
-            isPinned: true,
-            isHidden: false,
-          });
+        const totalPinned = await Comment.countDocuments({
+          isPinned: true,
+          isHidden: false,
+        });
 
         // tối đa 6 comment
-        if (
-          totalPinned >= 6 &&
-          !comment.isPinned
-        ) {
+        if (totalPinned >= 6 && !comment.isPinned) {
           return res.status(400).json({
-            message:
-              "Chỉ được ghim tối đa 6 bình luận",
+            message: "Chỉ được ghim tối đa 6 bình luận",
           });
         }
       }
@@ -160,14 +148,11 @@ export const updateCommentStatus = async (req, res) => {
     /**
      * UPDATE PRODUCT RATING
      */
-    await updateProductRating(
-      comment.product,
-    );
+    await updateProductRating(comment.product);
 
-    const updated =
-      await Comment.findById(comment._id)
-        .populate("user")
-        .populate("product");
+    const updated = await Comment.findById(comment._id)
+      .populate("user")
+      .populate("product");
 
     res.json(updated);
   } catch (error) {
@@ -231,7 +216,6 @@ export const deleteComment = async (req, res) => {
     });
   }
 };
-
 
 /**
  * GET PINNED COMMENTS

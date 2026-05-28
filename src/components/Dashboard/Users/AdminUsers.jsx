@@ -288,7 +288,7 @@ export default function AdminUsers() {
           <table className="admin-users__table">
             <thead>
               <tr>
-                <th>#</th>
+                 <th className="stt">#</th>
 
                 <th>ẢNH</th>
 

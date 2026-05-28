@@ -415,7 +415,7 @@ const AdminInventory = () => {
           <table>
             <thead>
               <tr>
-                <th>#</th>
+                 <th className="stt">#</th>
 
                 <th>TÊN SẢN PHẨM</th>
 

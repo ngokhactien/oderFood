@@ -171,7 +171,7 @@ const OrdersCheckout = () => {
         <table className="products-table">
           <thead>
             <tr>
-              <th>#</th>
+               <th className="stt">#</th>
 
               <th>MÃ HÓA ĐƠN</th>
 
