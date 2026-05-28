@@ -6,11 +6,10 @@ const Header = ({ toggle }) => {
   return (
     <div className="admin-header">
       <Bars3Icon className="menu-icon" onClick={toggle} />
-{/* 
-      <NavLink to={'info'} className="admin-right">
-        <div className="avatar"></div>
-        <span>ADMIN</span>
-      </NavLink> */}
+
+      <NavLink to={'/'} className="admin-link">
+        <span>Home</span>
+      </NavLink>
     </div>
   );
 };
