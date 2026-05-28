@@ -18,6 +18,10 @@ import adminProductReducer from "./admin/products/adminProductSlice";
 import categoryReducer from "./admin/category/categorySlice";
 import orderManagementReducer from "./admin/order/orderManagementSlice";
 import revenueReducer from "./admin/revenue/revenueSlice";
+// floor
+import floorReducer from "./admin/floors/floorSlice";
+// table
+import tableReducer from "./admin/floors/tableSlice";
 
 const saved = localStorage.getItem("orderUI");
 
@@ -40,6 +44,8 @@ export const store = configureStore({
     categories: categoryReducer, // mục lục
     adminOrders: orderManagementReducer, // quản lý order
     adminRevenue: revenueReducer, //doanh thu
+    floors: floorReducer,
+    tables: tableReducer,
   },
   preloadedState: {
     orderUI: saved ? JSON.parse(saved) : undefined,

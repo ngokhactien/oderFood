@@ -39,7 +39,6 @@ import MyOrderDetail from "../components/myOrderDetail/MyOrderDetail";
 import OrdersCheckout from "../components/Dashboard/OrdersCheckout/OrdersCheckout";
 import OrderDetail from "../components/Dashboard/OrdersCheckout/OrderDetail";
 import AdminFloorManager from "../components/Dashboard/TransferTable/AdminFloorManager";
-// import AdminInfo from "../components/Dashboard/AdminInfo";
 
 const router = createBrowserRouter([
   //user

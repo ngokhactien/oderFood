@@ -1,7 +1,8 @@
 // pages/admin/floor/AdminFloorManager.jsx
 
 import { useEffect, useState } from "react";
-import axios from "axios";
+
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   PlusIcon,
@@ -12,46 +13,44 @@ import {
 
 import "./styles/AdminFloorManager.css";
 
-export default function AdminFloorManager() {
-  const [floors, setFloors] = useState([]);
+// FLOOR
+import {
+  fetchFloors,
+  createFloor,
+  updateFloor,
+  deleteFloor,
+} from "../../../redux/admin/floors/floorSlice.js";
 
-  const [loading, setLoading] = useState(true);
+// TABLE
+import {
+  addTable,
+  updateTable,
+  deleteTable,
+} from "../../../redux/admin/floors/tableSlice.js";
+
+export default function AdminFloorManager() {
+  const dispatch = useDispatch();
+
+  const { floors = [], loading } = useSelector((state) => state.floors);
 
   const [saving, setSaving] = useState(false);
 
+  const [localFloors, setLocalFloors] = useState([]);
+
   // =========================
-  // FETCH FLOORS
+  // FETCH
   // =========================
 
   useEffect(() => {
-    fetchFloors();
-  }, []);
+    dispatch(fetchFloors());
+  }, [dispatch]);
 
-  const fetchFloors = async () => {
-    try {
-      setLoading(true);
-
-      const res = await axios.get("/api/floor");
-
-      if (res.data?.length > 0) {
-        setFloors(res.data);
-      } else {
-        setFloors([
-          {
-            name: "",
-            tables: [
-              {
-                name: "",
-                capacity: 2,
-              },
-            ],
-          },
-        ]);
-      }
-    } catch (error) {
-      console.log(error);
-
-      setFloors([
+  // redux -> local
+  useEffect(() => {
+    if (Array.isArray(floors) && floors.length > 0) {
+      setLocalFloors(floors);
+    } else {
+      setLocalFloors([
         {
           name: "",
           tables: [
@@ -62,17 +61,15 @@ export default function AdminFloorManager() {
           ],
         },
       ]);
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [floors]);
 
   // =========================
   // FLOOR
   // =========================
 
-  const addFloor = () => {
-    setFloors((prev) => [
+  const handleAddFloor = () => {
+    setLocalFloors((prev) => [
       ...prev,
       {
         name: "",
@@ -86,49 +83,67 @@ export default function AdminFloorManager() {
     ]);
   };
 
-  const removeFloor = (floorIndex) => {
-    setFloors((prev) => prev.filter((_, index) => index !== floorIndex));
+  const handleRemoveFloor = async (floorIndex, floorId) => {
+    if (floorId) {
+      await dispatch(deleteFloor(floorId));
+    }
+
+    setLocalFloors((prev) => prev.filter((_, index) => index !== floorIndex));
   };
 
-  const updateFloorName = (floorIndex, value) => {
-    const updated = [...floors];
+  const handleFloorName = (floorIndex, value) => {
+    const updated = [...localFloors];
 
     updated[floorIndex].name = value;
 
-    setFloors(updated);
+    setLocalFloors(updated);
   };
 
   // =========================
   // TABLE
   // =========================
 
-  const addTable = (floorIndex) => {
-    const updated = [...floors];
+  const handleAddTable = (floorIndex) => {
+    const updated = [...localFloors];
 
     updated[floorIndex].tables.push({
       name: "",
       capacity: 2,
     });
 
-    setFloors(updated);
+    setLocalFloors(updated);
   };
 
-  const removeTable = (floorIndex, tableIndex) => {
-    const updated = [...floors];
+  const handleRemoveTable = async (
+    floorIndex,
+    tableIndex,
+    floorId,
+    tableId,
+  ) => {
+    if (tableId && floorId) {
+      await dispatch(
+        deleteTable({
+          floorId,
+          tableId,
+        }),
+      );
+    }
+
+    const updated = [...localFloors];
 
     updated[floorIndex].tables = updated[floorIndex].tables.filter(
       (_, index) => index !== tableIndex,
     );
 
-    setFloors(updated);
+    setLocalFloors(updated);
   };
 
-  const updateTable = (floorIndex, tableIndex, field, value) => {
-    const updated = [...floors];
+  const handleUpdateTable = (floorIndex, tableIndex, field, value) => {
+    const updated = [...localFloors];
 
     updated[floorIndex].tables[tableIndex][field] = value;
 
-    setFloors(updated);
+    setLocalFloors(updated);
   };
 
   // =========================
@@ -139,11 +154,80 @@ export default function AdminFloorManager() {
     try {
       setSaving(true);
 
-      await axios.post("/api/floor", {
-        floors,
-      });
+      for (const floor of localFloors) {
+        // =====================
+        // CREATE FLOOR
+        // =====================
 
-      alert("Lưu sơ đồ bàn thành công");
+        if (!floor._id) {
+          const createdFloor = await dispatch(
+            createFloor({
+              name: floor.name,
+              tableCount: 0,
+            }),
+          ).unwrap();
+
+          // create tables
+          for (const table of floor.tables) {
+            await dispatch(
+              addTable({
+                floorId: createdFloor._id,
+
+                data: {
+                  name: table.name,
+                  capacity: table.capacity,
+                },
+              }),
+            );
+          }
+        }
+
+        // =====================
+        // UPDATE FLOOR
+        // =====================
+        else {
+          await dispatch(
+            updateFloor({
+              floorId: floor._id,
+              name: floor.name,
+            }),
+          );
+
+          for (const table of floor.tables) {
+            // CREATE TABLE
+            if (!table._id) {
+              await dispatch(
+                addTable({
+                  floorId: floor._id,
+
+                  data: {
+                    name: table.name,
+                    capacity: table.capacity,
+                  },
+                }),
+              );
+            }
+
+            // UPDATE TABLE
+            else {
+              await dispatch(
+                updateTable({
+                  tableId: table._id,
+
+                  data: {
+                    name: table.name,
+                    capacity: table.capacity,
+                  },
+                }),
+              );
+            }
+          }
+        }
+      }
+
+      await dispatch(fetchFloors());
+
+      alert("Lưu thành công");
     } catch (error) {
       console.log(error);
 
@@ -158,11 +242,7 @@ export default function AdminFloorManager() {
   // =========================
 
   if (loading) {
-    return (
-      <div className="floor-manager-loading">
-        Loading...
-      </div>
-    );
+    return <div className="floor-manager-loading">Loading...</div>;
   }
 
   return (
@@ -186,8 +266,8 @@ export default function AdminFloorManager() {
 
       {/* FLOORS */}
       <div className="floor-list">
-        {floors.map((floor, floorIndex) => (
-          <div className="floor-card" key={floorIndex}>
+        {localFloors.map((floor, floorIndex) => (
+          <div className="floor-card" key={floor._id || floorIndex}>
             {/* FLOOR TOP */}
             <div className="floor-card-top">
               <div className="floor-title">
@@ -197,15 +277,13 @@ export default function AdminFloorManager() {
                   type="text"
                   placeholder="Tên tầng..."
                   value={floor.name}
-                  onChange={(e) =>
-                    updateFloorName(floorIndex, e.target.value)
-                  }
+                  onChange={(e) => handleFloorName(floorIndex, e.target.value)}
                 />
               </div>
 
               <button
                 className="delete-floor-btn"
-                onClick={() => removeFloor(floorIndex)}
+                onClick={() => handleRemoveFloor(floorIndex, floor._id)}
               >
                 <TrashIcon className="trash-icon" />
               </button>
@@ -213,8 +291,8 @@ export default function AdminFloorManager() {
 
             {/* TABLES */}
             <div className="table-list">
-              {floor.tables.map((table, tableIndex) => (
-                <div className="table-card" key={tableIndex}>
+              {floor.tables?.map((table, tableIndex) => (
+                <div className="table-card" key={table._id || tableIndex}>
                   <div className="table-card-left">
                     <TableCellsIcon className="table-icon" />
 
@@ -223,7 +301,7 @@ export default function AdminFloorManager() {
                       placeholder="Tên bàn..."
                       value={table.name}
                       onChange={(e) =>
-                        updateTable(
+                        handleUpdateTable(
                           floorIndex,
                           tableIndex,
                           "name",
@@ -238,7 +316,7 @@ export default function AdminFloorManager() {
                       placeholder="Sức chứa"
                       value={table.capacity}
                       onChange={(e) =>
-                        updateTable(
+                        handleUpdateTable(
                           floorIndex,
                           tableIndex,
                           "capacity",
@@ -251,7 +329,12 @@ export default function AdminFloorManager() {
                   <button
                     className="delete-table-btn"
                     onClick={() =>
-                      removeTable(floorIndex, tableIndex)
+                      handleRemoveTable(
+                        floorIndex,
+                        tableIndex,
+                        floor._id,
+                        table._id,
+                      )
                     }
                   >
                     <TrashIcon className="trash-icon" />
@@ -262,10 +345,9 @@ export default function AdminFloorManager() {
               {/* ADD TABLE */}
               <button
                 className="add-table-btn"
-                onClick={() => addTable(floorIndex)}
+                onClick={() => handleAddTable(floorIndex)}
               >
                 <PlusIcon className="plus-icon" />
-
                 Thêm bàn
               </button>
             </div>
@@ -274,12 +356,8 @@ export default function AdminFloorManager() {
       </div>
 
       {/* ADD FLOOR */}
-      <button
-        className="add-floor-btn"
-        onClick={addFloor}
-      >
+      <button className="add-floor-btn" onClick={handleAddFloor}>
         <PlusIcon className="plus-icon" />
-
         Thêm tầng
       </button>
     </div>
